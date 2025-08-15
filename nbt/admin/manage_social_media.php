@@ -10,10 +10,12 @@ if (!isset($_SESSION['admin_id'])) {
 
 // Add new social media entry
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
-    $stmt = $pdo->prepare("INSERT INTO social_media (platform, followers) VALUES (?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO social_media (platform, followers, platform_url, is_active) VALUES (?, ?, ?, ?)");
     $stmt->execute([
         $_POST['platform'],
-        $_POST['followers']
+        $_POST['followers'],
+        $_POST['platform_url'],
+        isset($_POST['is_active']) ? 1 : 0
     ]);
     header("Location: manage_social_media.php");
     exit;
@@ -30,10 +32,12 @@ if (isset($_GET['delete'])) {
 // Edit social media entry
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
     $id = $_POST['id'];
-    $stmt = $pdo->prepare("UPDATE social_media SET platform = ?, followers = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE social_media SET platform = ?, followers = ?, platform_url = ?, is_active = ? WHERE id = ?");
     $stmt->execute([
         $_POST['platform'],
         $_POST['followers'],
+        $_POST['platform_url'],
+        isset($_POST['is_active']) ? 1 : 0,
         $id
     ]);
     header("Location: manage_social_media.php");
@@ -76,6 +80,13 @@ $social_media = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input type="text" name="platform" placeholder="Platform (e.g., Facebook)" required class="border border-purple-300 p-2 rounded" />
                 <input type="number" name="followers" placeholder="Followers (e.g., 10000)" required class="border border-purple-300 p-2 rounded" />
+                <input type="url" name="platform_url" placeholder="Platform URL" class="border border-purple-300 p-2 rounded" />
+                <div class="flex items-center">
+                    <label class="flex items-center">
+                        <input type="checkbox" name="is_active" checked class="mr-2">
+                        <span class="text-sm">Active</span>
+                    </label>
+                </div>
                 <div class="col-span-2 text-right">
                     <button type="submit" name="add" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-4 py-2 rounded">Add Social Media</button>
                 </div>

@@ -22,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image_size = $_FILES['image']['size'];
         $image_data = file_get_contents($_FILES['image']['tmp_name']);
 
-        $stmt = $pdo->prepare("INSERT INTO overview_images (title, image_sequence, image_name, image_type, image_size, image_data) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$title, $image_sequence, $image_name, $image_type, $image_size, $image_data]);
+        $stmt = $pdo->prepare("INSERT INTO overview_images (title, image_sequence, image_name, image_type, image_size, image_data, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$title, $image_sequence, $image_name, $image_type, $image_size, $image_data, isset($_POST['is_active']) ? 1 : 0]);
 
     } elseif (isset($_POST['update'])) {
         $id = $_POST['id'];
@@ -35,11 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image_type = $_FILES['image']['type'];
             $image_size = $_FILES['image']['size'];
             $image_data = file_get_contents($_FILES['image']['tmp_name']);
-            $stmt = $pdo->prepare("UPDATE overview_images SET title = ?, image_sequence = ?, image_name = ?, image_type = ?, image_size = ?, image_data = ? WHERE id = ?");
-            $stmt->execute([$title, $image_sequence, $image_name, $image_type, $image_size, $image_data, $id]);
+            $stmt = $pdo->prepare("UPDATE overview_images SET title = ?, image_sequence = ?, image_name = ?, image_type = ?, image_size = ?, image_data = ?, is_active = ? WHERE id = ?");
+            $stmt->execute([$title, $image_sequence, $image_name, $image_type, $image_size, $image_data, isset($_POST['is_active']) ? 1 : 0, $id]);
         } else {
-            $stmt = $pdo->prepare("UPDATE overview_images SET title = ?, image_sequence = ? WHERE id = ?");
-            $stmt->execute([$title, $image_sequence, $id]);
+            $stmt = $pdo->prepare("UPDATE overview_images SET title = ?, image_sequence = ?, is_active = ? WHERE id = ?");
+            $stmt->execute([$title, $image_sequence, isset($_POST['is_active']) ? 1 : 0, $id]);
         }
 
     } elseif (isset($_POST['delete'])) {
