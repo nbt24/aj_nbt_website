@@ -1,0 +1,1949 @@
+<?php
+require 'config/db.php';
+
+// Fetch data
+$mission_stmt = $pdo->query("SELECT * FROM our_mission LIMIT 1");
+$mission = $mission_stmt->fetch();
+
+$courses_stmt = $pdo->query("SELECT * FROM courses");
+$courses = $courses_stmt->fetchAll();
+
+$team_stmt = $pdo->query("SELECT * FROM meet_our_team ORDER BY image_sequence");
+$team = $team_stmt->fetchAll();
+
+$services_stmt = $pdo->query("SELECT * FROM our_services");
+$services = $services_stmt->fetchAll();
+
+$testimonials_stmt = $pdo->query("SELECT * FROM testimonials");
+$testimonials = $testimonials_stmt->fetchAll();
+
+$overview_stmt = $pdo->query("SELECT * FROM overview_images ORDER BY image_sequence");
+$overview_images = $overview_stmt->fetchAll();
+
+$clients_stmt = $pdo->query("SELECT * FROM client ORDER BY id DESC");
+$clients = $clients_stmt->fetchAll();
+
+$coupons_stmt = $pdo->query("SELECT * FROM coupons");
+$coupons = $coupons_stmt->fetchAll();
+
+// Fetch data for four top members card 
+$founder_stmt = $pdo->query("SELECT * FROM founder_card ORDER BY image_sequence");
+$founder = $founder_stmt->fetchAll();
+
+// Fetch data for client testimonials
+$clients_testimonials_stmt = $pdo->query("SELECT company_name, company_email, linkedin, project_description, rating, company_logo FROM client_testimonials ORDER BY rating DESC");
+$clients_testimonials = $clients_testimonials_stmt->fetchAll();
+
+// Fetch data for course testimonials 
+$course_testimonials_stmt = $pdo->query("SELECT name, email, course, rating, message, image, video FROM course_testimonials ORDER BY rating DESC");
+$course_testimonials = $course_testimonials_stmt->fetchAll();
+
+// Social Media Fetching Section
+$stmt = $pdo->query("SELECT * FROM social_media");
+// First row (e.g., Instagram)
+$row1 = $stmt->fetch(PDO::FETCH_ASSOC);
+// Second row (e.g., Facebook)
+$row2 = $stmt->fetch(PDO::FETCH_ASSOC);
+// Third row (e.g., Twitter)
+$row3 = $stmt->fetch(PDO::FETCH_ASSOC);
+// Fourth row (e.g., Youtube)
+$row4 = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+// Handle contact form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
+    $full_name = $_POST['full_name'];
+    $email_address = $_POST['email_address'];
+    $subject = $_POST['subject'];
+    $message = $_POST['message'];
+
+    $stmt = $pdo->prepare("INSERT INTO contact_us (full_name, email_address, subject, message) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$full_name, $email_address, $subject, $message]);
+    // Redirect to avoid resubmission
+    header('Location: index.php?success=contact_submitted#contact');
+    exit;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBT - Next Bigg Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@formspree/formspree-js@1.0.0/dist/formspree.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="icon" type="image/x-icon" href="./assert/black.png">
+
+    <style>
+       
+
+        .animate-marquee {
+            animation: marquee 50s linear infinite;
+            will-change: transform;
+        }
+         /* Marquee Animation */
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /*.hover\:pause:hover {*/
+        /*    animation-play-state: paused;*/
+        /*}*/
+
+        /* Pulse Animation */
+        .animate-pulse-slow {
+            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Bounce Animation */
+        .animate-bounce-slow {
+            animation: bounce 2s infinite;
+        }
+
+        /* Section Fade-In Animation */
+        .animate-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Base Colors */
+        :root {
+            --primary-purple: rgb(66, 23, 107);
+            /* Primary purple */
+            --light-purple-bg: rgb(230, 219, 241);
+            /* Light theme background */
+            --dark-purple-bg: rgb(250, 245, 255);
+            /* Dark theme background */
+            --medium-purple: rgb(108, 70, 145);
+            /* Medium purple for borders and fallback */
+            --very-light-purple: rgb(245, 240, 255);
+            /* Very light purple for subtle backgrounds */
+            --dark-purple: rgb(45, 15, 73);
+            /* Darker purple for secondary elements */
+            --yellow-accent: #facc15;
+            /* Yellow accent for both themes */
+            --light-yellow: #fffbeb;
+            /* Light yellow for backgrounds */
+        }
+
+        /* Light Theme */
+        .bg-purple-50 {
+            background-color: var(--light-purple-bg);
+        }
+
+        .text-purple-700 {
+            color: #ffffff;
+            /* White text for light theme */
+        }
+
+        .text-purple-900 {
+            color: #ffffff;
+            /* White text for light theme */
+        }
+
+        .border-purple-300 {
+            border-color: rgb(185, 165, 215);
+            /* Slightly darker light purple for borders */
+        }
+
+        .bg-purple-100 {
+            background-color: var(--very-light-purple);
+        }
+
+        .bg-purple-20 {
+            background-color: var(--very-light-purple-bg);
+        }
+
+        .text-yellow-500 {
+            color: var(--yellow-accent);
+        }
+
+        .bg-yellow-500 {
+            background-color: var(--yellow-accent);
+        }
+
+        .border-yellow-400 {
+            border-color: #fed7aa;
+            /* Softer yellow for borders */
+        }
+
+        .bg-yellow-400 {
+            background-color: #fed7aa;
+        }
+
+        .bg-purple-300 {
+            background-color: rgb(185, 165, 215);
+        }
+
+        /* Dark Theme */
+        .dark .bg-purple-50 {
+            background-color: var(--dark-purple-bg);
+        }
+
+        .dark .bg-white {
+            background-color: var(--dark-purple-bg);
+        }
+
+        .dark .text-purple-900 {
+            color: #000000;
+            /* Black text for dark theme */
+        }
+
+        .dark .text-purple-700 {
+            color: #000000;
+            /* Black text for dark theme */
+        }
+
+        .dark .border-purple-300 {
+            border-color: rgb(140, 110, 170);
+            /* Medium purple for borders */
+        }
+
+        .dark .bg-purple-100 {
+            background-color: rgb(240, 235, 245);
+            /* Slightly darker than dark theme bg */
+        }
+
+        .dark .bg-purple-20 {
+            background-color: var(--dark-purple-bg);
+        }
+
+        .dark .text-yellow-500 {
+            color: var(--yellow-accent);
+        }
+
+        .dark .bg-yellow-500 {
+            background-color: var(--yellow-accent);
+        }
+
+        .dark .border-yellow-400 {
+            border-color: #fed7aa;
+        }
+
+        .dark .bg-yellow-400 {
+            background-color: #fed7aa;
+        }
+
+        .dark .bg-purple-300 {
+            background-color: rgb(200, 180, 230);
+            /* Lighter purple for nav in dark mode */
+        }
+
+        .star-rating .filled {
+            color: var(--yellow-accent);
+        }
+
+        .star-rating .empty {
+            color: #d1d5db;
+        }
+
+        /* Hero Carousel */
+        #carousel {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            flex: 0 0 100%;
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Word Animation */
+        #animated-word {
+            display: inline-block;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        /* Scrolling Container */
+        .scrolling-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: nowrap;
+            animation: scroll-x 50s linear infinite;
+            will-change: transform;
+        }
+
+        /*.scrolling-wrapper:hover .scrolling-container {*/
+        /*    animation-play-state: paused;*/
+        /*}*/
+
+        @keyframes scroll-x {
+            0% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .scrolling-wrapper {
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Glow Pulse */
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                background-color: var(--primary-purple);
+            }
+
+            50% {
+                background-color: var(--medium-purple);
+            }
+        }
+
+        .glow-box {
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        /* Consistent Card Shadow */
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .card-shadow:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+    </style>
+
+
+
+</head>
+
+<body class="min-h-screen bg-purple-30 transition-colors duration-300 font-sans text-black-900">
+    <!-- Fixed Navigation -->
+    <nav class="bg-purple-100 dark:bg-purple-900/90 backdrop-blur-md shadow-lg fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2 group">
+                    <img src="./assert/black.png" alt="NBT Logo" class="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-110">
+                    <div class="ml-1 text-lg font-semibold text-purple-900 dark:text-purple-200 hidden sm:block transition-colors duration-300 group-hover:text-yellow-500 dark:group-hover:text-yellow-400"></div>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <button onclick="scrollToSection('home')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Home
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('about')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        About
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('services')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Services
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('courses')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Courses
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('contact')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Contact
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="toggleTheme()" class="p-2 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-900 dark:text-purple-200 hover:bg-yellow-100 dark:hover:bg-yellow-600 transition-all duration-300" aria-label="Toggle theme">
+                        <i data-lucide="moon" class="h-5 w-5"></i>
+                    </button>
+                </div>
+                <div class="hidden md:block">
+                    <button onclick="window.location.href='https://courses.nextbiggtech.com'" class="bg-yellow-500 text-purple-900 dark:bg-yellow-400 dark:text-purple-900 px-6 py-2 rounded-full font-semibold hover:bg-yellow-600 dark:hover:bg-yellow-500 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        Login
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center space-x-2">
+                    <button onclick="toggleTheme()" class="p-2 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-900 dark:text-purple-200 hover:bg-yellow-100 dark:hover:bg-yellow-600 transition-all duration-300" aria-label="Toggle theme">
+                        <i data-lucide="moon" class="h-5 w-5"></i>
+                    </button>
+                    <button onclick="toggleMenu()" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 focus:outline-none transition-all duration-300">
+                        <i data-lucide="menu" class="h-6 w-6" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden bg-white/95 dark:bg-purple-900/95 backdrop-blur-md border-t dark:border-purple-700 transition-all duration-300 max-h-0 opacity-0 overflow-hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <button onclick="scrollToSection('home')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Home</button>
+                <button onclick="scrollToSection('about')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">About</button>
+                <button onclick="scrollToSection('services')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Services</button>
+                <button onclick="scrollToSection('courses')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Courses</button>
+                <button onclick="scrollToSection('contact')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-purple-700 to-yellow-500 dark:from-purple-800 dark:via-purple-900 dark:to-yellow-600">
+        <div class="text-center text-white">
+            <div class="relative mb-8">
+                <div class="w-20 h-20 border-4 border-yellow-300 dark:border-yellow-400 border-t-white rounded-full animate-spin"></div>
+                <div class="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-purple-300 dark:border-r-purple-400 rounded-full animate-ping"></div>
+            </div>
+            <div class="text-3xl font-bold mb-2 animate-pulse tracking-tight">NBT</div>
+            <div class="text-lg animate-pulse tracking-tight">Next Bigg Tech</div>
+            <div class="mt-4 text-sm opacity-75">Loading your future...</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="hidden">
+        <!-- Hero Section -->
+        <section id="home" class="bg-gradient-to-br from-purple-600 via-purple-700 to-yellow-500 dark:from-purple-800 dark:via-purple-900 dark:to-yellow-600 text-white py-20 pt-36 relative overflow-hidden">
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-400/30 dark:bg-purple-500/30 rounded-full animate-pulse-slow"></div>
+                <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-400/30 dark:bg-yellow-500/30 rounded-full animate-pulse-slow" style="animation-delay: 2s;"></div>
+                <div class="absolute top-1/2 left-1/2 w-60 h-60 bg-purple-300/20 dark:bg-purple-400/20 rounded-full animate-pulse-slow" style="animation-delay: 4s;"></div>
+            </div>
+            <div class="w-full px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6 animate-section flex-1">
+                        <h1 class="text-4xl md:text-6xl font-bold leading-tight tracking-tight">
+                            Your <span id="animated-word" class="text-yellow-300 dark:text-yellow-400"></span><br /> Journey Starts Here
+                        </h1>
+                        <p class="text-xl text-purple-100 dark:text-purple-200">
+                            Transform your career with expert consultancy, cutting-edge tech services, and industry-leading courses in web development, data science, and digital marketing.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="scrollToSection('contact')" class="bg-yellow-500 text-purple-900 dark:bg-yellow-400 dark:text-purple-800 px-8 py-3 rounded-full font-semibold hover:bg-yellow-600 dark:hover:bg-yellow-500 hover:scale-105 transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                Get Free Consultation
+                            </button>
+                            <button onclick="scrollToSection('courses')" class="border-2 border-yellow-400 text-yellow-400 dark:border-yellow-400 dark:text-yellow-400 px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-purple-900 dark:hover:bg-yellow-400 dark:hover:text-purple-800 hover:scale-105 transition-all duration-300 text-center transform hover:-translate-y-1">
+                                View Courses
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Right Carousel Image -->
+                    <div class="animate-section flex-1" style="animation-delay: 300ms;">
+                        <div class="relative w-full aspect-video overflow-hidden rounded-xl shadow-2xl bg-white dark:bg-gray-800 flex items-center justify-center">
+                            <div id="carousel" class="flex w-full h-full items-center justify-center transition-transform duration-500 ease-in-out">
+                                <?php
+                                if (!empty($overview_images)) {
+                                    foreach ($overview_images as $image) {
+                                        $imageData = base64_encode($image['image_data']);
+                                        $imageType = $image['image_type'];
+                                        $title = htmlspecialchars($image['title']);
+                                        echo "<div class='carousel-item flex-shrink-0 w-full h-full flex items-center justify-center'>";
+                                        echo "<img src='data:$imageType;base64,$imageData' alt='$title' class='object-contain w-full h-full'>";
+                                        echo "</div>";
+                                    }
+                                } else {
+                                    echo "<div class='carousel-item flex-shrink-0 w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-xl'>";
+                                    echo "<p class='text-gray-500 dark:text-gray-400'>No images available</p>";
+                                    echo "</div>";
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
+                    <i data-lucide="arrow-down" class="h-6 w-6 text-yellow-300 dark:text-yellow-400"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 bg-purple-20 dark:bg-purple-950">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">About NBT</h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Empowering careers and businesses through cutting-edge courses, expert consultancy, and B2B tech solutions tailored for real-world impact.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+                    <div class="animate-section" style="animation-delay: 200ms;">
+                        <h3 class="text-3xl font-bold text-purple-900 dark:text-purple-200 mb-6 tracking-tight">Our Mission</h3>
+                        <p class="text-lg text-purple-700 dark:text-purple-300 mb-4">
+                            <?php echo htmlspecialchars($mission['description']); ?>
+                        </p>
+                        <p class="text-lg text-purple-700 dark:text-purple-300 mb-6">
+                            Since 2020, we’ve empowered over <?php echo htmlspecialchars($mission['students']); ?> individuals and 100+ startups to scale with confidence through our services and educational programs.
+                        </p>
+                        <div class="grid grid-cols-3 gap-6 text-center">
+                            <div class="group">
+                                <div class="text-3xl font-bold text-yellow-500 dark:text-yellow-400 group-hover:scale-110 transition-transform duration-300" data-counter="<?php echo htmlspecialchars($mission['students'] . '+'); ?>"></div>
+                                <div class="text-purple-700 dark:text-purple-300">Students</div>
+                            </div>
+                            <div class="group">
+                                <div class="text-3xl font-bold text-yellow-500 dark:text-yellow-400 group-hover:scale-110 transition-transform duration-300" data-counter="<?php echo htmlspecialchars($mission['courses'] . '+'); ?>"></div>
+                                <div class="text-purple-700 dark:text-purple-300">Courses</div>
+                            </div>
+                            <div class="group">
+                                <div class="text-3xl font-bold text-yellow-500 dark:text-yellow-400 group-hover:scale-110 transition-transform duration-300" data-counter="<?php echo htmlspecialchars($mission['success_rate'] . '%'); ?>"></div>
+                                <div class="text-purple-700 dark:text-purple-300">Success Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animate-section" style="animation-delay: 400ms;">
+                        <iframe width="100%" height="500" src="https://www.youtube.com/embed/HR4HJbqEgNU" title="This is why I left my 50+ LPA job 😲😬 #viral #ai #trending #share  #subscribe #life #tips #motivation" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Our Core Values -->
+                <section class="mb-20 relative overflow-hidden bg-white dark:bg-purple-950 py-20">
+                    <!-- Background Accents -->
+                    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+                    <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <!-- Header -->
+                        <div class="text-center mb-16 animate-section">
+                            <h3 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Our Core Values</h3>
+                            <p class="text-xl text-purple-700 dark:text-purple-300">The principles that guide everything we do</p>
+                        </div>
+
+                        <!-- Value Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <!-- Value Card -->
+                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group animate-section">
+                                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                </div>
+
+                                <div class="relative z-10 p-6 text-center">
+                                    <div class="bg-purple-100 dark:bg-purple-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-600 transition-colors duration-300">
+                                        <i data-lucide="target" class="h-8 w-8 text-purple-600 dark:text-purple-300 group-hover:text-purple-900 dark:group-hover:text-purple-800 transition-colors duration-300"></i>
+                                    </div>
+                                    <h4 class="text-xl font-semibold text-purple-900 dark:text-purple-200 mb-2 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">Excellence</h4>
+                                    <p class="text-purple-700 dark:text-purple-300">We strive for excellence in everything we do, from our courses to our consultancy services.</p>
+                                </div>
+                            </div>
+
+                            <!-- Repeat for other values -->
+                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group animate-section" style="animation-delay: 100ms;">
+                                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                </div>
+                                <div class="relative z-10 p-6 text-center">
+                                    <div class="bg-purple-100 dark:bg-purple-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-600 transition-colors duration-300">
+                                        <i data-lucide="heart" class="h-8 w-8 text-purple-600 dark:text-purple-300 group-hover:text-purple-900 dark:group-hover:text-purple-800 transition-colors duration-300"></i>
+                                    </div>
+                                    <h4 class="text-xl font-semibold text-purple-900 dark:text-purple-200 mb-2 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">Passion</h4>
+                                    <p class="text-purple-700 dark:text-purple-300">We're passionate about helping people achieve their career goals and reach their potential.</p>
+                                </div>
+                            </div>
+
+                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group animate-section" style="animation-delay: 200ms;">
+                                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                </div>
+                                <div class="relative z-10 p-6 text-center">
+                                    <div class="bg-purple-100 dark:bg-purple-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-600 transition-colors duration-300">
+                                        <i data-lucide="users" class="h-8 w-8 text-purple-600 dark:text-purple-300 group-hover:text-purple-900 dark:group-hover:text-purple-800 transition-colors duration-300"></i>
+                                    </div>
+                                    <h4 class="text-xl font-semibold text-purple-900 dark:text-purple-200 mb-2 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">Community</h4>
+                                    <p class="text-purple-700 dark:text-purple-300">We believe in building a supportive community where everyone can learn and grow together.</p>
+                                </div>
+                            </div>
+
+                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group animate-section" style="animation-delay: 300ms;">
+                                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                </div>
+                                <div class="relative z-10 p-6 text-center">
+                                    <div class="bg-purple-100 dark:bg-purple-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-600 transition-colors duration-300">
+                                        <i data-lucide="award" class="h-8 w-8 text-purple-600 dark:text-purple-300 group-hover:text-purple-900 dark:group-hover:text-purple-800 transition-colors duration-300"></i>
+                                    </div>
+                                    <h4 class="text-xl font-semibold text-purple-900 dark:text-purple-200 mb-2 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">Innovation</h4>
+                                    <p class="text-purple-700 dark:text-purple-300">We stay at the forefront of technology and teaching methods to provide the best experience.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Meet Our Team -->
+                <div class="mb-20">
+                    <div class="text-center mb-16 animate-section">
+                        <h3 class="text-3xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Meet Our Team</h3>
+                        <p class="text-xl text-purple-700 dark:text-purple-300">The experts behind your success</p>
+                    </div>
+
+                    <!--four Founders-->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+                        <?php foreach ($founder as $mem): ?>
+                            <div class="w-64 text-center bg-purple-50 dark:bg-purple-900/70 rounded-xl shadow-lg mx-auto overflow-hidden">
+                                <div class="relative w-full h-64 border-b-2 border-purple-300 dark:border-purple-600">
+                                    <img src="data:<?php echo htmlspecialchars($mem['image_type']); ?>;base64,<?php echo base64_encode($mem['image_data']); ?>"
+                                        alt="<?php echo htmlspecialchars($mem['name']); ?>"
+                                        class="absolute inset-0 w-full h-full object-cover shadow-lg" />
+                                    <div class="absolute inset-0 bg-yellow-500/20 dark:bg-yellow-400/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                                </div>
+                                <div class="p-6">
+                                    <h4 class="text-xl font-semibold text-purple-900 dark:text-purple-200 mb-1 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">
+                                        <?php echo htmlspecialchars($mem['name']); ?>
+                                    </h4>
+                                    <div class="text-yellow-500 dark:text-yellow-400 font-medium mb-2">
+                                        <?php echo htmlspecialchars($mem['position']); ?>
+                                    </div>
+                                    <p class="text-purple-700 dark:text-purple-300 text-sm">
+                                        <?php echo htmlspecialchars($mem['description']); ?>
+                                    </p>
+                                    <!-- Optional Socials -->
+                                    <div class="flex justify-center gap-4 mt-2">
+                                        <?php if (!empty($mem['linkedin'])): ?>
+                                            <a href="<?php echo htmlspecialchars($mem['linkedin']); ?>" target="_blank"
+                                                class="text-purple-400 hover:text-yellow-500 transition">
+                                                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                        <?php if (!empty($mem['email'])): ?>
+                                            <a href="mailto:<?php echo htmlspecialchars($mem['email']); ?>"
+                                                class="text-purple-400 hover:text-yellow-500 transition">
+                                                <i data-lucide="mail" class="w-5 h-5"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!--Company Team Members-->
+                    <div class="mt-16 overflow-hidden relative">
+                        <div class="flex gap-12 animate-marquee hover:[animation-play-state:paused] px-4" style="animation: marquee 30s linear infinite;">
+                            <?php
+                            // Double the team array for infinite scrolling
+                            $loopedTeam = array_merge($team, $team);
+                            foreach ($loopedTeam as $index => $member): ?>
+                                <div class="flex-shrink-0 w-64 text-center group">
+                                    <div class="relative overflow-hidden rounded-full w-40 h-40 mx-auto mb-4 border-2 border-purple-300 dark:border-purple-600">
+                                        <img src="data:<?php echo htmlspecialchars($member['image_type']); ?>;base64,<?php echo base64_encode($member['image_data']); ?>"
+                                            alt="<?php echo htmlspecialchars($member['name']); ?>"
+                                            class="w-full h-full object-cover shadow-lg transition-transform duration-500 group-hover:scale-110" />
+                                        <div class="absolute inset-0 bg-yellow-500/20 dark:bg-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    </div>
+
+                                    <h4 class="text-xl font-semibold text-purple-900 dark:text-purple-200 mb-1 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">
+                                        <?php echo htmlspecialchars($member['name']); ?>
+                                    </h4>
+
+                                    <div class="text-yellow-500 dark:text-yellow-400 font-medium mb-2">
+                                        <?php echo htmlspecialchars($member['position']); ?>
+                                    </div>
+
+                                    <p class="text-purple-700 dark:text-purple-300 text-sm">
+                                        <?php echo htmlspecialchars($member['description']); ?>
+                                    </p>
+
+                                    <!-- Optional Socials -->
+                                    <div class="flex justify-center gap-4 mt-2">
+                                        <?php if (!empty($member['linkedin'])): ?>
+                                            <a href="<?php echo htmlspecialchars($member['linkedin']); ?>" target="_blank"
+                                                class="text-purple-400 hover:text-yellow-500 transition">
+                                                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                        <?php if (!empty($member['email'])): ?>
+                                            <a href="mailto:<?php echo htmlspecialchars($member['email']); ?>"
+                                                class="text-purple-400 hover:text-yellow-500 transition">
+                                                <i data-lucide="mail" class="w-5 h-5"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Marquee Keyframes -->
+                    <style>
+                        @keyframes marquee {
+                            0% {
+                                transform: translateX(0%);
+                            }
+
+                            100% {
+                                transform: translateX(-50%);
+                            }
+                        }
+                    </style>
+                </div>
+
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+    <!-- Decorative Background Blobs -->
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+    <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-16 animate-section">
+            <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Our Services</h2>
+            <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                Comprehensive solutions to elevate your business and career
+            </p>
+        </div>
+
+        <!-- Horizontal Scrolling Cards -->
+        <div class="scrolling-wrapper overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <div class="scrolling-container flex space-x-6 min-w-max pb-4 animate-marquee">
+                <?php 
+                // Duplicate the services array for seamless looping
+                $services_loop = array_merge($services, $services);
+                foreach ($services_loop as $index => $service): ?>
+                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group w-[300px] sm:w-[320px] flex-shrink-0 animate-section" style="animation-delay: <?= 100 * $index ?>ms;">
+                        <!-- Tech Grid Background -->
+                        <div class="absolute inset-0 opacity-10 pointer-events-none">
+                            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="overflow-hidden rounded-t-3xl">
+                            <img src="data:<?= htmlspecialchars($service['image_type']) ?>;base64,<?= base64_encode($service['image_data']) ?>" alt="<?= htmlspecialchars($service['title']) ?>" class="w-full h-48 object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-110">
+                        </div>
+
+                        <!-- Content -->
+                        <div class="relative z-10 p-6">
+                            <h3 class="text-xl font-bold text-purple-900 dark:text-purple-200 mb-2 group-hover:text-yellow-500 transition-colors duration-300"><?= htmlspecialchars($service['title']) ?></h3>
+                            <p class="text-purple-700 dark:text-purple-300 mb-4"><?= htmlspecialchars($service['description']) ?></p>
+                            <ul class="list-disc list-inside text-purple-700 dark:text-purple-300 mb-4">
+                                <?php foreach (explode(',', $service['points']) as $point): ?>
+                                    <li><?= htmlspecialchars(trim($point)) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+
+                            <!-- CTA Button -->
+                            <button onclick="scrollToSection('contact')" class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white dark:text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn">
+                                <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                                <div class="relative flex items-center justify-center space-x-2">
+                                    <span>Get Started</span>
+                                    <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Tech Corner Accents -->
+                        <div class="absolute top-0 right-0 w-24 h-24">
+                            <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/30 dark:from-yellow-500/30 to-transparent"></div>
+                            <div class="absolute top-2 right-2 w-8 h-8 border-2 border-yellow-400/40 dark:border-yellow-500/50 rounded-lg transform rotate-45"></div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-20 h-20">
+                            <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
+                            <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <style>
+            .scrolling-wrapper::-webkit-scrollbar {
+                display: none;
+            }
+            .animate-marquee {
+                animation: marquee 20s linear infinite;
+                will-change: transform; /* Improves performance */
+            }
+             /* Pause animation on hover */
+            /*.scrolling-wrapper:hover .animate-marquee {*/
+            /*    animation-play-state: paused;*/
+            /*}*/
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%); /* Move half the width due to duplicated content */
+                }
+            }
+        </style>
+    </div>
+</section>
+
+
+        <!-- Client Section -->
+        <section id="client" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div class="absolute top-1/3 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-4xl font-bold text-center text-purple-900 dark:text-purple-200 mb-12 tracking-tight">Our Clients</h2>
+
+        <div class="relative overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <div class="flex animate-marquee gap-x-8" style="width: calc(300% + 48px);">
+                <?php for ($i = 0; $i < 2; $i++): ?>
+                    <?php foreach ($clients as $client): ?>
+                        <div class="w-96 flex-none rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl hover:shadow-3xl p-8 transition-all duration-300 transform hover:-translate-y-3 hover:scale-[1.02] group">
+                            <!-- Header -->
+                            <div class="border-b border-purple-100 dark:border-purple-600 pb-6 mb-6">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-purple-900 dark:text-white mb-1 leading-tight">
+                                            <?= htmlspecialchars($client['client_name']) ?>
+                                        </h3>
+                                        <p class="text-purple-600 dark:text-purple-300 font-medium">
+                                            <?= htmlspecialchars($client['company_name']) ?>
+                                        </p>
+                                    </div>
+                                    <div class="ml-4">
+                                        <?php $status = htmlspecialchars($client['status']); ?>
+                                        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase
+                      <?= $status === 'Completed'
+                                    ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800'
+                                    : 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800' ?>">
+                                            <span class="w-2 h-2 rounded-full mr-2 
+                          <?= $status === 'Completed' ? 'bg-green-500' : 'bg-amber-500' ?>"></span>
+                                            <?= $status ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Project Task -->
+                            <div class="bg-purple-50 dark:bg-purple-900/40 border border-purple-200/50 dark:border-purple-600/50 rounded-lg p-4 mb-6">
+                                <div class="flex items-start">
+                                    <div class="w-2 h-2 rounded-full bg-purple-500 mt-2 mr-3 flex-shrink-0"></div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-1">Project Task</p>
+                                        <p class="text-purple-900 dark:text-purple-100 font-medium leading-relaxed">
+                                            <?= htmlspecialchars($client['task']) ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Duration -->
+                            <div class="flex items-center mb-6">
+                                <div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-700 flex items-center justify-center mr-3">
+                                    <svg class="w-4 h-4 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wide">Duration</p>
+                                    <p class="text-purple-900 dark:text-purple-100 font-bold"><?= htmlspecialchars($client['duration']) ?></p>
+                                </div>
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="border-t border-purple-100 dark:border-purple-700 pt-6">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-700 flex items-center justify-center mr-3">
+                                        <svg class="w-4 h-4 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">Contact</p>
+                                        <p class="text-purple-900 dark:text-purple-100 font-medium text-sm break-all">
+                                            <?= htmlspecialchars($client['contact_email']) ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endfor; ?>
+            </div>
+        </div>
+        <style>
+            .relative::-webkit-scrollbar {
+                display: none;
+            }
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+            .animate-marquee {
+                animation: marquee 40s linear infinite;
+                display: flex;
+                width: max-content;
+                will-change: transform; /* Improves performance */
+            }
+            /*.relative:hover .animate-marquee {*/
+            /*    animation-play-state: paused;*/
+            /*}*/
+        </style>
+    </div>
+</section>
+
+
+
+        <!-- Client Testimonials Section -->
+       <section id="testimonials" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div class="absolute top-1/3 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-16 animate-section">
+            <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">What Our Clients Say</h2>
+            <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                Real stories from our valued clients who partnered with NBT
+            </p>
+        </div>
+
+        <!-- Marquee Testimonial Cards -->
+        <div class="relative overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <div class="flex animate-marquee hover:[animation-play-state:paused] gap-x-8" style="width: max-content;">
+                <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
+                    <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group">
+                        <!-- Rating Stars -->
+                        <div class="flex items-center mt-6 mb-4 px-6 star-rating">
+                            <?php $rating = floor($testimonial['rating']); ?>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <?php if ($i <= $rating): ?>
+                                    <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                <?php else: ?>
+                                    <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                            <span class="ml-2 text-purple-700 dark:text-purple-300 font-medium"><?= number_format($testimonial['rating'], 1) ?></span>
+                        </div>
+
+                        <!-- Testimonial Text -->
+                        <p class="text-purple-700 dark:text-purple-300 mb-4 px-6"><?php echo htmlspecialchars($testimonial['project_description']); ?></p>
+
+                        <!-- User Info -->
+                        <div class="flex items-center px-6 pb-4">
+                            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-purple-200 dark:bg-purple-700">
+                                <?php if (!empty($testimonial['company_logo'])): ?>
+                                    <img src="data:image/jpeg;base64,<?php echo base64_encode($testimonial['company_logo']); ?>"
+                                        alt="<?php echo htmlspecialchars($testimonial['company_name']); ?>"
+                                        class="w-full h-full object-cover" />
+                                <?php else: ?>
+                                    <div class="text-purple-900 dark:text-purple-200 font-semibold">
+                                        <?php echo htmlspecialchars(substr($testimonial['company_name'], 0, 1)); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="ml-4">
+                                <p class="font-semibold text-purple-900 dark:text-purple-200"><?php echo htmlspecialchars($testimonial['company_name']); ?></p>
+                                <p class="text-sm text-purple-700 dark:text-purple-300"><?php echo htmlspecialchars($testimonial['company_email']); ?></p>
+                            </div>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="flex justify-center gap-4 mb-6">
+                            <?php if (!empty($testimonial['linkedin'])): ?>
+                                <a href="<?= htmlspecialchars($testimonial['linkedin']) ?>" target="_blank"
+                                    class="text-purple-400 hover:text-yellow-500 transition">
+                                    <i data-lucide="linkedin" class="w-5 h-5"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Bottom Gradient Accent -->
+                        <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/20 dark:from-purple-600/30 to-transparent"></div>
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/20 dark:from-yellow-500/30 to-transparent"></div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Marquee Keyframes -->
+<style>
+    @keyframes marquee {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+    .relative::-webkit-scrollbar {
+        display: none;
+    }
+    .animate-marquee {
+        animation: marquee 40s linear infinite;
+        will-change: transform; /* Improves performance */
+    }
+    .relative:hover .animate-marquee {
+        animation-play-state: paused; /* Pause animation on hover */
+    }
+</style>
+
+
+
+
+        <!-- Courses Section -->
+        <section id="courses" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+    <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-section">
+            <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Our Courses</h2>
+            <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                Learn from industry experts and gain in-demand skills
+            </p>
+        </div>
+
+        <div class="scrolling-wrapper overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <div class="scrolling-container flex gap-x-6 min-w-max animate-marquee">
+                <?php 
+                // Duplicate the courses array for seamless looping
+                $courses_loop = array_merge($courses, $courses);
+                foreach ($courses_loop as $index => $course): ?>
+                    <div class="group animate-section w-[300px] sm:w-[320px] flex-shrink-0" style="animation-delay: <?= 100 * $index ?>ms;">
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl">
+
+                            <!-- Corner Decorations -->
+                            <div class="absolute top-0 right-0 w-24 h-24">
+                                <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/30 dark:from-yellow-500/30 to-transparent"></div>
+                                <div class="absolute top-2 right-2 w-8 h-8 border-2 border-yellow-400/40 dark:border-yellow-500/50 rounded-lg transform rotate-45"></div>
+                            </div>
+                            <div class="absolute bottom-0 left-0 w-20 h-20">
+                                <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
+                            </div>
+
+                            <!-- Image -->
+                            <?php if (!empty($course['image'])): ?>
+                                <div class="overflow-hidden rounded-t-3xl">
+                                    <img src="data:image/jpeg;base64,<?= base64_encode($course['image']) ?>"
+                                        alt="<?= htmlspecialchars($course['title']) ?>"
+                                        class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105">
+                                </div>
+                            <?php else: ?>
+                                <div class="w-full h-48 bg-purple-200 flex items-center justify-center rounded-t-3xl text-purple-600 font-semibold">
+                                    No Image
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Content -->
+                            <div class="p-6 space-y-4 relative z-10">
+                                <div class="flex justify-between text-xs uppercase font-semibold text-purple-700 dark:text-purple-300">
+                                    <span class="bg-purple-100 dark:bg-purple-800/80 border border-purple-300/50 dark:border-purple-600/50 px-2 py-1 rounded-xl tracking-wider text-purple-800 dark:text-purple-100">
+                                        <?= htmlspecialchars($course['type']) ?>
+                                    </span>
+                                    <span><?= htmlspecialchars($course['description_1']) ?></span>
+                                </div>
+
+                                <h3 class="text-xl font-bold text-purple-900 dark:text-purple-100"><?= htmlspecialchars($course['title']) ?></h3>
+                                <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($course['description_2']) ?></p>
+
+                                <div class="flex justify-between items-center text-sm text-purple-700 dark:text-purple-300 mt-2">
+                                    <div class="flex items-center space-x-1">
+                                        <i data-lucide="clock" class="h-5 w-5 text-yellow-500 dark:text-yellow-400"></i>
+                                        <span><?= htmlspecialchars($course['timeline']) ?></span>
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <i data-lucide="users" class="h-5 w-5 text-yellow-500 dark:text-yellow-400"></i>
+                                        <span><?= htmlspecialchars($course['people']) ?></span>
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <i class="fas fa-star text-yellow-500 h-4 w-4"></i>
+                                        <span><?= number_format($course['rating'], 1) ?></span>
+                                    </div>
+                                </div>
+
+                                <hr class="border-purple-200 dark:border-purple-600 my-2">
+
+                                <p class="text-sm text-purple-700 dark:text-purple-300">By <strong><?= htmlspecialchars($course['educator']) ?></strong></p>
+
+                                <?php if (!empty($course['link'])): ?>
+                                    <a href="<?= htmlspecialchars($course['link']) ?>" target="_blank"
+                                        class="block text-center py-3 px-6 mt-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn relative overflow-hidden">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                                        <div class="relative flex items-center justify-center space-x-2">
+                                            <span>Enroll Now</span>
+                                            <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                            </svg>
+                                        </div>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <style>
+            .scrolling-wrapper::-webkit-scrollbar {
+                display: none;
+            }
+            .animate-marquee {
+                animation: marquee 60s linear infinite;
+                will-change: transform; /* Improves performance */
+            }
+            .scrolling-wrapper:hover .animate-marquee {
+                animation-play-state: paused; /* Pause animation on hover */
+            }
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%); /* Move half the width due to duplicated content */
+                }
+            }
+        </style>
+    </div>
+</section>
+
+
+        <!-- Coupon Section -->
+        <!-- Coupon Section -->
+        <section id="coupons" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Background Elements -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header -->
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Special Offers</h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Use these exclusive coupons for discounts on your courses and services.
+                    </p>
+                </div>
+
+                <!-- Coupons Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-section" style="animation-delay: 200ms;">
+                    <?php foreach ($coupons as $coupon): ?>
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group">
+                            <!-- Tech Grid Pattern -->
+                            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                            </div>
+
+                            <!-- Header Section with Category -->
+                            <div class="relative z-10 px-6 pt-6 pb-2">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="inline-flex items-center px-3 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-800/80 border border-purple-300/50 dark:border-purple-600/50 text-xs font-bold uppercase tracking-wider text-purple-800 dark:text-purple-200 backdrop-blur-sm">
+                                        <div class="w-2 h-2 rounded-full bg-purple-500 dark:bg-purple-400 mr-2 animate-pulse"></div>
+                                        <?= htmlspecialchars($coupon['category']) ?>
+                                    </span>
+                                    <div class="w-6 h-6 rounded-lg bg-yellow-400/20 dark:bg-yellow-500/20 border border-yellow-400/30 dark:border-yellow-500/40 flex items-center justify-center">
+                                        <div class="w-2 h-2 bg-yellow-500 dark:bg-yellow-400 rounded-full animate-pulse"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Main Content Section -->
+                            <div class="relative z-10 px-6 pb-6">
+                                <!-- Coupon Code Display -->
+                                <div class="text-center mb-5 p-4 rounded-2xl bg-purple-50 dark:bg-purple-900/50 border border-purple-200/50 dark:border-purple-600/50">
+                                    <div class="text-xs font-semibold uppercase tracking-widest text-purple-600 dark:text-purple-300 mb-1">Coupon Code</div>
+                                    <h3 class="text-2xl font-black tracking-[0.2em] mb-3 font-mono transform group-hover:scale-105 transition-transform duration-300 text-purple-900 dark:text-purple-100">
+                                        <?= htmlspecialchars($coupon['code']) ?>
+                                    </h3>
+
+                                    <!-- Discount Display -->
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <div class="text-4xl font-black text-yellow-500 dark:text-yellow-400 transform group-hover:scale-110 transition-all duration-300">
+                                            <?= htmlspecialchars($coupon['discount']) ?>%
+                                        </div>
+                                        <div class="text-sm font-bold text-purple-600 dark:text-purple-300 uppercase tracking-wider">
+                                            OFF
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Time Limit with Enhanced Design -->
+                                <div class="flex items-center justify-center mb-4 p-2 rounded-lg bg-purple-50 dark:bg-purple-900/50 border border-purple-200/40 dark:border-purple-600/40">
+                                    <div class="flex items-center space-x-2 text-purple-600 dark:text-purple-300">
+                                        <div class="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
+                                            <svg class="w-3 h-3 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-semibold uppercase tracking-wide opacity-70">Valid Until</div>
+                                            <div class="text-xs font-bold"><?= htmlspecialchars($coupon['time_limit']) ?></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Enhanced CTA Button -->
+                                <button class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white dark:text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                                    <div class="relative flex items-center justify-center space-x-2">
+                                        <span>Use This Code</span>
+                                        <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <!-- Tech Corner Accents -->
+                            <div class="absolute top-0 right-0 w-24 h-24">
+                                <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/30 dark:from-yellow-500/30 to-transparent"></div>
+                                <div class="absolute top-2 right-2 w-8 h-8 border-2 border-yellow-400/40 dark:border-yellow-500/50 rounded-lg transform rotate-45"></div>
+                            </div>
+                            <div class="absolute bottom-0 left-0 w-20 h-20">
+                                <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Bottom CTA -->
+                <div class="text-center mt-16 animate-section" style="animation-delay: 400ms;">
+                    <p class="text-purple-700 dark:text-purple-300 mb-4 text-lg">
+                        🎉 Don't wait! These offers expire soon!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Course Testimonials Section -->
+        <section id="student-testimonials" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Backgrounds -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header -->
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Testimonials from Courses</h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Hear from students who achieved success with our courses
+                    </p>
+                </div>
+
+                <!-- Marquee Slider -->
+                <div class="relative overflow-hidden">
+                    <div class="flex animate-marquee" style="width: calc(300% + 48px); animation: marquee 40s linear infinite;">
+                        <?php foreach (array_merge($course_testimonials, $course_testimonials) as $testimonial): ?>
+                            <div class="flex-none w-80 mx-4 relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group p-6">
+                                <!-- Tech background pattern -->
+                                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                </div>
+
+                                <!-- Star Rating -->
+                                <div class="relative z-10 flex items-center mb-4 star-rating">
+                                    <?php
+                                    $rating = floor($testimonial['rating']);
+                                    for ($i = 1; $i <= 5; $i++): ?>
+                                        <?php if ($i <= $rating): ?>
+                                            <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                        <?php else: ?>
+                                            <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                        <?php endif; ?>
+                                    <?php endfor; ?>
+                                    <span class="ml-2 text-purple-700 dark:text-purple-300 font-medium"><?= number_format($testimonial['rating'], 1) ?></span>
+                                </div>
+
+                                <!-- Testimonial Message -->
+                                <p class="relative z-10 text-purple-700 dark:text-purple-300 mb-4">
+                                    <?= htmlspecialchars($testimonial['message']) ?>
+                                </p>
+
+                                <!-- Author -->
+                                <div class="relative z-10 flex items-center">
+                                    <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
+                                        <?php if (!empty($testimonial['image'])): ?>
+                                            <img src="data:image/jpeg;base64,<?= base64_encode($testimonial['image']) ?>"
+                                                alt="<?= htmlspecialchars($testimonial['name']) ?>"
+                                                class="w-full h-full object-cover" />
+                                        <?php else: ?>
+                                            <div class="w-full h-full bg-purple-200 dark:bg-purple-700 flex items-center justify-center text-purple-900 dark:text-purple-200 font-semibold">
+                                                <?= htmlspecialchars(substr($testimonial['name'], 0, 1)) ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="font-semibold text-purple-900 dark:text-purple-200"><?= htmlspecialchars($testimonial['name']) ?></p>
+                                        <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($testimonial['course']) ?></p>
+                                        <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($testimonial['email']) ?></p>
+                                    </div>
+                                </div>
+
+                                <!-- Optional Video -->
+                                <?php if (!empty($testimonial['video'])): ?>
+                                    <div class="flex justify-center mt-3">
+                                        <a href="<?= htmlspecialchars($testimonial['video']) ?>" target="_blank"
+                                            class="text-purple-400 hover:text-yellow-500 transition">
+                                            <i data-lucide="video" class="w-5 h-5"></i>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marquee animation -->
+        <style>
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+        </style>
+
+
+
+
+        <section id="testimonials" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Backgrounds -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header -->
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">What Our Students Say</h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Real stories from real people who transformed their careers with NBT
+                    </p>
+                </div>
+
+                <!-- Testimonials Marquee -->
+                <div class="relative overflow-hidden animate-section" style="animation-delay: 300ms;">
+                    <div class="flex gap-8 animate-marquee hover:[animation-play-state:paused] px-2" style="animation: marquee 40s linear infinite;">
+                        <?php $looped = array_merge($testimonials, $testimonials); ?>
+                        <?php foreach ($looped as $index => $testimonial): ?>
+                            <div class="flex-none w-80 bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group animate-section" style="animation-delay: <?= 100 * $index ?>ms;">
+                                <!-- Star Rating -->
+                                <div class="flex items-center mb-4">
+                                    <?php
+                                    $rating = isset($testimonial['rating']) ? (int) $testimonial['rating'] : 5;
+                                    for ($i = 1; $i <= 5; $i++): ?>
+                                        <?php if ($i <= $rating): ?>
+                                            <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                        <?php else: ?>
+                                            <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                        <?php endif; ?>
+                                    <?php endfor; ?>
+                                    <span class="ml-2 text-purple-700 dark:text-purple-300"><?= number_format($rating, 1) ?></span>
+                                </div>
+
+                                <!-- Message -->
+                                <p class="text-purple-700 dark:text-purple-300 mb-4 text-sm">
+                                    <?= htmlspecialchars($testimonial['message']) ?>
+                                </p>
+
+                                <!-- User Info -->
+                                <div class="flex items-center mt-4">
+                                    <div class="w-12 h-12 bg-yellow-400/20 dark:bg-yellow-500/20 border border-yellow-400/40 dark:border-yellow-500/50 rounded-full flex items-center justify-center text-purple-900 dark:text-purple-200 font-bold text-lg">
+                                        <?= strtoupper(substr($testimonial['name'], 0, 1)) ?>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="font-semibold text-purple-900 dark:text-purple-200"><?= htmlspecialchars($testimonial['name']) ?></p>
+                                        <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($testimonial['email']) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add marquee animation if not already defined -->
+        <style>
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+        </style>
+
+        <!-- Social Media Section -->
+        <section id="social-media" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Background -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">
+                        Follow Us on Social Media
+                    </h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Stay connected and get the latest updates from our platforms
+                    </p>
+                </div>
+
+                <!-- Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 animate-section" style="animation-delay: 200ms;">
+                    <!-- Card Template -->
+                    <?php
+                    $platforms = [
+                        [
+                            'icon' => 'fab fa-linkedin-in',
+                            'color' => 'blue',
+                            'text' => 'blue-700',
+                            'border' => 'border-blue-500',
+                            'iconColor' => 'text-blue-600',
+                            'data' => $row1
+                        ],
+                        [
+                            'icon' => 'fab fa-instagram',
+                            'color' => 'pink',
+                            'text' => 'pink-700',
+                            'border' => 'border-pink-500',
+                            'iconColor' => 'text-pink-600',
+                            'data' => $row2
+                        ],
+                        [
+                            'icon' => 'fab fa-youtube',
+                            'color' => 'red',
+                            'text' => 'red-700',
+                            'border' => 'border-red-500',
+                            'iconColor' => 'text-red-600',
+                            'data' => $row3
+                        ],
+                        [
+                            'icon' => 'fab fa-twitter',
+                            'color' => 'sky',
+                            'text' => 'sky-700',
+                            'border' => 'border-sky-500',
+                            'iconColor' => 'text-sky-600',
+                            'data' => $row4
+                        ],
+                    ];
+                    foreach ($platforms as $platform):
+                        $data = $platform['data'];
+                    ?>
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 backdrop-blur-sm border <?= $platform['border'] ?> dark:border-yellow-400/60 shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group max-w-[205px] h-[205px] mx-auto aspect-square flex flex-col justify-center items-center text-center">
+                            <!-- Tech pattern -->
+                            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                            </div>
+
+                            <!-- Icon -->
+                            <i class="<?= $platform['icon'] ?> <?= $platform['iconColor'] ?> text-3xl mb-2 relative z-10"></i>
+
+                            <!-- Platform -->
+                            <h2 class="text-lg font-bold <?= $platform['text'] ?> relative z-10"><?= htmlspecialchars($data['platform']) ?></h2>
+
+                            <!-- Follower Count -->
+                            <p class="text-yellow-500 text-base font-bold relative z-10">
+                                <span class="follower-count" data-target="<?= htmlspecialchars($data['followers']) ?>">0</span> Followers
+                            </p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+
+        <section id="videos-section" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Background Elements -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">
+                        Our Latest YouTube Videos
+                    </h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Discover our latest tutorials and insights on our YouTube channel
+                    </p>
+                </div>
+
+                <!-- Videos Marquee -->
+                <div id="videos-wrapper" class="overflow-x-auto animate-section" style="scrollbar-width: none; -ms-overflow-style: none;">
+                    <div id="videos" class="flex gap-x-6 min-w-max min-h-[200px] animate-marquee px-2">
+                        <!-- No videos fallback -->
+                        <div id="no-videos-message" class="text-purple-700 dark:text-purple-300 text-center w-full hidden">
+                            No videos available at the moment. Please check back later!
+                        </div>
+
+                        <!-- Example Card (dynamic items will follow this structure) -->
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px]">
+                            <!-- Thumbnail -->
+                            <div class="relative w-full h-48 overflow-hidden border-b border-purple-300 dark:border-purple-600">
+                                <img src="https://img.youtube.com/vi/VIDEO_ID/hqdefault.jpg" alt="Video Title"
+                                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                            </div>
+                            <!-- Title + Button -->
+                            <div class="p-4">
+                                <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2">
+                                    Video Title Here
+                                </h4>
+                                <p class="text-sm text-purple-700 dark:text-purple-300 mb-4">
+                                    Quick description or teaser of the video content.
+                                </p>
+                                <a href="https://youtube.com/watch?v=VIDEO_ID" target="_blank"
+                                    class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group">
+                                    Watch Now
+                                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Repeat similar cards dynamically using JS or PHP -->
+                    </div>
+                </div>
+
+                <!-- Hide scrollbar (WebKit) -->
+                <style>
+                    #videos-wrapper::-webkit-scrollbar {
+                        display: none;
+                    }
+
+                    .animate-marquee {
+                        animation: marquee 25s linear infinite;
+                        will-change: transform;
+                    }
+
+                    /*#videos-wrapper:hover .animate-marquee {*/
+                    /*    animation-play-state: paused;*/
+                    /*}*/
+
+                    @keyframes marquee {
+                        0% {
+                            transform: translateX(0);
+                        }
+
+                        100% {
+                            transform: translateX(-50%);
+                        }
+                    }
+                </style>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Background Blobs -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header -->
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Get in Touch</h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Have questions or ready to start your journey? Contact us for a free consultation.
+                    </p>
+                </div>
+
+                <!-- Contact Form + Image -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Contact Form -->
+                    <div class="animate-section" style="animation-delay: 200ms;">
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl p-8">
+                            <!-- Tech grid pattern -->
+                            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                            </div>
+                            <form method="POST" class="relative z-10 space-y-6">
+                                <input type="hidden" name="contact_form" value="1">
+                                <div>
+                                    <label for="full_name" class="block text-sm font-medium text-purple-900 dark:text-purple-200">Full Name</label>
+                                    <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required
+                                        class="mt-2 w-full px-4 py-3 border border-purple-300 dark:border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-white dark:bg-purple-800 text-purple-900 dark:text-purple-200">
+                                </div>
+                                <div>
+                                    <label for="email_address" class="block text-sm font-medium text-purple-900 dark:text-purple-200">Email Address</label>
+                                    <input type="email" id="email_address" name="email_address" placeholder="Enter your email address" required
+                                        class="mt-2 w-full px-4 py-3 border border-purple-300 dark:border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-white dark:bg-purple-800 text-purple-900 dark:text-purple-200">
+                                </div>
+                                <div>
+                                    <label for="subject" class="block text-sm font-medium text-purple-900 dark:text-purple-200">Subject</label>
+                                    <input type="text" id="subject" name="subject" placeholder="Enter the subject" required
+                                        class="mt-2 w-full px-4 py-3 border border-purple-300 dark:border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-white dark:bg-purple-800 text-purple-900 dark:text-purple-200">
+                                </div>
+                                <div>
+                                    <label for="message" class="block text-sm font-medium text-purple-900 dark:text-purple-200">Message</label>
+                                    <textarea id="message" name="message" rows="5" placeholder="Tell us about your goals and how can we help we..." required
+                                        class="mt-2 w-full px-4 py-3 border border-purple-300 dark:border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-white dark:bg-purple-800 text-purple-900 dark:text-purple-200"></textarea>
+                                </div>
+                                <button type="submit"
+                                    class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                                    <div class="relative flex items-center justify-center space-x-2">
+                                        <span>Send Message</span>
+                                        <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                        </svg>
+                                    </div>
+                                </button>
+                                <?php if (isset($_GET['success']) && $_GET['success'] === 'contact_submitted'): ?>
+                                    <p class="mt-4 text-green-500 dark:text-green-400 text-center">Thank you for your message! We'll get back to you soon.</p>
+                                <?php endif; ?>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Contact Image -->
+                    <div class="animate-section" style="animation-delay: 400ms;">
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl p-4 group transform transition duration-500 hover:-translate-y-2 hover:shadow-3xl">
+                            <!-- Tech pattern -->
+                            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                            </div>
+                            <img src="/assert/20250126_145421.jpg" alt="Contact us"
+                                class="relative z-10 w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Footer -->
+        <footer class="bg-white dark:bg-purple-950 pt-0 pb-12 mt-0">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Logo and Description -->
+                    <div>
+                        <div class="flex items-center space-x-2 mb-4">
+                            <img src="/assert/black.png" alt="NBT Logo" class="h-10 w-10 object-contain">
+                            <div class="text-lg font-semibold text-purple-900 dark:text-purple-200">NBT</div>
+                        </div>
+                        <p class="text-purple-700 dark:text-purple-300">
+                            Empowering your future with cutting-edge tech education and consultancy.
+                        </p>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><button onclick="scrollToSection('home')" class="text-purple-700 dark:text-purple-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">Home</button></li>
+                            <li><button onclick="scrollToSection('about')" class="text-purple-700 dark:text-purple-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">About</button></li>
+                            <li><button onclick="scrollToSection('services')" class="text-purple-700 dark:text-purple-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">Services</button></li>
+                            <li><button onclick="scrollToSection('courses')" class="text-purple-700 dark:text-purple-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">Courses</button></li>
+                            <li><button onclick="scrollToSection('contact')" class="text-purple-700 dark:text-purple-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">Contact</button></li>
+                            <li>
+                                <a href="admin/dashboard.php" class="text-purple-700 dark:text-purple-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">
+                                    Admin Login
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-4">Contact Us</h3>
+                        <p class="text-purple-700 dark:text-purple-300 mb-2">Email: info@nbt.com</p>
+                        <p class="text-purple-700 dark:text-purple-300 mb-2">Phone: +1 (123) 456-7890</p>
+                        <p class="text-purple-700 dark:text-purple-300">Address: 123 Tech Lane, Innovation City</p>
+                    </div>
+                </div>
+
+                <!-- Copyright -->
+                <div class="mt-8 text-center text-purple-700 dark:text-purple-300">
+                    <p>&copy; <?php echo date('Y'); ?> Next Bigg Tech. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+
+
+
+        <!-- JavaScript -->
+        <script>
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // Theme toggle
+            function toggleTheme() {
+                document.documentElement.classList.toggle('dark');
+                const themeIcon = document.querySelector('[data-lucide="moon"]') || document.querySelector('[data-lucide="sun"]');
+                if (document.documentElement.classList.contains('dark')) {
+                    themeIcon.setAttribute('data-lucide', 'sun');
+                } else {
+                    themeIcon.setAttribute('data-lucide', 'moon');
+                }
+                lucide.createIcons();
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            }
+
+            // Load theme from localStorage
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.querySelector('[data-lucide="moon"]').setAttribute('data-lucide', 'sun');
+                lucide.createIcons();
+            }
+
+            // Mobile menu toggle
+            function toggleMenu() {
+                const menu = document.getElementById('mobile-menu');
+                const menuIcon = document.getElementById('menu-icon');
+                if (menu.classList.contains('max-h-0')) {
+                    menu.classList.remove('max-h-0', 'opacity-0');
+                    menu.classList.add('max-h-screen', 'opacity-100');
+                    menuIcon.setAttribute('data-lucide', 'x');
+                } else {
+                    menu.classList.remove('max-h-screen', 'opacity-100');
+                    menu.classList.add('max-h-0', 'opacity-0');
+                    menuIcon.setAttribute('data-lucide', 'menu');
+                }
+                lucide.createIcons();
+            }
+
+            // Scroll to section
+            function scrollToSection(id) {
+                const element = document.getElementById(id);
+                element.scrollIntoView({
+                    behavior: 'smooth'
+                });
+                const menu = document.getElementById('mobile-menu');
+                if (menu.classList.contains('max-h-screen')) {
+                    toggleMenu();
+                }
+            }
+
+            // Hide loading screen
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('main-content').classList.remove('hidden');
+                }, 1000);
+            });
+
+            // Counter animation
+            document.querySelectorAll('[data-counter]').forEach(element => {
+                const target = parseFloat(element.getAttribute('data-counter').replace(/[^0-9.]/g, ''));
+                let count = 0;
+                const increment = target / 100;
+                const updateCount = () => {
+                    count += increment;
+                    if (count < target) {
+                        element.textContent = Math.ceil(count) + element.getAttribute('data-counter').replace(/[0-9.]+/g, '');
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        element.textContent = element.getAttribute('data-counter');
+                    }
+                };
+                updateCount();
+            });
+
+
+            // Overview carousel animation
+            const carousel = document.getElementById('carousel');
+            const items = carousel.querySelectorAll('.carousel-item');
+            let currentIndex = 0;
+
+            function showSlide(index) {
+                if (index >= items.length) index = 0;
+                if (index < 0) index = items.length - 1;
+                currentIndex = index;
+
+                // Update opacity and scale for all items
+                items.forEach((item, i) => {
+                    if (i === currentIndex) {
+                        item.classList.add('opacity-100', 'scale-100');
+                        item.classList.remove('opacity-0', 'scale-95');
+                    } else {
+                        item.classList.add('opacity-0', 'scale-95');
+                        item.classList.remove('opacity-100', 'scale-100');
+                    }
+                });
+            }
+
+            // Auto-advance carousel every 5 seconds
+            setInterval(() => {
+                showSlide(currentIndex + 1);
+            }, 4000);
+
+            // Ensure first slide is shown initially
+            showSlide(0);
+
+
+            //  Word Animation JavaScript 
+            const words = ["Bigg Tech", "Innovative", "Future", "Success"];
+            const wordElement = document.getElementById('animated-word');
+            let currentWordIndex = 0;
+
+            function updateWord() {
+                wordElement.style.opacity = 0;
+                wordElement.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    wordElement.textContent = words[currentWordIndex];
+                    wordElement.style.opacity = 1;
+                    wordElement.style.transform = 'translateY(0)';
+                    currentWordIndex = (currentWordIndex + 1) % words.length;
+                }, 500); // Match fade-out duration
+            }
+
+            // Initial word
+            wordElement.textContent = words[0];
+            wordElement.style.opacity = 1;
+
+            // Update word every 3 seconds
+            setInterval(updateWord, 3000);
+
+
+            // Counter animation for social media
+            console.log("Social media counter script loaded.");
+
+            document.addEventListener("DOMContentLoaded", function() {
+                function socialMediaCounter(element, target) {
+                    let count = 0;
+                    const speed = 2000;
+                    const increment = Math.ceil(target / speed);
+
+                    const updateCount = () => {
+                        if (count < target) {
+                            count += increment;
+                            element.innerText = Math.min(count, target).toLocaleString();
+                            requestAnimationFrame(updateCount);
+                        } else {
+                            element.innerText = target.toLocaleString();
+                        }
+                    };
+
+                    updateCount();
+                }
+
+                function isInViewport(el) {
+                    const rect = el.getBoundingClientRect();
+                    return (
+                        rect.top >= 0 &&
+                        rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+                    );
+                }
+
+                function startCounterAnimation() {
+                    const section = document.querySelector('#social-media');
+                    if (!section) {
+                        console.error("Social media section is not found");
+                    }
+
+                    if (isInViewport(section)) {
+                        const counters = document.querySelectorAll(".follower-count");
+                        console.log(`Found ${counters.length} .follower-count elements`);
+
+                        if (counters.length === 0) {
+                            console.error("No .follower-count elements found.");
+                            return;
+                        }
+
+                        counters.forEach(el => {
+                            const target = parseFloat(el.dataset.target);
+                            if (!isNaN(target) && target >= 0) {
+                                socialMediaCounter(el, target);
+                            } else {
+                                console.warn(`Invalid data-target value: ${el.dataset.target}`);
+                                el.innerText = "0";
+                            }
+                        });
+                        animated = true;
+                    }
+                }
+                let animated = false;
+
+                // Check on load in case section is already in viewport
+                startCounterAnimation();
+
+                // Check on scroll
+                window.addEventListener('scroll', () => {
+                    if (!animated) {
+                        startCounterAnimation();
+                    }
+                })
+            });
+
+
+            // Fetch youtube videos
+            document.addEventListener("DOMContentLoaded", function() {
+                fetch('./config/get_videos.php')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const videosDiv = document.getElementById('videos');
+                        if (!videosDiv) {
+                            console.error('Videos container not found');
+                            return;
+                        }
+                        if (!data.items || !Array.isArray(data.items)) {
+                            console.error('Invalid or empty video data');
+                            return;
+                        }
+                        videosDiv.innerHTML = ''; // Clear existing content
+                        data.items.forEach((item, index) => {
+                            if (item.id.kind === 'youtube#video') {
+                                const videoId = item.id.videoId;
+                                const title = item.snippet.title;
+                                const thumbnail = item.snippet.thumbnails.medium.url;
+
+                                const videoElement = `
+                                <div class="bg-purple-50 dark:bg-purple-900/70 rounded-xl shadow-lg p-4 flex flex-col items-center transform transition duration-300 hover:-translate-y-2 animate-section" style="animation-delay: ${100 * index}ms; width: 300px; height: 280px">
+                                    <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="block w-full">
+                                        <img src="${thumbnail}" alt="${title}" class="w-full h-45 object-cover rounded-lg mb-3">
+                                    </a>
+                                    <h3 class="text-lg font-semibold text-purple-900 dark:text-purple-200 text-center line-clamp-2 leading-snug">${title}</h3>
+                                </div>
+                            `;
+                                videosDiv.innerHTML += videoElement;
+                            }
+                        });
+                        console.log(`Loaded ${data.items.length} YouTube videos`);
+                    })
+                    .catch(error => console.error('Error fetching videos:', error));
+            });
+        </script>
+</body>
+
+</html>
