@@ -41,10 +41,6 @@ if (!isset($_SESSION['admin_id'])) {
         <p class="text-purple-700">Manage service offerings</p>
     </a>
     
-    <a href="manage_testimonials.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">View Testimonials</h3>
-        <p class="text-purple-700">View and download course and client testimonials</p>
-    </a>
     <a href="manage_mission.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
         <h3 class="text-xl font-semibold text-purple-900">Manage Mission</h3>
         <p class="text-purple-700">Update mission stats</p>
