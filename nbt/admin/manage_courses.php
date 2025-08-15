@@ -14,12 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
     $image = file_get_contents($_FILES['image']['tmp_name']);
   }
 
-  $stmt = $pdo->prepare("INSERT INTO courses (title, image, type, description_1, description_2, educator, timeline, people, rating, link)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt = $pdo->prepare("INSERT INTO courses (title, image, type, description_1, description_2, educator, timeline, people, rating, price, link)
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
   $stmt->execute([
     $_POST['title'], $image, $_POST['type'], $_POST['description_1'],
     $_POST['description_2'], $_POST['educator'], $_POST['timeline'],
-    $_POST['people'], $_POST['rating'], $_POST['link']
+    $_POST['people'], $_POST['rating'], $_POST['price'], $_POST['link']
   ]);
   header("Location: manage_courses.php");
   exit;
@@ -40,18 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
   // If a new image is uploaded, use it; otherwise, keep the existing one
   if (!empty($_FILES['image']['tmp_name'])) {
     $image = file_get_contents($_FILES['image']['tmp_name']);
-    $stmt = $pdo->prepare("UPDATE courses SET title=?, image=?, type=?, description_1=?, description_2=?, educator=?, timeline=?, people=?, rating=?, link=? WHERE id=?");
+    $stmt = $pdo->prepare("UPDATE courses SET title=?, image=?, type=?, description_1=?, description_2=?, educator=?, timeline=?, people=?, rating=?, price=?, link=? WHERE id=?");
     $stmt->execute([
       $_POST['title'], $image, $_POST['type'], $_POST['description_1'],
       $_POST['description_2'], $_POST['educator'], $_POST['timeline'],
-      $_POST['people'], $_POST['rating'], $_POST['link'], $id
+      $_POST['people'], $_POST['rating'], $_POST['price'], $_POST['link'], $id
     ]);
   } else {
-    $stmt = $pdo->prepare("UPDATE courses SET title=?, type=?, description_1=?, description_2=?, educator=?, timeline=?, people=?, rating=?, link=? WHERE id=?");
+    $stmt = $pdo->prepare("UPDATE courses SET title=?, type=?, description_1=?, description_2=?, educator=?, timeline=?, people=?, rating=?, price=?, link=? WHERE id=?");
     $stmt->execute([
       $_POST['title'], $_POST['type'], $_POST['description_1'],
       $_POST['description_2'], $_POST['educator'], $_POST['timeline'],
-      $_POST['people'], $_POST['rating'], $_POST['link'], $id
+      $_POST['people'], $_POST['rating'], $_POST['price'], $_POST['link'], $id
+    ]);
+  }
+  header("Location: manage_courses.php");
+  exit;
+}
     ]);
   }
   header("Location: manage_courses.php");
@@ -98,6 +103,7 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <input type="text" name="timeline" placeholder="Timeline" class="border border-purple-300 p-2 rounded" />
         <input type="text" name="people" placeholder="People" class="border border-purple-300 p-2 rounded" />
         <input type="text" name="rating" placeholder="Rating" class="border border-purple-300 p-2 rounded" />
+        <input type="text" name="price" placeholder="Price (e.g., $499.00)" class="border border-purple-300 p-2 rounded" />
         <input type="text" name="link" placeholder="Course Link" class="border border-purple-300 p-2 rounded" />
         <input type="file" name="image" class="border border-purple-300 p-2 rounded" />
         <div class="col-span-2 text-right">
@@ -148,6 +154,7 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <input type="text" name="timeline" value="<?= htmlspecialchars($course['timeline']) ?>" class="border p-2 rounded" />
                   <input type="text" name="people" value="<?= htmlspecialchars($course['people']) ?>" class="border p-2 rounded" />
                   <input type="text" name="rating" value="<?= htmlspecialchars($course['rating']) ?>" class="border p-2 rounded" />
+                  <input type="text" name="price" value="<?= htmlspecialchars($course['price']) ?>" class="border p-2 rounded" placeholder="Price (e.g., $499.00)" />
                   <input type="text" name="link" value="<?= htmlspecialchars($course['link']) ?>" class="border p-2 rounded" />
                   <input type="file" name="image" class="border p-2 rounded" />
                   <div class="col-span-2 text-right">

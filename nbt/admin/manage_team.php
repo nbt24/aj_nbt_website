@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image_size = $_FILES['image']['size'];
         $image_data = file_get_contents($_FILES['image']['tmp_name']);
 
-        $stmt = $pdo->prepare("INSERT INTO meet_our_team (name, description, position, number, image_sequence, linkedin, email, image_name, image_type, image_size, image_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO meet_our_team (name, description, position, phone, image_sequence, linkedin, email, image_name, image_type, image_size, image_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$name, $description, $position, $number, $image_sequence, $linkedin, $email, $image_name, $image_type, $image_size, $image_data]);
     } elseif (isset($_POST['update'])) {
         $id = $_POST['id'];
@@ -47,10 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image_type = $_FILES['image']['type'];
             $image_size = $_FILES['image']['size'];
             $image_data = file_get_contents($_FILES['image']['tmp_name']);
-            $stmt = $pdo->prepare("UPDATE meet_our_team SET name = ?, description = ?, position = ?, number = ?, image_sequence = ?, linkedin = ?, email = ?, image_name = ?, image_type = ?, image_size = ?, image_data = ? WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE meet_our_team SET name = ?, description = ?, position = ?, phone = ?, image_sequence = ?, linkedin = ?, email = ?, image_name = ?, image_type = ?, image_size = ?, image_data = ? WHERE id = ?");
             $stmt->execute([$name, $description, $position, $number, $image_sequence, $linkedin, $email, $image_name, $image_type, $image_size, $image_data, $id]);
         } else {
-            $stmt = $pdo->prepare("UPDATE meet_our_team SET name = ?, description = ?, position = ?, number = ?, image_sequence = ?, linkedin = ?, email = ? WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE meet_our_team SET name = ?, description = ?, position = ?, phone = ?, image_sequence = ?, linkedin = ?, email = ? WHERE id = ?");
             $stmt->execute([$name, $description, $position, $number, $image_sequence, $linkedin, $email, $id]);
         }
     } elseif (isset($_POST['delete'])) {
