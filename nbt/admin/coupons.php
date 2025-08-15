@@ -1,5 +1,11 @@
 <?php
+session_start();
 require '../config/db.php'; // adjust path if needed
+
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: index.php');
+    exit;
+}
 
 // Handle Add/Edit Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

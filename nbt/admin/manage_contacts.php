@@ -1,5 +1,26 @@
 <?php
+session_start();
 require '../config/db.php'; // PDO connection
+
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['update'])) {
+        $stmt = $pdo->prepare("UPDATE contact_us SET full_name = ?, email_address = ?, subject = ?, message = ? WHERE id = ?");
+        $stmt->execute([
+            $_POST['full_name'], $_POST['email_address'], $_POST['subject'], $_POST['message'], $_POST['id']
+        ]);
+        $success = "Contact updated successfully!";
+    } elseif (isset($_POST['delete'])) {
+        $stmt = $pdo->prepare("DELETE FROM contact_us WHERE id = ?");
+        $stmt->execute([$_POST['id']]);
+        $success = "Contact deleted successfully!";
+    }
+}
 
 // Fetch records
 try {
@@ -53,6 +74,10 @@ if (isset($_GET['download']) && $_GET['download'] === 'true') {
   <div class="max-w-7xl mx-auto px-4 py-12 mt-20">
     <h2 class="text-3xl font-extrabold text-purple-900 mb-8">📨 Contact Form Submissions</h2>
 
+    <?php if (isset($success)): ?>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"><?= $success ?></div>
+    <?php endif; ?>
+
     <div class="bg-white shadow-lg rounded-2xl p-6 mb-6">
       <div class="flex justify-between items-center">
         <h3 class="text-xl font-semibold text-purple-800">Submissions Table</h3>
@@ -75,11 +100,12 @@ if (isset($_GET['download']) && $_GET['download'] === 'true') {
               <th class="px-4 py-3">Email</th>
               <th class="px-4 py-3">Subject</th>
               <th class="px-4 py-3">Message</th>
+              <th class="px-4 py-3">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-purple-100">
             <?php if (count($contacts) === 0): ?>
-              <tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">No submissions yet.</td></tr>
+              <tr><td colspan="6" class="px-4 py-4 text-center text-gray-500">No submissions yet.</td></tr>
             <?php else: ?>
               <?php foreach ($contacts as $i => $c): ?>
                 <tr class="hover:bg-purple-50">
@@ -88,6 +114,31 @@ if (isset($_GET['download']) && $_GET['download'] === 'true') {
                   <td class="px-4 py-3"><?= htmlspecialchars($c['email_address']) ?></td>
                   <td class="px-4 py-3"><?= htmlspecialchars($c['subject']) ?></td>
                   <td class="px-4 py-3 whitespace-pre-wrap"><?= nl2br(htmlspecialchars($c['message'])) ?></td>
+                  <td class="px-4 py-3 space-x-2">
+                    <button onclick="toggleEdit(<?= $c['id'] ?>)" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                    <form method="POST" class="inline">
+                      <input type="hidden" name="id" value="<?= $c['id'] ?>">
+                      <button type="submit" name="delete" onclick="return confirm('Delete this contact?')" class="bg-red-600 text-white px-2 py-1 rounded text-xs">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                <!-- Edit Form -->
+                <tr id="edit-<?= $c['id'] ?>" class="hidden bg-gray-50">
+                  <td colspan="6">
+                    <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+                      <input type="hidden" name="id" value="<?= $c['id'] ?>">
+                      <input type="text" name="full_name" value="<?= htmlspecialchars($c['full_name']) ?>" class="border p-2 rounded" placeholder="Full Name" required />
+                      <input type="email" name="email_address" value="<?= htmlspecialchars($c['email_address']) ?>" class="border p-2 rounded" placeholder="Email" required />
+                      <input type="text" name="subject" value="<?= htmlspecialchars($c['subject']) ?>" class="border p-2 rounded" placeholder="Subject" required />
+                      <div class="col-span-2">
+                        <textarea name="message" rows="3" class="w-full border p-2 rounded" placeholder="Message" required><?= htmlspecialchars($c['message']) ?></textarea>
+                      </div>
+                      <div class="col-span-2 text-right space-x-2">
+                        <button type="submit" name="update" class="bg-green-500 text-white px-4 py-2 rounded">Update</button>
+                        <button type="button" onclick="toggleEdit(<?= $c['id'] ?>)" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+                      </div>
+                    </form>
+                  </td>
                 </tr>
               <?php endforeach; ?>
             <?php endif; ?>
@@ -96,6 +147,13 @@ if (isset($_GET['download']) && $_GET['download'] === 'true') {
       </div>
     </div>
   </div>
+
+  <script>
+    function toggleEdit(id) {
+      const editRow = document.getElementById('edit-' + id);
+      editRow.classList.toggle('hidden');
+    }
+  </script>
 
 </body>
 </html>

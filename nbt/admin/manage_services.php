@@ -121,15 +121,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </thead>
                 <tbody>
                     <?php foreach ($services as $service): ?>
-                        <tr class="border-t">
-                            <td class="py-2"><?php echo htmlspecialchars($service['title']); ?></td>
-                            <td class="py-2"><?php echo htmlspecialchars($service['price']); ?></td>
+                        <tr class="border-t" id="row-<?php echo $service['id']; ?>">
                             <td class="py-2">
-                                <button onclick="editService(<?php echo $service['id']; ?>)" class="text-yellow-500 hover:text-yellow-600">Edit</button>
-                                <form method="POST" class="inline">
-                                    <input type="hidden" name="delete" value="1">
+                                <div id="view-title-<?php echo $service['id']; ?>"><?php echo htmlspecialchars($service['title']); ?></div>
+                                <div id="edit-title-<?php echo $service['id']; ?>" class="hidden">
+                                    <input type="text" id="input-title-<?php echo $service['id']; ?>" value="<?php echo htmlspecialchars($service['title']); ?>" class="border rounded px-2 py-1 w-full">
+                                </div>
+                                
+                                <div id="view-desc-<?php echo $service['id']; ?>" class="text-sm text-gray-600 mt-1"><?php echo htmlspecialchars(substr($service['description'], 0, 50)); ?>...</div>
+                                <div id="edit-desc-<?php echo $service['id']; ?>" class="hidden mt-1">
+                                    <textarea id="input-desc-<?php echo $service['id']; ?>" class="border rounded px-2 py-1 w-full text-sm" rows="2"><?php echo htmlspecialchars($service['description']); ?></textarea>
+                                </div>
+                                
+                                <div id="view-points-<?php echo $service['id']; ?>" class="text-sm text-gray-600 mt-1"><?php echo htmlspecialchars(substr($service['points'], 0, 30)); ?>...</div>
+                                <div id="edit-points-<?php echo $service['id']; ?>" class="hidden mt-1">
+                                    <textarea id="input-points-<?php echo $service['id']; ?>" class="border rounded px-2 py-1 w-full text-sm" rows="2"><?php echo htmlspecialchars($service['points']); ?></textarea>
+                                </div>
+                            </td>
+                            <td class="py-2">
+                                <div id="view-price-<?php echo $service['id']; ?>"><?php echo htmlspecialchars($service['price']); ?></div>
+                                <div id="edit-price-<?php echo $service['id']; ?>" class="hidden">
+                                    <input type="text" id="input-price-<?php echo $service['id']; ?>" value="<?php echo htmlspecialchars($service['price']); ?>" class="border rounded px-2 py-1 w-full">
+                                </div>
+                            </td>
+                            <td class="py-2">
+                                <div id="view-buttons-<?php echo $service['id']; ?>">
+                                    <button onclick="toggleEdit(<?php echo $service['id']; ?>)" class="text-yellow-500 hover:text-yellow-600 mr-2">Edit</button>
+                                    <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this service?')">
+                                        <input type="hidden" name="delete" value="1">
+                                        <input type="hidden" name="id" value="<?php echo $service['id']; ?>">
+                                        <button type="submit" class="text-red-500 hover:text-red-600">Delete</button>
+                                    </form>
+                                </div>
+                                <div id="edit-buttons-<?php echo $service['id']; ?>" class="hidden">
+                                    <button onclick="saveEdit(<?php echo $service['id']; ?>)" class="text-green-500 hover:text-green-600 mr-2">Save</button>
+                                    <button onclick="cancelEdit(<?php echo $service['id']; ?>)" class="text-gray-500 hover:text-gray-600">Cancel</button>
+                                </div>
+                                
+                                <form id="edit-form-<?php echo $service['id']; ?>" method="POST" class="hidden">
+                                    <input type="hidden" name="update" value="1">
                                     <input type="hidden" name="id" value="<?php echo $service['id']; ?>">
-                                    <button type="submit" class="text-red-500 hover:text-red-600">Delete</button>
+                                    <input type="hidden" id="form-title-<?php echo $service['id']; ?>" name="title">
+                                    <input type="hidden" id="form-desc-<?php echo $service['id']; ?>" name="description">
+                                    <input type="hidden" id="form-points-<?php echo $service['id']; ?>" name="points">
+                                    <input type="hidden" id="form-price-<?php echo $service['id']; ?>" name="price">
                                 </form>
                             </td>
                         </tr>
@@ -139,9 +174,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <script>
-        function editService(id) {
-            alert('Edit functionality to be implemented with a modal or separate form');
+        function toggleEdit(id) {
+            // Hide view elements
+            document.getElementById('view-title-' + id).classList.add('hidden');
+            document.getElementById('view-desc-' + id).classList.add('hidden');
+            document.getElementById('view-points-' + id).classList.add('hidden');
+            document.getElementById('view-price-' + id).classList.add('hidden');
+            document.getElementById('view-buttons-' + id).classList.add('hidden');
+            
+            // Show edit elements
+            document.getElementById('edit-title-' + id).classList.remove('hidden');
+            document.getElementById('edit-desc-' + id).classList.remove('hidden');
+            document.getElementById('edit-points-' + id).classList.remove('hidden');
+            document.getElementById('edit-price-' + id).classList.remove('hidden');
+            document.getElementById('edit-buttons-' + id).classList.remove('hidden');
         }
+
+        function cancelEdit(id) {
+            // Show view elements
+            document.getElementById('view-title-' + id).classList.remove('hidden');
+            document.getElementById('view-desc-' + id).classList.remove('hidden');
+            document.getElementById('view-points-' + id).classList.remove('hidden');
+            document.getElementById('view-price-' + id).classList.remove('hidden');
+            document.getElementById('view-buttons-' + id).classList.remove('hidden');
+            
+            // Hide edit elements
+            document.getElementById('edit-title-' + id).classList.add('hidden');
+            document.getElementById('edit-desc-' + id).classList.add('hidden');
+            document.getElementById('edit-points-' + id).classList.add('hidden');
+            document.getElementById('edit-price-' + id).classList.add('hidden');
+            document.getElementById('edit-buttons-' + id).classList.add('hidden');
+        }
+
+        function saveEdit(id) {
+            // Get values from input fields
+            const title = document.getElementById('input-title-' + id).value;
+            const description = document.getElementById('input-desc-' + id).value;
+            const points = document.getElementById('input-points-' + id).value;
+            const price = document.getElementById('input-price-' + id).value;
+            
+            // Set values in hidden form
+            document.getElementById('form-title-' + id).value = title;
+            document.getElementById('form-desc-' + id).value = description;
+            document.getElementById('form-points-' + id).value = points;
+            document.getElementById('form-price-' + id).value = price;
+            
+            // Submit the form
+            document.getElementById('edit-form-' + id).submit();
+        }
+
+        // Show success message if update was successful
+        <?php if (isset($_POST['update'])): ?>
+            alert('Service updated successfully!');
+        <?php endif; ?>
     </script>
 </body>
 </html>

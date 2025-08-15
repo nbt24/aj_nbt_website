@@ -1,5 +1,31 @@
 <?php
+session_start();
 require '.././config/db.php'; // PDO connection
+
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
+// Handle Add
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add'])) {
+    $logoData = null;
+    if (!empty($_FILES['company_logo']['tmp_name'])) {
+        $logoData = file_get_contents($_FILES['company_logo']['tmp_name']);
+    }
+    
+    $stmt = $pdo->prepare("INSERT INTO client_testimonials (company_name, company_email, linkedin, project_description, rating, company_logo, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([
+        $_POST['company_name'],
+        $_POST['company_email'],
+        $_POST['linkedin'],
+        $_POST['project_description'],
+        $_POST['rating'],
+        $logoData,
+        isset($_POST['is_active']) ? 1 : 0
+    ]);
+    $success = "Company testimonial added successfully!";
+}
 
 // Handle Delete
 if (isset($_GET['delete'])) {
@@ -19,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_id'])) {
             company_name = ?, 
             company_email = ?, 
             linkedin = ?, 
+            project_description = ?,
             rating = ?, 
             is_active = ?, 
             company_logo = ?
@@ -27,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_id'])) {
             $_POST['company_name'],
             $_POST['company_email'],
             $_POST['linkedin'],
+            $_POST['project_description'],
             $_POST['rating'],
             $_POST['is_active'],
             $logoData,
@@ -37,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_id'])) {
             company_name = ?, 
             company_email = ?, 
             linkedin = ?, 
+            project_description = ?,
             rating = ?, 
             is_active = ?
             WHERE id = ?");
@@ -44,14 +73,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_id'])) {
             $_POST['company_name'],
             $_POST['company_email'],
             $_POST['linkedin'],
+            $_POST['project_description'],
             $_POST['rating'],
             $_POST['is_active'],
             $_POST['update_id']
         ]);
     }
 
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
+    $success = "Company testimonial updated successfully!";
 }
 
 // Fetch records
@@ -91,6 +120,45 @@ try {
 <div class="max-w-7xl mx-auto px-4 py-12 mt-20">
   <h2 class="text-3xl font-extrabold text-purple-900 mb-8">🏢 Companies List</h2>
 
+  <?php if (isset($success)): ?>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"><?= $success ?></div>
+  <?php endif; ?>
+
+  <!-- Add New Company Form -->
+  <div class="bg-white shadow-lg rounded-2xl p-6 mb-6">
+    <h3 class="text-xl font-semibold text-purple-800 mb-4">Add New Company Testimonial</h3>
+    <form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="text" name="company_name" placeholder="Company Name" required class="border border-purple-300 p-2 rounded" />
+      <input type="email" name="company_email" placeholder="Company Email" class="border border-purple-300 p-2 rounded" />
+      <input type="url" name="linkedin" placeholder="LinkedIn URL" class="border border-purple-300 p-2 rounded" />
+      <select name="rating" required class="border border-purple-300 p-2 rounded">
+        <option value="">Select Rating</option>
+        <option value="1">1 Star</option>
+        <option value="2">2 Stars</option>
+        <option value="3">3 Stars</option>
+        <option value="4">4 Stars</option>
+        <option value="5">5 Stars</option>
+      </select>
+      <div class="col-span-2">
+        <textarea name="project_description" placeholder="Project Description" rows="3" class="w-full border border-purple-300 p-2 rounded"></textarea>
+      </div>
+      <div class="col-span-1">
+        <input type="file" name="company_logo" accept="image/*" class="border border-purple-300 p-2 rounded w-full" />
+        <div class="text-xs text-gray-500 mt-1">Upload company logo (optional)</div>
+      </div>
+      <div class="flex items-center">
+        <label class="flex items-center">
+          <input type="checkbox" name="is_active" checked class="mr-2">
+          <span class="text-sm">Active</span>
+        </label>
+      </div>
+      <div class="col-span-2 text-right">
+        <button type="submit" name="add" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-4 py-2 rounded">Add Company</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Companies List -->
   <div class="bg-white shadow-lg rounded-2xl p-6 mb-6">
     <div class="flex justify-between items-center">
       <h3 class="text-xl font-semibold text-purple-800">Company Records</h3>

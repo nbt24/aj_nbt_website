@@ -121,21 +121,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </thead>
                 <tbody>
                     <?php foreach ($gallery as $img): ?>
-                        <tr class="border-t">
+                        <tr class="border-t" id="row-<?php echo $img['id']; ?>">
                             <td class="py-2 px-4">
                                  <img src="data:<?php echo $img['image_type']; ?>;base64,<?php echo base64_encode($img['image_data']); ?>" 
                                     alt="<?php echo $img['image_name']; ?>" 
                                     class="w-24 h-24 object-cover rounded shadow" />
 
                           </td>
-                            <td class="py-2"><?php echo htmlspecialchars($img['title']); ?></td>
-                            <td class="py-2"><?php echo htmlspecialchars($img['image_sequence']); ?></td>
                             <td class="py-2">
-                                <button onclick="editGallery(<?php echo $img['id']; ?>)" class="text-yellow-500 hover:text-yellow-600">Edit</button>
-                                <form method="POST" class="inline">
-                                    <input type="hidden" name="delete" value="1">
+                                <div id="view-title-<?php echo $img['id']; ?>"><?php echo htmlspecialchars($img['title']); ?></div>
+                                <div id="edit-title-<?php echo $img['id']; ?>" class="hidden">
+                                    <input type="text" id="input-title-<?php echo $img['id']; ?>" value="<?php echo htmlspecialchars($img['title']); ?>" class="border rounded px-2 py-1 w-full">
+                                </div>
+                            </td>
+                            <td class="py-2">
+                                <div id="view-sequence-<?php echo $img['id']; ?>"><?php echo htmlspecialchars($img['image_sequence']); ?></div>
+                                <div id="edit-sequence-<?php echo $img['id']; ?>" class="hidden">
+                                    <input type="number" id="input-sequence-<?php echo $img['id']; ?>" value="<?php echo htmlspecialchars($img['image_sequence']); ?>" class="border rounded px-2 py-1 w-full">
+                                </div>
+                            </td>
+                            <td class="py-2">
+                                <div id="view-buttons-<?php echo $img['id']; ?>">
+                                    <button onclick="toggleEdit(<?php echo $img['id']; ?>)" class="text-yellow-500 hover:text-yellow-600 mr-2">Edit</button>
+                                    <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this image?')">
+                                        <input type="hidden" name="delete" value="1">
+                                        <input type="hidden" name="id" value="<?php echo $img['id']; ?>">
+                                        <button type="submit" class="text-red-500 hover:text-red-600">Delete</button>
+                                    </form>
+                                </div>
+                                <div id="edit-buttons-<?php echo $img['id']; ?>" class="hidden">
+                                    <button onclick="saveEdit(<?php echo $img['id']; ?>)" class="text-green-500 hover:text-green-600 mr-2">Save</button>
+                                    <button onclick="cancelEdit(<?php echo $img['id']; ?>)" class="text-gray-500 hover:text-gray-600">Cancel</button>
+                                </div>
+                                
+                                <form id="edit-form-<?php echo $img['id']; ?>" method="POST" class="hidden">
+                                    <input type="hidden" name="update" value="1">
                                     <input type="hidden" name="id" value="<?php echo $img['id']; ?>">
-                                    <button type="submit" class="text-red-500 hover:text-red-600">Delete</button>
+                                    <input type="hidden" id="form-title-<?php echo $img['id']; ?>" name="title">
+                                    <input type="hidden" id="form-sequence-<?php echo $img['id']; ?>" name="image_sequence">
+                                    <input type="hidden" name="is_active" value="1">
                                 </form>
                             </td>
                         </tr>
@@ -146,9 +170,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        function editGallery(id) {
-            alert('Edit functionality to be implemented with a modal or separate form');
+        function toggleEdit(id) {
+            // Hide view elements
+            document.getElementById('view-title-' + id).classList.add('hidden');
+            document.getElementById('view-sequence-' + id).classList.add('hidden');
+            document.getElementById('view-buttons-' + id).classList.add('hidden');
+            
+            // Show edit elements
+            document.getElementById('edit-title-' + id).classList.remove('hidden');
+            document.getElementById('edit-sequence-' + id).classList.remove('hidden');
+            document.getElementById('edit-buttons-' + id).classList.remove('hidden');
         }
+
+        function cancelEdit(id) {
+            // Show view elements
+            document.getElementById('view-title-' + id).classList.remove('hidden');
+            document.getElementById('view-sequence-' + id).classList.remove('hidden');
+            document.getElementById('view-buttons-' + id).classList.remove('hidden');
+            
+            // Hide edit elements
+            document.getElementById('edit-title-' + id).classList.add('hidden');
+            document.getElementById('edit-sequence-' + id).classList.add('hidden');
+            document.getElementById('edit-buttons-' + id).classList.add('hidden');
+        }
+
+        function saveEdit(id) {
+            // Get values from input fields
+            const title = document.getElementById('input-title-' + id).value;
+            const sequence = document.getElementById('input-sequence-' + id).value;
+            
+            // Set values in hidden form
+            document.getElementById('form-title-' + id).value = title;
+            document.getElementById('form-sequence-' + id).value = sequence;
+            
+            // Submit the form
+            document.getElementById('edit-form-' + id).submit();
+        }
+
+        // Show success message if update was successful
+        <?php if (isset($_POST['update'])): ?>
+            alert('Image updated successfully!');
+        <?php endif; ?>
     </script>
 </body>
 </html>
