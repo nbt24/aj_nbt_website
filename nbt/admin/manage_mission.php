@@ -1,13 +1,13 @@
 <?php
-// DB connection
-$host = 'localhost';
-$dbname = 'nbt';
-$username = 'root';
-$password = '';
+session_start();
+require '../config/db.php';
+
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: index.php');
+    exit;
+}
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->exec("CREATE TABLE IF NOT EXISTS our_mission (
         id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255),
@@ -33,8 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
         $_POST['title'], $_POST['description'], $_POST['students'],
         $_POST['courses'], $_POST['success_rate'], $_POST['id']
     ]);
-    header("Location: manage_mission.php?success=1");
-    exit;
+    $success = "Mission updated successfully!";
 }
 
 $mission = $pdo->query("SELECT * FROM our_mission LIMIT 1")->fetch(PDO::FETCH_ASSOC);
@@ -68,8 +67,8 @@ $mission = $pdo->query("SELECT * FROM our_mission LIMIT 1")->fetch(PDO::FETCH_AS
         <div class="bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-xl font-semibold text-purple-800 mb-4">Update Mission Info</h2>
 
-            <?php if (isset($_GET['success'])): ?>
-                <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">✅ Mission updated successfully!</div>
+            <?php if (isset($success)): ?>
+                <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">✅ <?= $success ?></div>
             <?php endif; ?>
 
             <form method="POST">

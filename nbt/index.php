@@ -638,45 +638,97 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
                     <!--Company Team Members-->
                     <div class="mt-16 overflow-hidden relative">
-                        <div class="flex gap-12 animate-marquee hover:[animation-play-state:paused] px-4" style="animation: marquee 30s linear infinite;">
+                        <div id="team-marquee" class="flex gap-12 animate-marquee px-4" style="animation: marquee 60s linear infinite;">
                             <?php
                             // Double the team array for infinite scrolling
                             $loopedTeam = array_merge($team, $team);
                             foreach ($loopedTeam as $index => $member): ?>
-                                <div class="flex-shrink-0 w-64 text-center group">
-                                    <div class="relative overflow-hidden rounded-full w-40 h-40 mx-auto mb-4 border-2 border-purple-300 dark:border-purple-600">
-                                        <img src="data:<?php echo htmlspecialchars($member['image_type']); ?>;base64,<?php echo base64_encode($member['image_data']); ?>"
-                                            alt="<?php echo htmlspecialchars($member['name']); ?>"
-                                            class="w-full h-full object-cover shadow-lg transition-transform duration-500 group-hover:scale-110" />
-                                        <div class="absolute inset-0 bg-yellow-500/20 dark:bg-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                    </div>
+                                <div class="flex-shrink-0 w-72 text-center group team-card" onmouseenter="pauseTeamMarquee()" onmouseleave="resumeTeamMarquee()">
+                                    <!-- Card Container with Curved Boundary -->
+                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-purple-200/30 dark:border-purple-700/50 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400/50 dark:group-hover:border-yellow-400/60 overflow-hidden">
+                                        
+                                        <!-- Decorative Background Pattern -->
+                                        <div class="absolute inset-0 opacity-5 pointer-events-none">
+                                            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                        </div>
+                                        
+                                        <!-- Gradient Border Effect -->
+                                        <div class="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 via-purple-500/20 to-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                                        
+                                        <!-- Content -->
+                                        <div class="relative z-10">
+                                            <!-- Profile Image -->
+                                            <div class="relative overflow-hidden rounded-full w-24 h-24 mx-auto mb-4 border-3 border-gradient-to-r from-yellow-400 to-purple-500 shadow-xl group-hover:shadow-2xl transition-shadow duration-300">
+                                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 to-purple-500 p-0.5">
+                                                    <div class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-purple-900">
+                                                        <?php if (!empty($member['image_path']) && file_exists($member['image_path'])): ?>
+                                                            <img src="<?php echo htmlspecialchars($member['image_path']); ?>"
+                                                                alt="<?php echo htmlspecialchars($member['name']); ?>"
+                                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                        <?php elseif (!empty($member['image_data'])): ?>
+                                                            <img src="data:<?php echo htmlspecialchars($member['image_type']); ?>;base64,<?php echo base64_encode($member['image_data']); ?>"
+                                                                alt="<?php echo htmlspecialchars($member['name']); ?>"
+                                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                        <?php else: ?>
+                                                            <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                                                <i data-lucide="user" class="w-8 h-8 text-gray-400"></i>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                    <h4 class="text-xl font-semibold text-purple-900 dark:text-purple-200 mb-1 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">
-                                        <?php echo htmlspecialchars($member['name']); ?>
-                                    </h4>
+                                            <!-- Name -->
+                                            <h4 class="text-lg font-bold text-purple-900 dark:text-purple-200 mb-1 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">
+                                                <?php echo htmlspecialchars($member['name']); ?>
+                                            </h4>
 
-                                    <div class="text-yellow-500 dark:text-yellow-400 font-medium mb-2">
-                                        <?php echo htmlspecialchars($member['position']); ?>
-                                    </div>
+                                            <!-- Position -->
+                                            <div class="text-yellow-500 dark:text-yellow-400 font-semibold mb-3 text-sm">
+                                                <?php echo htmlspecialchars($member['position']); ?>
+                                            </div>
 
-                                    <p class="text-purple-700 dark:text-purple-300 text-sm">
-                                        <?php echo htmlspecialchars($member['description']); ?>
-                                    </p>
+                                            <!-- Skills/Description -->
+                                            <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 mb-4">
+                                                <?php 
+                                                $description = htmlspecialchars($member['description']);
+                                                // Split by bullet points (•) or newlines
+                                                $bullet_points = preg_split('/[•\n]/', $description);
+                                                $bullet_points = array_filter(array_map('trim', $bullet_points)); // Remove empty items
+                                                $bullet_points = array_slice($bullet_points, 0, 6); // Limit to 6 points
+                                                
+                                                foreach ($bullet_points as $point): 
+                                                    if (!empty($point)):
+                                                ?>
+                                                    <div class="flex items-start gap-2">
+                                                        <span class="text-yellow-500 dark:text-yellow-400 text-xs mt-0.5 flex-shrink-0">•</span>
+                                                        <span class="flex-1 leading-relaxed"><?php echo $point; ?></span>
+                                                    </div>
+                                                <?php 
+                                                    endif;
+                                                endforeach; 
+                                                ?>
+                                            </div>
 
-                                    <!-- Optional Socials -->
-                                    <div class="flex justify-center gap-4 mt-2">
-                                        <?php if (!empty($member['linkedin'])): ?>
-                                            <a href="<?php echo htmlspecialchars($member['linkedin']); ?>" target="_blank"
-                                                class="text-purple-400 hover:text-yellow-500 transition">
-                                                <i data-lucide="linkedin" class="w-5 h-5"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                        <?php if (!empty($member['email'])): ?>
-                                            <a href="mailto:<?php echo htmlspecialchars($member['email']); ?>"
-                                                class="text-purple-400 hover:text-yellow-500 transition">
-                                                <i data-lucide="mail" class="w-5 h-5"></i>
-                                            </a>
-                                        <?php endif; ?>
+                                            <!-- Social Links -->
+                                            <div class="flex justify-center gap-3 pt-2 border-t border-purple-200/30 dark:border-purple-700/50">
+                                                <?php if (!empty($member['linkedin'])): ?>
+                                                    <a href="<?php echo htmlspecialchars($member['linkedin']); ?>" target="_blank"
+                                                        class="p-2 rounded-full bg-purple-100 dark:bg-purple-800/50 text-purple-600 dark:text-purple-300 hover:bg-yellow-100 dark:hover:bg-yellow-500/20 hover:text-yellow-600 dark:hover:text-yellow-400 transition-all duration-300 transform hover:scale-110">
+                                                        <i data-lucide="linkedin" class="w-4 h-4"></i>
+                                                    </a>
+                                                <?php endif; ?>
+                                                <?php if (!empty($member['email'])): ?>
+                                                    <a href="mailto:<?php echo htmlspecialchars($member['email']); ?>"
+                                                        class="p-2 rounded-full bg-purple-100 dark:bg-purple-800/50 text-purple-600 dark:text-purple-300 hover:bg-yellow-100 dark:hover:bg-yellow-500/20 hover:text-yellow-600 dark:hover:text-yellow-400 transition-all duration-300 transform hover:scale-110">
+                                                        <i data-lucide="mail" class="w-4 h-4"></i>
+                                                    </a>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Corner Accent -->
+                                        <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/20 dark:from-yellow-500/30 to-transparent rounded-bl-3xl"></div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -1774,6 +1826,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 };
                 updateCount();
             });
+
+            // Team Marquee Pause/Resume Functions
+            function pauseTeamMarquee() {
+                const marquee = document.getElementById('team-marquee');
+                if (marquee) {
+                    marquee.style.animationPlayState = 'paused';
+                }
+            }
+
+            function resumeTeamMarquee() {
+                const marquee = document.getElementById('team-marquee');
+                if (marquee) {
+                    marquee.style.animationPlayState = 'running';
+                }
+            }
 
 
             // Overview carousel animation
