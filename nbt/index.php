@@ -49,7 +49,10 @@ $row3 = $stmt->fetch(PDO::FETCH_ASSOC);
 // Fourth row (e.g., Youtube)
 $row4 = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
+// Fetch YouTube videos
+$youtube_stmt = $pdo->prepare("SELECT * FROM youtube_videos ORDER BY sequence_number");
+$youtube_stmt->execute();
+$youtube_videos = $youtube_stmt->fetchAll();
 
 // Handle contact form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
@@ -1685,41 +1688,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 </div>
 
                 <!-- Videos Marquee -->
-                <div id="videos-wrapper" class="overflow-x-auto animate-section" style="scrollbar-width: none; -ms-overflow-style: none;">
-                    <div id="videos" class="flex gap-x-6 min-w-max min-h-[200px] animate-marquee px-2">
-                        <!-- No videos fallback -->
-                        <div id="no-videos-message" class="text-purple-700 dark:text-purple-300 text-center w-full hidden">
-                            No videos available at the moment. Please check back later!
-                        </div>
-
-                        <!-- Example Card (dynamic items will follow this structure) -->
-                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px]">
-                            <!-- Thumbnail -->
-                            <div class="relative w-full h-48 overflow-hidden border-b border-purple-300 dark:border-purple-600">
-                                <img src="https://img.youtube.com/vi/VIDEO_ID/hqdefault.jpg" alt="Video Title"
-                                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                <div id="videos-wrapper" class="overflow-hidden animate-section" style="scrollbar-width: none; -ms-overflow-style: none;">
+                    <div id="videos" class="flex gap-x-6 min-h-[200px] animate-marquee">
+                        <?php if (empty($youtube_videos)): ?>
+                            <div class="text-purple-700 dark:text-purple-300 text-center w-full">
+                                No videos available at the moment. Please check back later!
                             </div>
-                            <!-- Title + Button -->
-                            <div class="p-4">
-                                <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2">
-                                    Video Title Here
-                                </h4>
-                                <p class="text-sm text-purple-700 dark:text-purple-300 mb-4">
-                                    Quick description or teaser of the video content.
-                                </p>
-                                <a href="https://youtube.com/watch?v=VIDEO_ID" target="_blank"
-                                    class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group">
-                                    Watch Now
-                                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                    </svg>
-                                </a>
+                        <?php else: ?>
+                            <!-- First set of videos -->
+                            <?php foreach ($youtube_videos as $video): 
+                                $video_id = '';
+                                if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
+                                    $video_id = $matches[1];
+                                }
+                            ?>
+                                <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                    <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
+                                        <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
+                                            class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
+                                            onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
+                                                <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M8 5v14l11-7z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-4">
+                                        <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
+                                            <?= htmlspecialchars($video['title']) ?>
+                                        </h4>
+                                        <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
+                                            Watch Now
+                                        </button>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                            
+                            <!-- Duplicate set for seamless loop -->
+                            <?php foreach ($youtube_videos as $video): 
+                                $video_id = '';
+                                if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
+                                    $video_id = $matches[1];
+                                }
+                            ?>
+                                <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                    <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
+                                        <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
+                                            class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
+                                            onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
+                                                <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M8 5v14l11-7z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-4">
+                                        <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
+                                            <?= htmlspecialchars($video['title']) ?>
+                                        </h4>
+                                        <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
+                                            Watch Now
+                                        </button>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Video Modal -->
+                <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center p-4 overflow-y-auto" style="z-index: 99999 !important; padding-top: 100px;">
+                    <div class="bg-white dark:bg-purple-900 rounded-3xl max-w-4xl w-full max-h-[85vh] overflow-y-auto my-8" style="z-index: 99999 !important;">
+                        <div class="flex justify-between items-center p-4 border-b border-purple-200 dark:border-purple-700 sticky top-0 bg-white dark:bg-purple-900" style="z-index: 99999 !important;">
+                            <h3 id="modalTitle" class="text-xl font-bold text-purple-900 dark:text-purple-200"></h3>
+                            <button onclick="closeVideoModal()" class="text-gray-500 hover:text-gray-700 text-2xl" style="z-index: 99999 !important;">&times;</button>
+                        </div>
+                        <div class="p-4">
+                            <div class="relative" style="padding-bottom: 56.25%; height: 0;">
+                                <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="absolute top-0 left-0 w-full h-full rounded-lg"></iframe>
                             </div>
                         </div>
-
-                        <!-- Repeat similar cards dynamically using JS or PHP -->
                     </div>
                 </div>
 
@@ -1730,22 +1782,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     }
 
                     .animate-marquee {
-                        animation: marquee 25s linear infinite;
+                        animation: marquee 40s linear infinite;
                         will-change: transform;
+                        width: fit-content;
                     }
 
-                    /*#videos-wrapper:hover .animate-marquee {*/
-                    /*    animation-play-state: paused;*/
-                    /*}*/
+                    #videos-wrapper:hover .animate-marquee {
+                        animation-play-state: paused;
+                    }
 
                     @keyframes marquee {
                         0% {
-                            transform: translateX(0);
+                            transform: translateX(0%);
                         }
-
                         100% {
                             transform: translateX(-50%);
                         }
+                    }
+
+                    /* Ensure smooth transitions */
+                    #videos {
+                        transition: transform 0.1s ease-out;
                     }
                 </style>
             </div>
@@ -2101,7 +2158,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 })
             });
 
+            // Video Modal Functions
+            function openVideoModal(videoId, title) {
+                const modal = document.getElementById('videoModal');
+                const frame = document.getElementById('videoFrame');
+                const modalTitle = document.getElementById('modalTitle');
+                
+                modalTitle.textContent = title;
+                frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
 
+            function closeVideoModal() {
+                const modal = document.getElementById('videoModal');
+                const frame = document.getElementById('videoFrame');
+                
+                frame.src = '';
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            // Close modal when clicking outside
+            document.getElementById('videoModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeVideoModal();
+                }
+            });
+
+            /*
             // Fetch youtube videos
             document.addEventListener("DOMContentLoaded", function() {
                 fetch('./config/get_videos.php')
@@ -2143,6 +2228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     })
                     .catch(error => console.error('Error fetching videos:', error));
             });
+            */
         </script>
 </body>
 

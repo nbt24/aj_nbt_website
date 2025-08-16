@@ -83,11 +83,13 @@ if (!isset($_SESSION['admin_id'])) {
     <h3 class="text-xl font-semibold text-purple-900">Manage Admin Users</h3>
     <p class="text-purple-700">Add, edit, or delete admin accounts</p>
 </a>
-<a href="manage_client_testimonials.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-    <h3 class="text-xl font-semibold text-purple-900">Manage Business Testimonials</h3>
-    <p class="text-purple-700">Company reviews and project feedback</p>
-</a>
-</div>
-
-</body>
+    <a href="manage_client_testimonials.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Business Testimonials</h3>
+        <p class="text-purple-700">Company reviews and project feedback</p>
+    </a>
+    <a href="manage_youtube_videos.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage YouTube Videos</h3>
+        <p class="text-purple-700">Add, edit, and organize video links with sequence</p>
+    </a>
+</div></body>
 </html>
