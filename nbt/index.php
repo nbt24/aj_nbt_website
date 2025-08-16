@@ -644,8 +644,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             $loopedTeam = array_merge($team, $team);
                             foreach ($loopedTeam as $index => $member): ?>
                                 <div class="flex-shrink-0 w-72 text-center group team-card" onmouseenter="pauseTeamMarquee()" onmouseleave="resumeTeamMarquee()">
-                                    <!-- Card Container with Curved Boundary -->
-                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-purple-200/30 dark:border-purple-700/50 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400/50 dark:group-hover:border-yellow-400/60 overflow-hidden">
+                                    <!-- Card Container with Curved Boundary and Fixed Height -->
+                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-96">
                                         
                                         <!-- Decorative Background Pattern -->
                                         <div class="absolute inset-0 opacity-5 pointer-events-none">
@@ -655,10 +655,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                         <!-- Gradient Border Effect -->
                                         <div class="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 via-purple-500/20 to-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                                         
-                                        <!-- Content -->
-                                        <div class="relative z-10">
+                                        <!-- Content with Flex Layout -->
+                                        <div class="relative z-10 h-full flex flex-col">
                                             <!-- Profile Image -->
-                                            <div class="relative overflow-hidden rounded-full w-24 h-24 mx-auto mb-4 border-3 border-gradient-to-r from-yellow-400 to-purple-500 shadow-xl group-hover:shadow-2xl transition-shadow duration-300">
+                                            <div class="relative overflow-hidden rounded-full w-20 h-20 mx-auto mb-4 border-3 border-gradient-to-r from-yellow-400 to-purple-500 shadow-xl group-hover:shadow-2xl transition-shadow duration-300">
                                                 <div class="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 to-purple-500 p-0.5">
                                                     <div class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-purple-900">
                                                         <?php if (!empty($member['image_path']) && file_exists($member['image_path'])): ?>
@@ -671,7 +671,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                                         <?php else: ?>
                                                             <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                                                <i data-lucide="user" class="w-8 h-8 text-gray-400"></i>
+                                                                <i data-lucide="user" class="w-6 h-6 text-gray-400"></i>
                                                             </div>
                                                         <?php endif; ?>
                                                     </div>
@@ -688,21 +688,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 <?php echo htmlspecialchars($member['position']); ?>
                                             </div>
 
-                                            <!-- Skills/Description -->
-                                            <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 mb-4">
+                                            <!-- Skills/Description - Flexible Section -->
+                                            <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 mb-4 flex-1 overflow-hidden">
                                                 <?php 
                                                 $description = htmlspecialchars($member['description']);
                                                 // Split by bullet points (•) or newlines
                                                 $bullet_points = preg_split('/[•\n]/', $description);
                                                 $bullet_points = array_filter(array_map('trim', $bullet_points)); // Remove empty items
-                                                $bullet_points = array_slice($bullet_points, 0, 6); // Limit to 6 points
+                                                $bullet_points = array_slice($bullet_points, 0, 4); // Limit to 4 points for consistent height
                                                 
                                                 foreach ($bullet_points as $point): 
                                                     if (!empty($point)):
                                                 ?>
                                                     <div class="flex items-start gap-2">
                                                         <span class="text-yellow-500 dark:text-yellow-400 text-xs mt-0.5 flex-shrink-0">•</span>
-                                                        <span class="flex-1 leading-relaxed"><?php echo $point; ?></span>
+                                                        <span class="flex-1 leading-relaxed line-clamp-2"><?php echo $point; ?></span>
                                                     </div>
                                                 <?php 
                                                     endif;
@@ -710,8 +710,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 ?>
                                             </div>
 
-                                            <!-- Social Links -->
-                                            <div class="flex justify-center gap-3 pt-2 border-t border-purple-200/30 dark:border-purple-700/50">
+                                            <!-- Social Links - Fixed at Bottom -->
+                                            <div class="flex justify-center gap-3 pt-2 border-t border-purple-200/30 dark:border-purple-700/50 mt-auto">
                                                 <?php if (!empty($member['linkedin'])): ?>
                                                     <a href="<?php echo htmlspecialchars($member['linkedin']); ?>" target="_blank"
                                                         class="p-2 rounded-full bg-purple-100 dark:bg-purple-800/50 text-purple-600 dark:text-purple-300 hover:bg-yellow-100 dark:hover:bg-yellow-500/20 hover:text-yellow-600 dark:hover:text-yellow-400 transition-all duration-300 transform hover:scale-110">
@@ -726,9 +726,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 <?php endif; ?>
                                             </div>
                                         </div>
-                                        
-                                        <!-- Corner Accent -->
-                                        <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/20 dark:from-yellow-500/30 to-transparent rounded-bl-3xl"></div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -808,10 +805,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </div>
 
                         <!-- Tech Corner Accents -->
-                        <div class="absolute top-0 right-0 w-24 h-24">
-                            <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/30 dark:from-yellow-500/30 to-transparent"></div>
-                            <div class="absolute top-2 right-2 w-8 h-8 border-2 border-yellow-400/40 dark:border-yellow-500/50 rounded-lg transform rotate-45"></div>
-                        </div>
                         <div class="absolute bottom-0 left-0 w-20 h-20">
                             <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
                             <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
@@ -852,85 +845,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
     <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-4xl font-bold text-center text-purple-900 dark:text-purple-200 mb-12 tracking-tight">Our Clients</h2>
+        <!-- Header -->
+        <div class="text-center mb-16 animate-section">
+            <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Our Clients</h2>
+            <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                Trusted partnerships delivering exceptional results across industries
+            </p>
+        </div>
 
-        <div class="relative overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
-            <div class="flex animate-marquee gap-x-8" style="width: calc(300% + 48px);">
-                <?php for ($i = 0; $i < 2; $i++): ?>
-                    <?php foreach ($clients as $client): ?>
-                        <div class="w-96 flex-none rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl hover:shadow-3xl p-8 transition-all duration-300 transform hover:-translate-y-3 hover:scale-[1.02] group">
-                            <!-- Header -->
-                            <div class="border-b border-purple-100 dark:border-purple-600 pb-6 mb-6">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <h3 class="text-xl font-bold text-purple-900 dark:text-white mb-1 leading-tight">
-                                            <?= htmlspecialchars($client['client_name']) ?>
-                                        </h3>
-                                        <p class="text-purple-600 dark:text-purple-300 font-medium">
-                                            <?= htmlspecialchars($client['company_name']) ?>
-                                        </p>
-                                    </div>
-                                    <div class="ml-4">
-                                        <?php $status = htmlspecialchars($client['status']); ?>
-                                        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase
-                      <?= $status === 'Completed'
-                                    ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800'
-                                    : 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800' ?>">
-                                            <span class="w-2 h-2 rounded-full mr-2 
-                          <?= $status === 'Completed' ? 'bg-green-500' : 'bg-amber-500' ?>"></span>
-                                            <?= $status ?>
-                                        </span>
-                                    </div>
-                                </div>
+        <!-- Scrolling Container -->
+        <div class="relative overflow-hidden">
+            <div class="flex animate-marquee gap-8" style="animation: marquee 40s linear infinite;">
+                <?php 
+                // Double the clients array for seamless looping
+                $clients_loop = array_merge($clients, $clients);
+                foreach ($clients_loop as $index => $client): ?>
+                    <div class="flex-shrink-0 w-80 group">
+                        <!-- Client Card -->
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 h-80">
+                            
+                            <!-- Decorative Background Pattern -->
+                            <div class="absolute inset-0 opacity-5 pointer-events-none">
+                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                             </div>
-
-                            <!-- Project Task -->
-                            <div class="bg-purple-50 dark:bg-purple-900/40 border border-purple-200/50 dark:border-purple-600/50 rounded-lg p-4 mb-6">
-                                <div class="flex items-start">
-                                    <div class="w-2 h-2 rounded-full bg-purple-500 mt-2 mr-3 flex-shrink-0"></div>
+                            
+                            <!-- Card Content -->
+                            <div class="relative z-10 p-6 h-full flex flex-col">
+                                <!-- Company Logo & Header -->
+                                <div class="flex items-center gap-4 mb-6">
+                                    <!-- Company Logo -->
+                                    <div class="w-24 h-24 rounded-xl bg-gradient-to-br from-purple-100 to-yellow-100 dark:from-purple-800 dark:to-yellow-800 flex items-center justify-center border-2 border-yellow-400/30 dark:border-yellow-400/50 shadow-lg">
+                                        <?php if (!empty($client['company_logo'])): ?>
+                                            <img src="data:image/jpeg;base64,<?= base64_encode($client['company_logo']) ?>" 
+                                                 alt="<?= htmlspecialchars($client['company_name']) ?>" 
+                                                 class="w-full h-full object-cover rounded-lg">
+                                        <?php else: ?>
+                                            <i data-lucide="building-2" class="w-10 h-10 text-purple-600 dark:text-purple-300"></i>
+                                        <?php endif; ?>
+                                    </div>
+                                    
+                                    <!-- Company Name -->
                                     <div class="flex-1">
-                                        <p class="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-1">Project Task</p>
-                                        <p class="text-purple-900 dark:text-purple-100 font-medium leading-relaxed">
-                                            <?= htmlspecialchars($client['task']) ?>
-                                        </p>
+                                        <h3 class="text-xl font-bold text-purple-900 dark:text-purple-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors duration-300 mb-1">
+                                            <?= htmlspecialchars($client['company_name']) ?>
+                                        </h3>
+                                        <p class="text-sm text-purple-600 dark:text-purple-400">Client Partner</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Project Description -->
+                                <div class="bg-purple-50/50 dark:bg-purple-900/30 rounded-2xl p-4 border border-purple-200/30 dark:border-purple-700/30 flex-1">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-purple-500 flex items-center justify-center flex-shrink-0 mt-1">
+                                            <i data-lucide="briefcase" class="w-4 h-4 text-white"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-2">Project Details</h4>
+                                            <p class="text-purple-900 dark:text-purple-100 text-sm leading-relaxed line-clamp-4">
+                                                <?= htmlspecialchars($client['task']) ?>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Duration -->
-                            <div class="flex items-center mb-6">
-                                <div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-700 flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wide">Duration</p>
-                                    <p class="text-purple-900 dark:text-purple-100 font-bold"><?= htmlspecialchars($client['duration']) ?></p>
-                                </div>
-                            </div>
-
-                            <!-- Contact -->
-                            <div class="border-t border-purple-100 dark:border-purple-700 pt-6">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-700 flex items-center justify-center mr-3">
-                                        <svg class="w-4 h-4 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">Contact</p>
-                                        <p class="text-purple-900 dark:text-purple-100 font-medium text-sm break-all">
-                                            <?= htmlspecialchars($client['contact_email']) ?>
-                                        </p>
-                                    </div>
-                                </div>
+                            
+                            <!-- Status Badge - Bottom Right -->
+                            <div class="absolute bottom-4 right-4 z-20">
+                                <?php 
+                                $status = strtolower($client['status']);
+                                $statusColors = [
+                                    'active' => 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
+                                    'completed' => 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
+                                    'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800',
+                                    'cancelled' => 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800'
+                                ];
+                                $statusClass = $statusColors[$status] ?? 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-300 dark:border-gray-800';
+                                ?>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border shadow-lg <?= $statusClass ?>">
+                                    <span class="w-2 h-2 rounded-full mr-2 
+                                        <?= $status === 'active' ? 'bg-blue-500' : 
+                                           ($status === 'completed' ? 'bg-green-500' : 
+                                           ($status === 'pending' ? 'bg-yellow-500' : 'bg-red-500')) ?>">
+                                    </span>
+                                    <?= ucfirst($client['status']) ?>
+                                </span>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                <?php endfor; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
+        
+        <!-- Animation Styles -->
         <style>
             .relative::-webkit-scrollbar {
                 display: none;
@@ -938,6 +944,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             @keyframes marquee {
                 0% {
                     transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+            .animate-marquee {
+                animation: marquee 40s linear infinite;
+                will-change: transform;
+            }
+            .relative:hover .animate-marquee {
+                animation-play-state: paused;
+            }
+        </style>
+    </div>
+</section>
                 }
                 100% {
                     transform: translateX(-50%);
@@ -1025,7 +1046,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
                         <!-- Bottom Gradient Accent -->
                         <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/20 dark:from-purple-600/30 to-transparent"></div>
-                        <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/20 dark:from-yellow-500/30 to-transparent"></div>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -1083,10 +1103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl">
 
                             <!-- Corner Decorations -->
-                            <div class="absolute top-0 right-0 w-24 h-24">
-                                <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/30 dark:from-yellow-500/30 to-transparent"></div>
-                                <div class="absolute top-2 right-2 w-8 h-8 border-2 border-yellow-400/40 dark:border-yellow-500/50 rounded-lg transform rotate-45"></div>
-                            </div>
                             <div class="absolute bottom-0 left-0 w-20 h-20">
                                 <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
                                 <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
@@ -1265,10 +1281,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             </div>
 
                             <!-- Tech Corner Accents -->
-                            <div class="absolute top-0 right-0 w-24 h-24">
-                                <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-400/30 dark:from-yellow-500/30 to-transparent"></div>
-                                <div class="absolute top-2 right-2 w-8 h-8 border-2 border-yellow-400/40 dark:border-yellow-500/50 rounded-lg transform rotate-45"></div>
-                            </div>
                             <div class="absolute bottom-0 left-0 w-20 h-20">
                                 <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
                                 <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
