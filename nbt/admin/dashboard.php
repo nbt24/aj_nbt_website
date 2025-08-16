@@ -32,64 +32,61 @@ if (!isset($_SESSION['admin_id'])) {
         <h3 class="text-xl font-semibold text-purple-900">Manage Courses</h3>
         <p class="text-purple-700">Add, edit, or delete courses</p>
     </a>
-    <a href="manage_team.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">Manage Team</h3>
-        <p class="text-purple-700">Manage team members</p>
+    <a href="course_testimonials_admin.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Course Testimonials</h3>
+        <p class="text-purple-700">Edit, delete & activate/deactivate testimonials</p>
     </a>
-    <a href="manage_services.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">Manage Services</h3>
-        <p class="text-purple-700">Manage service offerings</p>
+    <a href="manage_youtube_videos.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage YouTube Videos</h3>
+        <p class="text-purple-700">Add, edit, and organize video links with sequence</p>
     </a>
-    
-    <a href="manage_mission.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">Manage Mission</h3>
-        <p class="text-purple-700">Update mission stats</p>
-    </a>
-    <a href="manage_contacts.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">Manage Contacts</h3>
-        <p class="text-purple-700">View and manage contact submissions</p>
-    </a>
-    <a href="manage_overview_images.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">Manage Overview Images</h3>
-        <p class="text-purple-700">Upload the images you want in overview section</p>
-    </a>
-    <a href="manage_social_media.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">Manage Social Media Section</h3>
-        <p class="text-purple-700">Configure your social media platforms</p>
+    <a href="manage_client_testimonials.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Business Testimonials</h3>
+        <p class="text-purple-700">Company reviews and project feedback</p>
     </a>
     <a href="coupons.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
         <h3 class="text-xl font-semibold text-purple-900">Manage Coupons</h3>
         <p class="text-purple-700">Create, edit, and manage discount codes</p>
     </a>
-    <!-- ✅ New Company Management Card -->
+    <a href="manage_services.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Services</h3>
+        <p class="text-purple-700">Manage service offerings</p>
+    </a>
+    <a href="admin_clients.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Clients</h3>
+        <p class="text-purple-700">Create, update, and delete client records</p>
+    </a>
     <a href="company_list.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
         <h3 class="text-xl font-semibold text-purple-900">Manage Companies Testimonials</h3>
         <p class="text-purple-700">View, activate/inactivate & export company data</p>
     </a>
-    <a href="course_testimonials_admin.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-    <h3 class="text-xl font-semibold text-purple-900">Manage Course Testimonials</h3>
-    <p class="text-purple-700">Edit, delete & activate/deactivate testimonials</p>
-</a>
-<a href="admin_clients.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-    <h3 class="text-xl font-semibold text-purple-900">Manage Clients</h3>
-    <p class="text-purple-700">Create, update, and delete client records</p>
-</a>
-<a href="admin_founders.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-    <h3 class="text-xl font-semibold text-purple-900">Manage Founder Cards</h3>
-    <p class="text-purple-700">Upload, edit, or delete founder profiles</p>
-</a>
-<!-- ✅ New Admin Management Cards -->
-<a href="manage_admin_users.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-    <h3 class="text-xl font-semibold text-purple-900">Manage Admin Users</h3>
-    <p class="text-purple-700">Add, edit, or delete admin accounts</p>
-</a>
-    <a href="manage_client_testimonials.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">Manage Business Testimonials</h3>
-        <p class="text-purple-700">Company reviews and project feedback</p>
+    <a href="manage_team.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Team</h3>
+        <p class="text-purple-700">Manage team members</p>
     </a>
-    <a href="manage_youtube_videos.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
-        <h3 class="text-xl font-semibold text-purple-900">Manage YouTube Videos</h3>
-        <p class="text-purple-700">Add, edit, and organize video links with sequence</p>
+    <a href="manage_social_media.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Social Media Section</h3>
+        <p class="text-purple-700">Configure your social media platforms</p>
+    </a>
+    <a href="manage_contacts.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Contacts</h3>
+        <p class="text-purple-700">View and manage contact submissions</p>
+    </a>
+    <a href="manage_mission.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Mission</h3>
+        <p class="text-purple-700">Update mission stats</p>
+    </a>
+    <a href="manage_overview_images.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Overview Images</h3>
+        <p class="text-purple-700">Upload the images you want in overview section</p>
+    </a>
+    <a href="admin_founders.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Founder Cards</h3>
+        <p class="text-purple-700">Upload, edit, or delete founder profiles</p>
+    </a>
+    <a href="manage_admin_users.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
+        <h3 class="text-xl font-semibold text-purple-900">Manage Admin Users</h3>
+        <p class="text-purple-700">Add, edit, or delete admin accounts</p>
     </a>
 </div></body>
 </html>
