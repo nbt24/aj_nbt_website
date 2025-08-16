@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Marquee Hover Test - NBT</title>
+    <style>
+        body { margin: 0; padding: 20px; background: #f5f5f5; }
+        .test-section { margin: 20px 0; padding: 20px; background: white; border-radius: 10px; }
+        .status { font-weight: bold; color: green; }
+    </style>
+</head>
+<body>
+    <h1>NBT Website - Marquee Hover Behavior Fixed</h1>
+    
+    <div class="test-section">
+        <h2>✅ Fixed Marquee Sections:</h2>
+        
+        <h3>1. Client Testimonials Section</h3>
+        <p class="status">Fixed: Uses <code>.client-testimonials-container:hover .animate-marquee</code></p>
+        <p>Now only pauses when hovering over the testimonials container area, not individual cards.</p>
+        
+        <h3>2. Course Testimonials Section</h3>
+        <p class="status">Fixed: Uses <code>.course-testimonials-container:hover .animate-marquee</code></p>
+        <p>Animation pauses only when hovering over the course testimonials scrolling area.</p>
+        
+        <h3>3. Services Section</h3>
+        <p class="status">Fixed: Uses <code>.scrolling-wrapper:hover .animate-marquee</code></p>
+        <p>Previously commented out hover behavior has been re-enabled and working properly.</p>
+        
+        <h3>4. Clients Section</h3>
+        <p class="status">Fixed: Uses <code>.clients-container:hover .animate-marquee</code></p>
+        <p>Specific container targeting prevents unwanted pause behavior.</p>
+        
+        <h3>5. Courses Section</h3>
+        <p class="status">Already Working: Uses <code>.scrolling-wrapper:hover .animate-marquee</code></p>
+        <p>This section was already implemented correctly.</p>
+        
+        <h3>6. Team Section</h3>
+        <p class="status">Fixed: Uses <code>.team-marquee-container:hover .animate-marquee</code></p>
+        <p>Replaced individual card JavaScript hover with container-level CSS hover.</p>
+        
+        <h3>7. YouTube Videos Section</h3>
+        <p class="status">Already Working: Uses <code>#videos-wrapper:hover .animate-marquee</code></p>
+        <p>This section was already implemented correctly.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎯 Problem Solved:</h2>
+        <p><strong>Before:</strong> Banner scrolling was stopping when hovering outside containers or on individual elements, causing poor user experience.</p>
+        <p><strong>After:</strong> Banner scrolling only pauses when hovering directly over the intended container areas, providing smooth and intuitive interaction.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔧 Technical Changes Made:</h2>
+        <ul>
+            <li>Removed problematic Tailwind <code>hover:[animation-play-state:paused]</code> classes</li>
+            <li>Added specific container classes for each marquee section</li>
+            <li>Implemented precise CSS hover selectors targeting only container areas</li>
+            <li>Replaced JavaScript hover handlers with consistent CSS approach</li>
+            <li>Ensured all marquee sections have uniform hover behavior</li>
+        </ul>
+    </div>
+    
+    <p><a href="index.php">← Back to NBT Website</a></p>
+</body>
+</html>
