@@ -64,7 +64,7 @@ function getVideoEmbedData($url) {
     if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/', $url, $matches)) {
         $data['type'] = 'youtube';
         $data['video_id'] = $matches[1];
-        $data['embed_url'] = "https://www.youtube.com/embed/" . $matches[1] . "?rel=0&modestbranding=1&showinfo=0";
+        $data['embed_url'] = "https://www.youtube.com/embed/" . $matches[1] . "?rel=0&modestbranding=1&showinfo=0&end_screen=0";
         $data['thumbnail'] = "https://img.youtube.com/vi/" . $matches[1] . "/maxresdefault.jpg";
         return $data;
     }
@@ -1481,14 +1481,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         from { opacity: 0; transform: translateY(10px); }
                         to { opacity: 1; transform: translateY(0); }
                     }
+                    
+                    /* Video Modal Z-Index Fix */
+                    #videoModal {
+                        z-index: 999999 !important;
+                    }
+                    
+                    #videoModal * {
+                        z-index: inherit !important;
+                    }
                 </style>
 
                 <!-- Video Modal -->
-                <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center p-4 overflow-y-auto" style="z-index: 99999 !important; padding-top: 100px;">
-                    <div class="bg-white dark:bg-purple-900 rounded-3xl max-w-4xl w-full max-h-[85vh] overflow-y-auto my-8" style="z-index: 99999 !important;">
-                        <div class="flex justify-between items-center p-4 border-b border-purple-200 dark:border-purple-700 sticky top-0 bg-white dark:bg-purple-900" style="z-index: 99999 !important;">
+                <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center p-4 overflow-y-auto z-[999999]" style="padding-top: 100px;">
+                    <div class="bg-white dark:bg-purple-900 rounded-3xl max-w-4xl w-full max-h-[85vh] overflow-y-auto my-8 z-[999999] relative">
+                        <div class="flex justify-between items-center p-4 border-b border-purple-200 dark:border-purple-700 sticky top-0 bg-white dark:bg-purple-900 z-[999999]">
                             <h3 id="modalTitle" class="text-xl font-bold text-purple-900 dark:text-purple-200"></h3>
-                            <button onclick="closeVideoModal()" class="text-gray-500 hover:text-gray-700 text-2xl" style="z-index: 99999 !important;">&times;</button>
+                            <button onclick="closeVideoModal()" class="text-gray-500 hover:text-gray-700 text-2xl z-[999999] relative">&times;</button>
                         </div>
                         <div class="p-4">
                             <div class="relative" style="padding-bottom: 56.25%; height: 0;">
@@ -2481,7 +2490,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 const videoFrame = document.getElementById('videoFrame');
                 
                 modalTitle.textContent = title;
-                videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&end_screen=0`;
                 modal.classList.remove('hidden');
                 
                 // Prevent body scroll
@@ -2726,7 +2735,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 const modalTitle = document.getElementById('modalTitle');
                 
                 modalTitle.textContent = title;
-                frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&end_screen=0`;
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
             }
