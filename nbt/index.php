@@ -1,6 +1,55 @@
 <?php
 require 'config/db.php';
 
+/**
+ * Image caching function to convert base64 images to files for better performance
+ * @param string $imageData - The binary image data
+ * @param string $imageType - The MIME type of the image
+ * @param string $prefix - A prefix for the filename (e.g., 'course', 'team', 'service')
+ * @param int|string $id - Unique identifier for the image
+ * @return string - The path to the cached image file
+ */
+function getCachedImagePath($imageData, $imageType, $prefix, $id) {
+    // Create cache directory if it doesn't exist
+    $cacheDir = 'cache/images/';
+    if (!is_dir($cacheDir)) {
+        mkdir($cacheDir, 0755, true);
+    }
+    
+    // Generate filename based on content hash to avoid unnecessary regeneration
+    $imageHash = md5($imageData);
+    $extension = '';
+    
+    // Determine file extension from MIME type
+    switch($imageType) {
+        case 'image/jpeg':
+        case 'image/jpg':
+            $extension = '.jpg';
+            break;
+        case 'image/png':
+            $extension = '.png';
+            break;
+        case 'image/gif':
+            $extension = '.gif';
+            break;
+        case 'image/webp':
+            $extension = '.webp';
+            break;
+        default:
+            $extension = '.jpg'; // fallback
+    }
+    
+    $filename = $prefix . '_' . $id . '_' . $imageHash . $extension;
+    $filepath = $cacheDir . $filename;
+    
+    // Only create file if it doesn't exist
+    if (!file_exists($filepath)) {
+        file_put_contents($filepath, $imageData);
+    }
+    
+    return $filepath;
+}
+
 // Fetch data
 $mission_stmt = $pdo->query("SELECT * FROM our_mission LIMIT 1");
 $mission = $mission_stmt->fetch();
@@ -636,9 +685,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         <?php foreach ($founder as $mem): ?>
                             <div class="w-64 text-center bg-purple-50 dark:bg-purple-900/70 rounded-xl shadow-lg mx-auto overflow-hidden">
                                 <div class="relative w-full h-64 border-b-2 border-purple-300 dark:border-purple-600">
-                                    <img src="data:<?php echo htmlspecialchars($mem['image_type']); ?>;base64,<?php echo base64_encode($mem['image_data']); ?>"
+                                    <?php 
+                                        // Use cached image for better performance
+                                        $cachedImagePath = getCachedImagePath($mem['image_data'], $mem['image_type'], 'founder', $mem['id']);
+                                    ?>
+                                    <img src="<?= $cachedImagePath ?>"
                                         alt="<?php echo htmlspecialchars($mem['name']); ?>"
-                                        class="absolute inset-0 w-full h-full object-cover shadow-lg" />
+                                        class="absolute inset-0 w-full h-full object-cover shadow-lg"
+                                        loading="lazy" />
                                     <div class="absolute inset-0 bg-yellow-500/20 dark:bg-yellow-400/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                                 </div>
                                 <div class="p-6">
@@ -699,11 +753,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                         <?php if (!empty($member['image_path']) && file_exists($member['image_path'])): ?>
                                                             <img src="<?php echo htmlspecialchars($member['image_path']); ?>"
                                                                 alt="<?php echo htmlspecialchars($member['name']); ?>"
-                                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                                loading="lazy" />
                                                         <?php elseif (!empty($member['image_data'])): ?>
-                                                            <img src="data:<?php echo htmlspecialchars($member['image_type']); ?>;base64,<?php echo base64_encode($member['image_data']); ?>"
+                                                            <?php 
+                                                                // Use cached image for better performance
+                                                                $cachedImagePath = getCachedImagePath($member['image_data'], $member['image_type'], 'team', $member['id']);
+                                                            ?>
+                                                            <img src="<?= $cachedImagePath ?>"
                                                                 alt="<?php echo htmlspecialchars($member['name']); ?>"
-                                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                                loading="lazy" />
                                                         <?php else: ?>
                                                             <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                                                 <i data-lucide="user" class="w-6 h-6 text-gray-400"></i>
@@ -853,10 +913,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
                                         <!-- Image -->
                                         <?php if (!empty($course['image'])): ?>
+                                            <?php 
+                                                // Use cached image for better performance
+                                                $cachedImagePath = getCachedImagePath($course['image'], 'image/jpeg', 'course', $course['id']);
+                                            ?>
                                             <div class="overflow-hidden rounded-t-3xl">
-                                                <img src="data:image/jpeg;base64,<?= base64_encode($course['image']) ?>"
+                                                <img src="<?= $cachedImagePath ?>"
                                                     alt="<?= htmlspecialchars($course['title']) ?>"
-                                                    class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105">
+                                                    class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105"
+                                                    loading="lazy">
                                             </div>
                             <?php else: ?>
                                 <div class="w-full h-48 bg-purple-200 flex items-center justify-center rounded-t-3xl text-purple-600 font-semibold">
@@ -991,9 +1056,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 <div class="relative z-10 flex items-center">
                                     <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
                                         <?php if (!empty($testimonial['image'])): ?>
-                                            <img src="data:image/jpeg;base64,<?= base64_encode($testimonial['image']) ?>"
+                                            <?php 
+                                                // Use cached image for better performance
+                                                $cachedImagePath = getCachedImagePath($testimonial['image'], 'image/jpeg', 'testimonial', $testimonial['name']);
+                                            ?>
+                                            <img src="<?= $cachedImagePath ?>"
                                                 alt="<?= htmlspecialchars($testimonial['name']) ?>"
-                                                class="w-full h-full object-cover" />
+                                                class="w-full h-full object-cover"
+                                                loading="lazy" />
                                         <?php else: ?>
                                             <div class="w-full h-full bg-purple-200 dark:bg-purple-700 flex items-center justify-center text-purple-900 dark:text-purple-200 font-semibold">
                                                 <?= htmlspecialchars(substr($testimonial['name'], 0, 1)) ?>
@@ -1237,9 +1307,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         <div class="flex items-center px-6 pb-4">
                             <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-purple-200 dark:bg-purple-700">
                                 <?php if (!empty($testimonial['company_logo'])): ?>
-                                    <img src="data:image/jpeg;base64,<?php echo base64_encode($testimonial['company_logo']); ?>"
+                                    <?php 
+                                        // Use cached image for better performance
+                                        $cachedImagePath = getCachedImagePath($testimonial['company_logo'], 'image/jpeg', 'company', $testimonial['company_name']);
+                                    ?>
+                                    <img src="<?= $cachedImagePath ?>"
                                         alt="<?php echo htmlspecialchars($testimonial['company_name']); ?>"
-                                        class="w-full h-full object-cover" />
+                                        class="w-full h-full object-cover"
+                                        loading="lazy" />
                                 <?php else: ?>
                                     <div class="text-purple-900 dark:text-purple-200 font-semibold">
                                         <?php echo htmlspecialchars(substr($testimonial['company_name'], 0, 1)); ?>
@@ -1465,7 +1540,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
                                     <!-- Image -->
                                     <div class="overflow-hidden rounded-t-3xl">
-                                        <img src="data:<?= htmlspecialchars($service['image_type']) ?>;base64,<?= base64_encode($service['image_data']) ?>" alt="<?= htmlspecialchars($service['title']) ?>" class="w-full h-48 object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-110">
+                                        <?php 
+                                            // Use cached image for better performance
+                                            $cachedImagePath = getCachedImagePath($service['image_data'], $service['image_type'], 'service', $service['id']);
+                                        ?>
+                                        <img src="<?= $cachedImagePath ?>" 
+                                             alt="<?= htmlspecialchars($service['title']) ?>" 
+                                             class="w-full h-48 object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-110"
+                                             loading="lazy">
                                     </div>
 
                                     <!-- Content -->
@@ -1574,9 +1656,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 <!-- Company Logo -->
                                                 <div class="w-24 h-24 rounded-xl bg-gradient-to-br from-purple-100 to-yellow-100 dark:from-purple-800 dark:to-yellow-800 flex items-center justify-center border-2 border-yellow-400/30 dark:border-yellow-400/50 shadow-lg">
                                         <?php if (!empty($client['company_logo'])): ?>
-                                            <img src="data:image/jpeg;base64,<?= base64_encode($client['company_logo']) ?>" 
+                                            <?php 
+                                                // Use cached image for better performance
+                                                $cachedImagePath = getCachedImagePath($client['company_logo'], 'image/jpeg', 'client', $client['id']);
+                                            ?>
+                                            <img src="<?= $cachedImagePath ?>" 
                                                  alt="<?= htmlspecialchars($client['company_name']) ?>" 
-                                                 class="w-full h-full object-cover rounded-lg">
+                                                 class="w-full h-full object-cover rounded-lg"
+                                                 loading="lazy">
                                         <?php else: ?>
                                             <i data-lucide="building-2" class="w-10 h-10 text-purple-600 dark:text-purple-300"></i>
                                         <?php endif; ?>
@@ -1940,7 +2027,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                             </div>
                             <img src="/assert/20250126_145421.jpg" alt="Contact us"
-                                class="relative z-10 w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105">
+                                class="relative z-10 w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105"
+                                loading="lazy">
                         </div>
                     </div>
                 </div>
