@@ -1459,31 +1459,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         from { opacity: 0; transform: translateY(10px); }
                         to { opacity: 1; transform: translateY(0); }
                     }
-                    
-                    /* Video Modal Z-Index Fix */
-                    #videoModal {
-                        z-index: 999999 !important;
-                    }
-                    
-                    #videoModal * {
-                        z-index: inherit !important;
-                    }
                 </style>
-
-                <!-- Video Modal -->
-                <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center p-4 overflow-y-auto z-[999999]" style="padding-top: 100px;">
-                    <div class="bg-white dark:bg-purple-900 rounded-3xl max-w-4xl w-full max-h-[85vh] overflow-y-auto my-8 z-[999999] relative">
-                        <div class="flex justify-between items-center p-4 border-b border-purple-200 dark:border-purple-700 sticky top-0 bg-white dark:bg-purple-900 z-[999999]">
-                            <h3 id="modalTitle" class="text-xl font-bold text-purple-900 dark:text-purple-200"></h3>
-                            <button onclick="closeVideoModal()" class="text-gray-500 hover:text-gray-700 text-2xl z-[999999] relative">&times;</button>
-                        </div>
-                        <div class="p-4">
-                            <div class="relative" style="padding-bottom: 56.25%; height: 0;">
-                                <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="absolute top-0 left-0 w-full h-full rounded-lg"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -2424,44 +2400,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
             // Team Marquee Pause/Resume Functions
             
-            // Video Modal Functions
+            // Video Functions - Direct Fullscreen
             function openVideoModal(videoId, title) {
-                const modal = document.getElementById('videoModal');
-                const modalTitle = document.getElementById('modalTitle');
-                const videoFrame = document.getElementById('videoFrame');
-                
-                modalTitle.textContent = title;
-                videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&end_screen=0`;
-                modal.classList.remove('hidden');
-                
-                // Prevent body scroll
-                document.body.style.overflow = 'hidden';
+                // Open YouTube video directly in a new tab/window with autoplay
+                const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}&autoplay=1&rel=0`;
+                window.open(youtubeUrl, '_blank');
             }
 
             function closeVideoModal() {
-                const modal = document.getElementById('videoModal');
-                const videoFrame = document.getElementById('videoFrame');
-                
-                videoFrame.src = '';
-                modal.classList.add('hidden');
-                
-                // Restore body scroll
-                document.body.style.overflow = 'auto';
+                // No longer needed, but keeping for compatibility
+                return;
             }
 
-            // Close modal when clicking outside
-            document.getElementById('videoModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeVideoModal();
-                }
-            });
-
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeVideoModal();
-                }
-            });
             function pauseTeamMarquee() {
                 const marquee = document.getElementById('team-marquee');
                 if (marquee) {
@@ -2669,33 +2619,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             //     })
             // });
 
-            // Video Modal Functions
-            function openVideoModal(videoId, title) {
-                const modal = document.getElementById('videoModal');
-                const frame = document.getElementById('videoFrame');
-                const modalTitle = document.getElementById('modalTitle');
-                
-                modalTitle.textContent = title;
-                frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&end_screen=0`;
-                modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            }
 
-            function closeVideoModal() {
-                const modal = document.getElementById('videoModal');
-                const frame = document.getElementById('videoFrame');
-                
-                frame.src = '';
-                modal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }
-
-            // Close modal when clicking outside
-            document.getElementById('videoModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeVideoModal();
-                }
-            });
 
             /*
             // Fetch youtube videos
