@@ -768,26 +768,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         </div>
 
         <!-- Horizontal Scrolling Cards -->
-        <div class="scrolling-wrapper overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
-            <div class="scrolling-container flex space-x-6 min-w-max pb-4 animate-marquee">
-                <?php 
-                // Duplicate the services array for seamless looping
-                $services_loop = array_merge($services, $services);
-                foreach ($services_loop as $index => $service): ?>
-                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group w-[300px] sm:w-[320px] flex-shrink-0 animate-section" style="animation-delay: <?= 100 * $index ?>ms;">
-                        <!-- Tech Grid Background -->
-                        <div class="absolute inset-0 opacity-10 pointer-events-none">
-                            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
-                        </div>
+        <div class="relative mx-2 md:mx-4 lg:mx-6">
+            <!-- Curved Container Background -->
+            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+                <!-- Inner padding container -->
+                <div class="px-6 py-6">
+                    <div class="scrolling-wrapper overflow-hidden rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
+                        <div class="scrolling-container flex space-x-6 min-w-max pb-4 animate-marquee">
+                            <?php 
+                            // Duplicate the services array for seamless looping
+                            $services_loop = array_merge($services, $services);
+                            foreach ($services_loop as $index => $service): ?>
+                                <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group w-[300px] sm:w-[320px] flex-shrink-0 animate-section" style="animation-delay: <?= 100 * $index ?>ms;">
+                                    <!-- Tech Grid Background -->
+                                    <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                    </div>
 
-                        <!-- Image -->
-                        <div class="overflow-hidden rounded-t-3xl">
-                            <img src="data:<?= htmlspecialchars($service['image_type']) ?>;base64,<?= base64_encode($service['image_data']) ?>" alt="<?= htmlspecialchars($service['title']) ?>" class="w-full h-48 object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-110">
-                        </div>
+                                    <!-- Image -->
+                                    <div class="overflow-hidden rounded-t-3xl">
+                                        <img src="data:<?= htmlspecialchars($service['image_type']) ?>;base64,<?= base64_encode($service['image_data']) ?>" alt="<?= htmlspecialchars($service['title']) ?>" class="w-full h-48 object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-110">
+                                    </div>
 
-                        <!-- Content -->
-                        <div class="relative z-10 p-6">
-                            <h3 class="text-xl font-bold text-purple-900 dark:text-purple-200 mb-2 group-hover:text-yellow-500 transition-colors duration-300"><?= htmlspecialchars($service['title']) ?></h3>
+                                    <!-- Content -->
+                                    <div class="relative z-10 p-6">
+                                        <h3 class="text-xl font-bold text-purple-900 dark:text-purple-200 mb-2 group-hover:text-yellow-500 transition-colors duration-300"><?= htmlspecialchars($service['title']) ?></h3>
                             <p class="text-purple-700 dark:text-purple-300 mb-4"><?= htmlspecialchars($service['description']) ?></p>
                             <ul class="list-disc list-inside text-purple-700 dark:text-purple-300 mb-4">
                                 <?php foreach (explode(',', $service['points']) as $point): ?>
@@ -814,6 +819,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </div>
                     </div>
                 <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Curved fade edges for seamless effect -->
+                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
             </div>
         </div>
         <style>
@@ -857,27 +869,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         </div>
 
         <!-- Scrolling Container -->
-        <div class="relative overflow-hidden">
-            <div class="flex animate-marquee gap-8" style="animation: marquee 40s linear infinite;">
-                <?php 
-                // Double the clients array for seamless looping
-                $clients_loop = array_merge($clients, $clients);
-                foreach ($clients_loop as $index => $client): ?>
-                    <div class="flex-shrink-0 w-80 group">
-                        <!-- Client Card -->
-                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 h-80">
-                            
-                            <!-- Decorative Background Pattern -->
-                            <div class="absolute inset-0 opacity-5 pointer-events-none">
-                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
-                            </div>
-                            
-                            <!-- Card Content -->
-                            <div class="relative z-10 p-6 h-full flex flex-col">
-                                <!-- Company Logo & Header -->
-                                <div class="flex items-center gap-4 mb-6">
-                                    <!-- Company Logo -->
-                                    <div class="w-24 h-24 rounded-xl bg-gradient-to-br from-purple-100 to-yellow-100 dark:from-purple-800 dark:to-yellow-800 flex items-center justify-center border-2 border-yellow-400/30 dark:border-yellow-400/50 shadow-lg">
+        <div class="relative mx-2 md:mx-4 lg:mx-6">
+            <!-- Curved Container Background -->
+            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+                <!-- Inner padding container -->
+                <div class="px-6 py-6">
+                    <div class="relative overflow-hidden rounded-[2rem]">
+                        <div class="flex animate-marquee gap-8" style="animation: marquee 40s linear infinite;">
+                            <?php 
+                            // Double the clients array for seamless looping
+                            $clients_loop = array_merge($clients, $clients);
+                            foreach ($clients_loop as $index => $client): ?>
+                                <div class="flex-shrink-0 w-80 group">
+                                    <!-- Client Card -->
+                                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 h-80">
+                                        
+                                        <!-- Decorative Background Pattern -->
+                                        <div class="absolute inset-0 opacity-5 pointer-events-none">
+                                            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                        </div>
+                                        
+                                        <!-- Card Content -->
+                                        <div class="relative z-10 p-6 h-full flex flex-col">
+                                            <!-- Company Logo & Header -->
+                                            <div class="flex items-center gap-4 mb-6">
+                                                <!-- Company Logo -->
+                                                <div class="w-24 h-24 rounded-xl bg-gradient-to-br from-purple-100 to-yellow-100 dark:from-purple-800 dark:to-yellow-800 flex items-center justify-center border-2 border-yellow-400/30 dark:border-yellow-400/50 shadow-lg">
                                         <?php if (!empty($client['company_logo'])): ?>
                                             <img src="data:image/jpeg;base64,<?= base64_encode($client['company_logo']) ?>" 
                                                  alt="<?= htmlspecialchars($client['company_name']) ?>" 
@@ -936,6 +953,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </div>
                     </div>
                 <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Curved fade edges for seamless effect -->
+                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
             </div>
         </div>
         
@@ -998,25 +1022,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         </div>
 
         <!-- Marquee Testimonial Cards -->
-        <div class="relative overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
-            <div class="flex animate-marquee hover:[animation-play-state:paused] gap-x-8" style="width: max-content;">
-                <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
-                    <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group">
-                        <!-- Rating Stars -->
-                        <div class="flex items-center mt-6 mb-4 px-6 star-rating">
-                            <?php $rating = floor($testimonial['rating']); ?>
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                                <?php if ($i <= $rating): ?>
-                                    <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
-                                <?php else: ?>
-                                    <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
-                                <?php endif; ?>
-                            <?php endfor; ?>
-                            <span class="ml-2 text-purple-700 dark:text-purple-300 font-medium"><?= number_format($testimonial['rating'], 1) ?></span>
-                        </div>
+        <div class="relative mx-2 md:mx-4 lg:mx-6">
+            <!-- Curved Container Background -->
+            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+                <!-- Inner padding container -->
+                <div class="px-6 py-6">
+                    <div class="relative overflow-hidden rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
+                        <div class="flex animate-marquee hover:[animation-play-state:paused] gap-x-8" style="width: max-content;">
+                            <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
+                                <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group">
+                                    <!-- Rating Stars -->
+                                    <div class="flex items-center mt-6 mb-4 px-6 star-rating">
+                                        <?php $rating = floor($testimonial['rating']); ?>
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <?php if ($i <= $rating): ?>
+                                                <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                            <?php endif; ?>
+                                        <?php endfor; ?>
+                                        <span class="ml-2 text-purple-700 dark:text-purple-300 font-medium"><?= number_format($testimonial['rating'], 1) ?></span>
+                                    </div>
 
-                        <!-- Testimonial Text -->
-                        <p class="text-purple-700 dark:text-purple-300 mb-4 px-6"><?php echo htmlspecialchars($testimonial['project_description']); ?></p>
+                                    <!-- Testimonial Text -->
+                                    <p class="text-purple-700 dark:text-purple-300 mb-4 px-6"><?php echo htmlspecialchars($testimonial['project_description']); ?></p>
 
                         <!-- User Info -->
                         <div class="flex items-center px-6 pb-4">
@@ -1051,6 +1080,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/20 dark:from-purple-600/30 to-transparent"></div>
                     </div>
                 <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Curved fade edges for seamless effect -->
+                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
             </div>
         </div>
     </div>
@@ -1096,28 +1132,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             </p>
         </div>
 
-        <div class="scrolling-wrapper overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
-            <div class="scrolling-container flex gap-x-6 min-w-max animate-marquee">
-                <?php 
-                // Duplicate the courses array for seamless looping
-                $courses_loop = array_merge($courses, $courses);
-                foreach ($courses_loop as $index => $course): ?>
-                    <div class="group animate-section w-[300px] sm:w-[320px] flex-shrink-0" style="animation-delay: <?= 100 * $index ?>ms;">
-                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl">
+        <div class="relative mx-2 md:mx-4 lg:mx-6">
+            <!-- Curved Container Background -->
+            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+                <!-- Inner padding container -->
+                <div class="px-6 py-6">
+                    <div class="scrolling-wrapper overflow-hidden rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
+                        <div class="scrolling-container flex gap-x-6 min-w-max animate-marquee">
+                            <?php 
+                            // Duplicate the courses array for seamless looping
+                            $courses_loop = array_merge($courses, $courses);
+                            foreach ($courses_loop as $index => $course): ?>
+                                <div class="group animate-section w-[300px] sm:w-[320px] flex-shrink-0" style="animation-delay: <?= 100 * $index ?>ms;">
+                                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl">
 
-                            <!-- Corner Decorations -->
-                            <div class="absolute bottom-0 left-0 w-20 h-20">
-                                <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
-                                <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
-                            </div>
+                                        <!-- Corner Decorations -->
+                                        <div class="absolute bottom-0 left-0 w-20 h-20">
+                                            <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
+                                            <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
+                                        </div>
 
-                            <!-- Image -->
-                            <?php if (!empty($course['image'])): ?>
-                                <div class="overflow-hidden rounded-t-3xl">
-                                    <img src="data:image/jpeg;base64,<?= base64_encode($course['image']) ?>"
-                                        alt="<?= htmlspecialchars($course['title']) ?>"
-                                        class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105">
-                                </div>
+                                        <!-- Image -->
+                                        <?php if (!empty($course['image'])): ?>
+                                            <div class="overflow-hidden rounded-t-3xl">
+                                                <img src="data:image/jpeg;base64,<?= base64_encode($course['image']) ?>"
+                                                    alt="<?= htmlspecialchars($course['title']) ?>"
+                                                    class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105">
+                                            </div>
                             <?php else: ?>
                                 <div class="w-full h-48 bg-purple-200 flex items-center justify-center rounded-t-3xl text-purple-600 font-semibold">
                                     No Image
@@ -1171,6 +1212,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </div>
                     </div>
                 <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Curved fade edges for seamless effect -->
+                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
             </div>
         </div>
         <style>
@@ -1688,75 +1736,87 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 </div>
 
                 <!-- Videos Marquee -->
-                <div id="videos-wrapper" class="overflow-hidden animate-section" style="scrollbar-width: none; -ms-overflow-style: none;">
-                    <div id="videos" class="flex gap-x-6 min-h-[200px] animate-marquee">
-                        <?php if (empty($youtube_videos)): ?>
-                            <div class="text-purple-700 dark:text-purple-300 text-center w-full">
-                                No videos available at the moment. Please check back later!
+                <div class="relative mx-2 md:mx-4 lg:mx-6">
+                    <!-- Curved Container Background -->
+                    <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+                        <!-- Inner padding container -->
+                        <div class="px-6 py-6">
+                            <div id="videos-wrapper" class="overflow-hidden animate-section rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
+                                <div id="videos" class="flex gap-x-6 min-h-[200px] animate-marquee">
+                                    <?php if (empty($youtube_videos)): ?>
+                                        <div class="text-purple-700 dark:text-purple-300 text-center w-full">
+                                            No videos available at the moment. Please check back later!
+                                        </div>
+                                    <?php else: ?>
+                                        <!-- First set of videos -->
+                                        <?php foreach ($youtube_videos as $video): 
+                                            $video_id = '';
+                                            if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
+                                                $video_id = $matches[1];
+                                            }
+                                        ?>
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
+                                                    <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
+                                                        class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
+                                                        onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
+                                                    <div class="absolute inset-0 flex items-center justify-center">
+                                                        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
+                                                            <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                                                <path d="M8 5v14l11-7z"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="p-4">
+                                                    <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
+                                                        <?= htmlspecialchars($video['title']) ?>
+                                                    </h4>
+                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
+                                                        Watch Now
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                        
+                                        <!-- Duplicate set for seamless loop -->
+                                        <?php foreach ($youtube_videos as $video): 
+                                            $video_id = '';
+                                            if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
+                                                $video_id = $matches[1];
+                                            }
+                                        ?>
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
+                                                    <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
+                                                        class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
+                                                        onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
+                                                    <div class="absolute inset-0 flex items-center justify-center">
+                                                        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
+                                                            <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                                                <path d="M8 5v14l11-7z"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="p-4">
+                                                    <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
+                                                        <?= htmlspecialchars($video['title']) ?>
+                                                    </h4>
+                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
+                                                        Watch Now
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                        <?php else: ?>
-                            <!-- First set of videos -->
-                            <?php foreach ($youtube_videos as $video): 
-                                $video_id = '';
-                                if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
-                                    $video_id = $matches[1];
-                                }
-                            ?>
-                                <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
-                                    <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
-                                        <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
-                                            class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
-                                            onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
-                                        <div class="absolute inset-0 flex items-center justify-center">
-                                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
-                                                <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M8 5v14l11-7z"/>
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-4">
-                                        <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
-                                            <?= htmlspecialchars($video['title']) ?>
-                                        </h4>
-                                        <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
-                                            Watch Now
-                                        </button>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                            
-                            <!-- Duplicate set for seamless loop -->
-                            <?php foreach ($youtube_videos as $video): 
-                                $video_id = '';
-                                if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
-                                    $video_id = $matches[1];
-                                }
-                            ?>
-                                <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
-                                    <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
-                                        <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
-                                            class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
-                                            onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
-                                        <div class="absolute inset-0 flex items-center justify-center">
-                                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
-                                                <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M8 5v14l11-7z"/>
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-4">
-                                        <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
-                                            <?= htmlspecialchars($video['title']) ?>
-                                        </h4>
-                                        <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
-                                            Watch Now
-                                        </button>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                        </div>
+                        
+                        <!-- Curved fade edges for seamless effect -->
+                        <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
+                        <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
                     </div>
                 </div>
 
