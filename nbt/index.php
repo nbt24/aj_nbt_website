@@ -637,7 +637,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     </div>
 
                     <!--Company Team Members-->
-                    <div class="mt-16 overflow-hidden relative team-marquee-container">
+                    <div class="mt-16 overflow-hidden relative team-marquee-container manual-scroll">
                         <div id="team-marquee" class="flex gap-12 animate-marquee px-4" style="animation: marquee 60s linear infinite;">
                             <?php
                             // Double the team array for infinite scrolling
@@ -748,6 +748,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         .team-marquee-container:hover .animate-marquee {
                             animation-play-state: paused;
                         }
+                        
+                        /* Manual scroll styles */
+                        .manual-scroll {
+                            overflow-x: auto;
+                            cursor: grab;
+                        }
+                        
+                        .manual-scroll:active {
+                            cursor: grabbing;
+                        }
+                        
+                        .manual-scroll::-webkit-scrollbar {
+                            height: 8px;
+                        }
+                        
+                        .manual-scroll::-webkit-scrollbar-track {
+                            background: rgba(147, 51, 234, 0.1);
+                            border-radius: 4px;
+                        }
+                        
+                        .manual-scroll::-webkit-scrollbar-thumb {
+                            background: rgba(147, 51, 234, 0.3);
+                            border-radius: 4px;
+                        }
+                        
+                        .manual-scroll::-webkit-scrollbar-thumb:hover {
+                            background: rgba(147, 51, 234, 0.5);
+                        }
                     </style>
                 </div>
 
@@ -775,7 +803,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
                 <div class="px-6 py-6">
-                    <div class="scrolling-wrapper overflow-hidden rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
+                    <div class="scrolling-wrapper overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                         <div class="scrolling-container flex space-x-6 min-w-max pb-4 animate-marquee">
                             <?php 
                             // Duplicate the services array for seamless looping
@@ -876,7 +904,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
                 <div class="px-6 py-6">
-                    <div class="relative overflow-hidden rounded-[2rem]">
+                    <div class="relative overflow-hidden rounded-[2rem] manual-scroll">
                         <div class="flex animate-marquee gap-8" style="animation: marquee 40s linear infinite;">
                             <?php 
                             // Double the clients array for seamless looping
@@ -1029,7 +1057,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
                 <div class="px-6 py-6">
-                    <div class="relative overflow-hidden rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
+                    <div class="relative overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                         <div class="flex animate-marquee gap-x-8" style="width: max-content;">
                             <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
                                 <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group">
@@ -1115,6 +1143,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
     .client-testimonials-container:hover .animate-marquee {
         animation-play-state: paused;
     }
+    
+    /* Manual scroll functionality */
+    .manual-scroll {
+        overflow-x: auto !important;
+        cursor: grab;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(168, 85, 247, 0.3) transparent;
+    }
+    .manual-scroll::-webkit-scrollbar {
+        height: 6px;
+    }
+    .manual-scroll::-webkit-scrollbar-track {
+        background: rgba(168, 85, 247, 0.1);
+        border-radius: 3px;
+    }
+    .manual-scroll::-webkit-scrollbar-thumb {
+        background: rgba(168, 85, 247, 0.3);
+        border-radius: 3px;
+    }
+    .manual-scroll::-webkit-scrollbar-thumb:hover {
+        background: rgba(168, 85, 247, 0.5);
+    }
+    .manual-scroll:active {
+        cursor: grabbing;
+    }
+    .manual-scroll:hover .animate-marquee {
+        animation-play-state: paused;
+    }
 </style>
 
 
@@ -1140,7 +1196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
                 <div class="px-6 py-6">
-                    <div class="scrolling-wrapper overflow-hidden rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
+                    <div class="scrolling-wrapper overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                         <div class="scrolling-container flex gap-x-6 min-w-max animate-marquee">
                             <?php 
                             // Duplicate the courses array for seamless looping
@@ -1370,7 +1426,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 </div>
 
                 <!-- Marquee Slider -->
-                <div class="relative overflow-hidden course-testimonials-container">
+                <div class="relative overflow-hidden course-testimonials-container manual-scroll">
                     <div class="flex animate-marquee" style="width: calc(300% + 48px); animation: marquee 40s linear infinite;">
                         <?php foreach (array_merge($course_testimonials, $course_testimonials) as $testimonial): ?>
                             <div class="flex-none w-80 mx-4 relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group p-6">
@@ -1679,7 +1735,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                         <!-- Inner padding container -->
                         <div class="px-6 py-6">
-                            <div id="videos-wrapper" class="overflow-hidden animate-section rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
+                            <div id="videos-wrapper" class="overflow-hidden animate-section rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                                 <div id="videos" class="flex gap-x-6 min-h-[200px] animate-marquee">
                                     <?php if (empty($youtube_videos)): ?>
                                         <div class="text-purple-700 dark:text-purple-300 text-center w-full">
