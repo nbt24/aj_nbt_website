@@ -80,7 +80,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
     <link rel="icon" type="image/x-icon" href="./assert/black.png">
 
     <style>
-       
+        /* Global Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Disable smooth scrolling for users who prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+        }
 
         .animate-marquee {
             animation: marquee 50s linear infinite;
@@ -365,12 +375,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         About
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
                     </button>
+                    <button onclick="scrollToSection('courses')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Courses
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('student-testimonials')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Student Reviews
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('videos-section')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Videos
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('testimonials')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Client Reviews
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('coupons')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Offers
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
                     <button onclick="scrollToSection('services')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
                         Services
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
                     </button>
-                    <button onclick="scrollToSection('courses')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
-                        Courses
+                    <button onclick="scrollToSection('client')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
+                        Clients
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 dark:bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
                     </button>
                     <button onclick="scrollToSection('contact')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
@@ -400,8 +430,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <button onclick="scrollToSection('home')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Home</button>
                 <button onclick="scrollToSection('about')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">About</button>
-                <button onclick="scrollToSection('services')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Services</button>
                 <button onclick="scrollToSection('courses')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Courses</button>
+                <button onclick="scrollToSection('student-testimonials')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Student Reviews</button>
+                <button onclick="scrollToSection('videos-section')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Videos</button>
+                <button onclick="scrollToSection('testimonials')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Client Reviews</button>
+                <button onclick="scrollToSection('coupons')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Offers</button>
+                <button onclick="scrollToSection('services')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Services</button>
+                <button onclick="scrollToSection('client')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Clients</button>
                 <button onclick="scrollToSection('contact')" class="block w-full text-left px-3 py-2 text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 hover:bg-purple-100 dark:hover:bg-purple-800 transition-all duration-300 capitalize transform hover:translate-x-2 font-medium">Contact</button>
             </div>
         </div>
@@ -2005,15 +2040,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 lucide.createIcons();
             }
 
-            // Scroll to section
+            // Scroll to section with smooth animation
             function scrollToSection(id) {
                 const element = document.getElementById(id);
-                element.scrollIntoView({
-                    behavior: 'smooth'
-                });
-                const menu = document.getElementById('mobile-menu');
-                if (menu.classList.contains('max-h-screen')) {
-                    toggleMenu();
+                if (element) {
+                    // Get the navbar height to offset the scroll position
+                    const navbarHeight = document.querySelector('nav').offsetHeight || 80;
+                    const elementPosition = element.offsetTop - navbarHeight - 20;
+                    
+                    // Custom smooth scroll implementation for better browser support
+                    const startPosition = window.pageYOffset;
+                    const distance = elementPosition - startPosition;
+                    const duration = 1000; // 1 second animation
+                    let start = null;
+                    
+                    function animation(currentTime) {
+                        if (start === null) start = currentTime;
+                        const timeElapsed = currentTime - start;
+                        const run = ease(timeElapsed, startPosition, distance, duration);
+                        window.scrollTo(0, run);
+                        if (timeElapsed < duration) requestAnimationFrame(animation);
+                    }
+                    
+                    // Easing function for smooth animation
+                    function ease(t, b, c, d) {
+                        t /= d / 2;
+                        if (t < 1) return c / 2 * t * t + b;
+                        t--;
+                        return -c / 2 * (t * (t - 2) - 1) + b;
+                    }
+                    
+                    requestAnimationFrame(animation);
+                    
+                    // Close mobile menu if open
+                    const menu = document.getElementById('mobile-menu');
+                    if (menu && menu.classList.contains('max-h-screen')) {
+                        toggleMenu();
+                    }
+                }
+            }
+
+            // Dedicated smooth scroll function for contact section
+            function smoothScrollToContact() {
+                const contactSection = document.getElementById('contact');
+                if (contactSection) {
+                    const navbarHeight = document.querySelector('nav').offsetHeight || 80;
+                    const targetPosition = contactSection.offsetTop - navbarHeight - 20;
+                    
+                    // Enhanced smooth scroll with longer duration for better visual effect
+                    const startPosition = window.pageYOffset;
+                    const distance = targetPosition - startPosition;
+                    const duration = 1500; // 1.5 seconds for more noticeable smooth scroll
+                    let startTime = null;
+                    
+                    function smoothAnimation(currentTime) {
+                        if (startTime === null) startTime = currentTime;
+                        const timeElapsed = currentTime - startTime;
+                        const progress = Math.min(timeElapsed / duration, 1);
+                        
+                        // Smooth easing function (ease-in-out)
+                        const easeProgress = progress < 0.5 
+                            ? 2 * progress * progress 
+                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                        
+                        const currentPosition = startPosition + (distance * easeProgress);
+                        window.scrollTo(0, currentPosition);
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(smoothAnimation);
+                        }
+                    }
+                    
+                    requestAnimationFrame(smoothAnimation);
+                    
+                    // Close mobile menu if open
+                    const menu = document.getElementById('mobile-menu');
+                    if (menu && menu.classList.contains('max-h-screen')) {
+                        toggleMenu();
+                    }
                 }
             }
 
