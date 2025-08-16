@@ -168,6 +168,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
     <link rel="icon" type="image/x-icon" href="./assert/black.png">
 
     <style>
+        /* Performance Optimizations */
+        * {
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
         /* Global Smooth Scrolling */
         html {
             scroll-behavior: smooth;
@@ -181,17 +187,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         }
 
         .animate-marquee {
-            animation: marquee 50s linear infinite;
+            animation: marquee 40s linear infinite;
             will-change: transform;
+            transform: translate3d(0, 0, 0);
         }
-         /* Marquee Animation */
+         /* Marquee Animation - Hardware Accelerated */
         @keyframes marquee {
             0% {
-                transform: translateX(0);
+                transform: translate3d(0, 0, 0);
             }
 
             100% {
-                transform: translateX(-50%);
+                transform: translate3d(-50%, 0, 0);
             }
         }
 
@@ -382,13 +389,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
-        /* Scrolling Container */
+        /* Scrolling Container - Hardware Accelerated */
         .scrolling-container {
             display: flex;
             gap: 2rem;
             flex-wrap: nowrap;
-            animation: scroll-x 50s linear infinite;
+            animation: scroll-x 40s linear infinite;
             will-change: transform;
+            transform: translate3d(0, 0, 0);
         }
 
         /*.scrolling-wrapper:hover .scrolling-container {*/
@@ -397,11 +405,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
         @keyframes scroll-x {
             0% {
-                transform: translateX(0%);
+                transform: translate3d(0%, 0, 0);
             }
 
             100% {
-                transform: translateX(-50%);
+                transform: translate3d(-50%, 0, 0);
             }
         }
 
@@ -867,14 +875,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
                     <!--Company Team Members-->
                     <div class="mt-16 overflow-hidden relative team-marquee-container manual-scroll">
-                        <div id="team-marquee" class="flex gap-12 animate-marquee px-4" style="animation: marquee 60s linear infinite;">
+                        <div id="team-marquee" class="flex gap-12 animate-marquee px-4" style="animation: marquee 40s linear infinite;">
                             <?php
                             // Double the team array for infinite scrolling
                             $loopedTeam = array_merge($team, $team);
                             foreach ($loopedTeam as $index => $member): ?>
                                 <div class="flex-shrink-0 w-72 text-center group team-card">
                                     <!-- Card Container with Curved Boundary and Reduced Height -->
-                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-72">
+                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-72 will-change-transform">
                                         
                                         <!-- Decorative Background Pattern -->
                                         <div class="absolute inset-0 opacity-5 pointer-events-none">
@@ -902,8 +910,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                             ?>
                                                             <img src="<?= $cachedImagePath ?>"
                                                                 alt="<?php echo htmlspecialchars($member['name']); ?>"
-                                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                                                loading="lazy" />
+                                                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                                                loading="lazy" 
+                                                                decoding="async" />
                                                         <?php else: ?>
                                                             <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                                                 <i data-lucide="user" class="w-6 h-6 text-gray-400"></i>
@@ -953,15 +962,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </div>
                     </div>
 
-                    <!-- Marquee Keyframes -->
+                    <!-- Marquee Keyframes - Hardware Accelerated -->
                     <style>
                         @keyframes marquee {
                             0% {
-                                transform: translateX(0%);
+                                transform: translate3d(0%, 0, 0);
                             }
 
                             100% {
-                                transform: translateX(-50%);
+                                transform: translate3d(-50%, 0, 0);
                             }
                         }
                         
@@ -1265,10 +1274,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 $video_id = $matches[1];
                                             }
                                         ?>
-                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-300 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
                                                 <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
                                                     <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
-                                                        class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
+                                                        class="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105" 
                                                         onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
                                                     <div class="absolute inset-0 flex items-center justify-center">
                                                         <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
@@ -1296,10 +1305,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 $video_id = $matches[1];
                                             }
                                         ?>
-                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-300 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
                                                 <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
                                                     <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
-                                                        class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
+                                                        class="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105" 
                                                         onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
                                                     <div class="absolute inset-0 flex items-center justify-center">
                                                         <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
@@ -1372,6 +1381,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     .video-player {
                         z-index: 10;
                     }
+                    
+                    .video-player iframe,
+                    .video-player video {
+                        transition: opacity 0.3s ease;
+                        display: block;
+                        width: 100% !important;
+                        height: 100% !important;
+                        border: none;
+                        outline: none;
+                        border-radius: 1.5rem; /* Match rounded-3xl */
+                    }
+                </style>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services-section" class="py-20 bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Background Elements -->
                     
                     .video-player iframe,
                     .video-player video {
