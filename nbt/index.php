@@ -123,16 +123,16 @@ $clients_testimonials = $clients_testimonials_stmt->fetchAll();
 $course_testimonials_stmt = $pdo->query("SELECT name, email, course, rating, message, image, video FROM course_testimonials ORDER BY rating DESC");
 $course_testimonials = $course_testimonials_stmt->fetchAll();
 
-// Social Media Fetching Section
-$stmt = $pdo->query("SELECT * FROM social_media");
-// First row (e.g., Instagram)
-$row1 = $stmt->fetch(PDO::FETCH_ASSOC);
-// Second row (e.g., Facebook)
-$row2 = $stmt->fetch(PDO::FETCH_ASSOC);
-// Third row (e.g., Twitter)
-$row3 = $stmt->fetch(PDO::FETCH_ASSOC);
-// Fourth row (e.g., Youtube)
-$row4 = $stmt->fetch(PDO::FETCH_ASSOC);
+// // Social Media Fetching Section
+// $stmt = $pdo->query("SELECT * FROM social_media");
+// // First row (e.g., Instagram)
+// $row1 = $stmt->fetch(PDO::FETCH_ASSOC);
+// // Second row (e.g., Facebook)
+// $row2 = $stmt->fetch(PDO::FETCH_ASSOC);
+// // Third row (e.g., Twitter)
+// $row3 = $stmt->fetch(PDO::FETCH_ASSOC);
+// // Fourth row (e.g., Youtube)
+// $row4 = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Fetch YouTube videos
 $youtube_stmt = $pdo->prepare("SELECT * FROM youtube_videos ORDER BY sequence_number");
@@ -530,21 +530,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         </div>
     </nav>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-purple-700 to-yellow-500 dark:from-purple-800 dark:via-purple-900 dark:to-yellow-600">
-        <div class="text-center text-white">
-            <div class="relative mb-8">
-                <div class="w-20 h-20 border-4 border-yellow-300 dark:border-yellow-400 border-t-white rounded-full animate-spin"></div>
-                <div class="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-purple-300 dark:border-r-purple-400 rounded-full animate-ping"></div>
-            </div>
-            <div class="text-3xl font-bold mb-2 animate-pulse tracking-tight">NBT</div>
-            <div class="text-lg animate-pulse tracking-tight">Next Bigg Tech</div>
-            <div class="mt-4 text-sm opacity-75">Loading your future...</div>
-        </div>
-    </div>
+    
 
     <!-- Main Content -->
-    <div id="main-content" class="hidden">
+    <!-- <div id="main-content" class="hidden"> -->
+        <div id="main-content">
         <!-- Hero Section -->
         <section id="home" class="bg-gradient-to-br from-purple-600 via-purple-700 to-yellow-500 dark:from-purple-800 dark:via-purple-900 dark:to-yellow-600 text-white py-20 pt-36 relative overflow-hidden">
             <div class="absolute inset-0 overflow-hidden">
@@ -2086,7 +2076,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </div>
                     </div>
                 </div>
-
+            </div>
+        </section>
                 <?php /*
                 <!-- Enhanced Social Media Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate-section" style="animation-delay: 200ms;">
@@ -2198,9 +2189,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </button>
                     </div>
                 </div>
-            </div>
-        </section>
-        */ ?>
+                */ ?>
+         
+        
 
         <!-- Contact Section -->
         <section id="contact" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
@@ -2456,13 +2447,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 }
             }
 
-            // Hide loading screen
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    document.getElementById('loading-screen').classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                }, 1000);
-            });
+            
 
             // Counter animation
             document.querySelectorAll('[data-counter]').forEach(element => {
@@ -2661,72 +2646,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 missionVideoLoaded = false;
             }
 
-            document.addEventListener("DOMContentLoaded", function() {
-                function socialMediaCounter(element, target) {
-                    let count = 0;
-                    const speed = 2000;
-                    const increment = Math.ceil(target / speed);
+            // document.addEventListener("DOMContentLoaded", function() {
+            //     function socialMediaCounter(element, target) {
+            //         let count = 0;
+            //         const speed = 2000;
+            //         const increment = Math.ceil(target / speed);
 
-                    const updateCount = () => {
-                        if (count < target) {
-                            count += increment;
-                            element.innerText = Math.min(count, target).toLocaleString();
-                            requestAnimationFrame(updateCount);
-                        } else {
-                            element.innerText = target.toLocaleString();
-                        }
-                    };
+            //         const updateCount = () => {
+            //             if (count < target) {
+            //                 count += increment;
+            //                 element.innerText = Math.min(count, target).toLocaleString();
+            //                 requestAnimationFrame(updateCount);
+            //             } else {
+            //                 element.innerText = target.toLocaleString();
+            //             }
+            //         };
 
-                    updateCount();
-                }
+            //         updateCount();
+            //     }
 
-                function isInViewport(el) {
-                    const rect = el.getBoundingClientRect();
-                    return (
-                        rect.top >= 0 &&
-                        rect.top <= (window.innerHeight || document.documentElement.clientHeight)
-                    );
-                }
+            //     function isInViewport(el) {
+            //         const rect = el.getBoundingClientRect();
+            //         return (
+            //             rect.top >= 0 &&
+            //             rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+            //         );
+            //     }
 
-                function startCounterAnimation() {
-                    const section = document.querySelector('#social-media');
-                    if (!section) {
-                        console.error("Social media section is not found");
-                    }
+            //     function startCounterAnimation() {
+            //         const section = document.querySelector('#social-media');
+            //         if (!section) {
+            //             console.error("Social media section is not found");
+            //         }
 
-                    if (isInViewport(section)) {
-                        const counters = document.querySelectorAll(".follower-count");
-                        console.log(`Found ${counters.length} .follower-count elements`);
+            //         if (isInViewport(section)) {
+            //             const counters = document.querySelectorAll(".follower-count");
+            //             console.log(`Found ${counters.length} .follower-count elements`);
 
-                        if (counters.length === 0) {
-                            console.error("No .follower-count elements found.");
-                            return;
-                        }
+            //             if (counters.length === 0) {
+            //                 console.error("No .follower-count elements found.");
+            //                 return;
+            //             }
 
-                        counters.forEach(el => {
-                            const target = parseFloat(el.dataset.target);
-                            if (!isNaN(target) && target >= 0) {
-                                socialMediaCounter(el, target);
-                            } else {
-                                console.warn(`Invalid data-target value: ${el.dataset.target}`);
-                                el.innerText = "0";
-                            }
-                        });
-                        animated = true;
-                    }
-                }
-                let animated = false;
+            //             counters.forEach(el => {
+            //                 const target = parseFloat(el.dataset.target);
+            //                 if (!isNaN(target) && target >= 0) {
+            //                     socialMediaCounter(el, target);
+            //                 } else {
+            //                     console.warn(`Invalid data-target value: ${el.dataset.target}`);
+            //                     el.innerText = "0";
+            //                 }
+            //             });
+            //             animated = true;
+            //         }
+            //     }
+            //     let animated = false;
 
-                // Check on load in case section is already in viewport
-                startCounterAnimation();
+            //     // Check on load in case section is already in viewport
+            //     startCounterAnimation();
 
-                // Check on scroll
-                window.addEventListener('scroll', () => {
-                    if (!animated) {
-                        startCounterAnimation();
-                    }
-                })
-            });
+            //     // Check on scroll
+            //     window.addEventListener('scroll', () => {
+            //         if (!animated) {
+            //             startCounterAnimation();
+            //         }
+            //     })
+            // });
 
             // Video Modal Functions
             function openVideoModal(videoId, title) {
