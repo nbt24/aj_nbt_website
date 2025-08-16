@@ -637,13 +637,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     </div>
 
                     <!--Company Team Members-->
-                    <div class="mt-16 overflow-hidden relative">
+                    <div class="mt-16 overflow-hidden relative team-marquee-container">
                         <div id="team-marquee" class="flex gap-12 animate-marquee px-4" style="animation: marquee 60s linear infinite;">
                             <?php
                             // Double the team array for infinite scrolling
                             $loopedTeam = array_merge($team, $team);
                             foreach ($loopedTeam as $index => $member): ?>
-                                <div class="flex-shrink-0 w-72 text-center group team-card" onmouseenter="pauseTeamMarquee()" onmouseleave="resumeTeamMarquee()">
+                                <div class="flex-shrink-0 w-72 text-center group team-card">
                                     <!-- Card Container with Curved Boundary and Fixed Height -->
                                     <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-96">
                                         
@@ -743,6 +743,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 transform: translateX(-50%);
                             }
                         }
+                        
+                        /* Team marquee hover behavior */
+                        .team-marquee-container:hover .animate-marquee {
+                            animation-play-state: paused;
+                        }
                     </style>
                 </div>
 
@@ -834,9 +839,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 will-change: transform; /* Improves performance */
             }
              /* Pause animation on hover */
-            /*.scrolling-wrapper:hover .animate-marquee {*/
-            /*    animation-play-state: paused;*/
-            /*}*/
+            .scrolling-wrapper:hover .animate-marquee {
+                animation-play-state: paused;
+            }
             @keyframes marquee {
                 0% {
                     transform: translateX(0);
@@ -866,7 +871,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         </div>
 
         <!-- Scrolling Container -->
-        <div class="relative mx-2 md:mx-4 lg:mx-6">
+        <div class="relative mx-2 md:mx-4 lg:mx-6 clients-container">
             <!-- Curved Container Background -->
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
@@ -977,7 +982,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 animation: marquee 40s linear infinite;
                 will-change: transform;
             }
-            .relative:hover .animate-marquee {
+            .clients-container:hover .animate-marquee {
                 animation-play-state: paused;
             }
         </style>
@@ -1019,13 +1024,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         </div>
 
         <!-- Marquee Testimonial Cards -->
-        <div class="relative mx-2 md:mx-4 lg:mx-6">
+        <div class="relative mx-2 md:mx-4 lg:mx-6 client-testimonials-container">
             <!-- Curved Container Background -->
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
                 <div class="px-6 py-6">
                     <div class="relative overflow-hidden rounded-[2rem]" style="scrollbar-width: none; -ms-overflow-style: none;">
-                        <div class="flex animate-marquee hover:[animation-play-state:paused] gap-x-8" style="width: max-content;">
+                        <div class="flex animate-marquee gap-x-8" style="width: max-content;">
                             <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
                                 <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group">
                                     <!-- Rating Stars -->
@@ -1106,8 +1111,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         animation: marquee 40s linear infinite;
         will-change: transform; /* Improves performance */
     }
-    .relative:hover .animate-marquee {
-        animation-play-state: paused; /* Pause animation on hover */
+    /* Only pause animation when hovering over the specific testimonials container */
+    .client-testimonials-container:hover .animate-marquee {
+        animation-play-state: paused;
     }
 </style>
 
@@ -1129,7 +1135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             </p>
         </div>
 
-        <div class="relative mx-2 md:mx-4 lg:mx-6">
+        <div class="relative mx-2 md:mx-4 lg:mx-6 courses-container">
             <!-- Curved Container Background -->
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
@@ -1364,7 +1370,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 </div>
 
                 <!-- Marquee Slider -->
-                <div class="relative overflow-hidden">
+                <div class="relative overflow-hidden course-testimonials-container">
                     <div class="flex animate-marquee" style="width: calc(300% + 48px); animation: marquee 40s linear infinite;">
                         <?php foreach (array_merge($course_testimonials, $course_testimonials) as $testimonial): ?>
                             <div class="flex-none w-80 mx-4 relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group p-6">
@@ -1438,6 +1444,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 100% {
                     transform: translateX(-50%);
                 }
+            }
+            
+            /* Course testimonials hover behavior */
+            .course-testimonials-container:hover .animate-marquee {
+                animation-play-state: paused;
             }
         </style>
 
