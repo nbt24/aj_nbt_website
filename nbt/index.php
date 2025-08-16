@@ -873,8 +873,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             $loopedTeam = array_merge($team, $team);
                             foreach ($loopedTeam as $index => $member): ?>
                                 <div class="flex-shrink-0 w-72 text-center group team-card">
-                                    <!-- Card Container with Curved Boundary and Fixed Height -->
-                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-96">
+                                    <!-- Card Container with Curved Boundary and Reduced Height -->
+                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-72">
                                         
                                         <!-- Decorative Background Pattern -->
                                         <div class="absolute inset-0 opacity-5 pointer-events-none">
@@ -887,7 +887,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                         <!-- Content with Flex Layout -->
                                         <div class="relative z-10 h-full flex flex-col">
                                             <!-- Profile Image -->
-                                            <div class="relative overflow-hidden rounded-full w-20 h-20 mx-auto mb-4 border-3 border-gradient-to-r from-yellow-400 to-purple-500 shadow-xl group-hover:shadow-2xl transition-shadow duration-300">
+                                            <div class="relative overflow-hidden rounded-full w-16 h-16 mx-auto mb-3 border-3 border-gradient-to-r from-yellow-400 to-purple-500 shadow-xl group-hover:shadow-2xl transition-shadow duration-300">
                                                 <div class="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 to-purple-500 p-0.5">
                                                     <div class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-purple-900">
                                                         <?php if (!empty($member['image_path']) && file_exists($member['image_path'])): ?>
@@ -919,12 +919,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                             </h4>
 
                                             <!-- Position -->
-                                            <div class="text-yellow-500 dark:text-yellow-400 font-semibold mb-3 text-sm">
+                                            <div class="text-yellow-500 dark:text-yellow-400 font-semibold mb-2 text-sm">
                                                 <?php echo htmlspecialchars($member['position']); ?>
                                             </div>
 
                                             <!-- Skills/Description - Flexible Section -->
-                                            <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 mb-4 flex-1 overflow-hidden">
+                                            <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 flex-1 overflow-hidden">
                                                 <?php 
                                                 $description = htmlspecialchars($member['description']);
                                                 // Split by bullet points (•) or newlines
@@ -945,21 +945,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 ?>
                                             </div>
 
-                                            <!-- Social Links - Fixed at Bottom -->
-                                            <div class="flex justify-center gap-3 pt-2 border-t border-purple-200/30 dark:border-purple-700/50 mt-auto">
-                                                <?php if (!empty($member['linkedin'])): ?>
-                                                    <a href="<?php echo htmlspecialchars($member['linkedin']); ?>" target="_blank"
-                                                        class="p-2 rounded-full bg-purple-100 dark:bg-purple-800/50 text-purple-600 dark:text-purple-300 hover:bg-yellow-100 dark:hover:bg-yellow-500/20 hover:text-yellow-600 dark:hover:text-yellow-400 transition-all duration-300 transform hover:scale-110">
-                                                        <i data-lucide="linkedin" class="w-4 h-4"></i>
-                                                    </a>
-                                                <?php endif; ?>
-                                                <?php if (!empty($member['email'])): ?>
-                                                    <a href="mailto:<?php echo htmlspecialchars($member['email']); ?>"
-                                                        class="p-2 rounded-full bg-purple-100 dark:bg-purple-800/50 text-purple-600 dark:text-purple-300 hover:bg-yellow-100 dark:hover:bg-yellow-500/20 hover:text-yellow-600 dark:hover:text-yellow-400 transition-all duration-300 transform hover:scale-110">
-                                                        <i data-lucide="mail" class="w-4 h-4"></i>
-                                                    </a>
-                                                <?php endif; ?>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
