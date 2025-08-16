@@ -406,8 +406,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         }
 
         .scrolling-wrapper {
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
             overflow: hidden;
             position: relative;
         }
@@ -1035,9 +1033,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
         <div class="relative mx-2 md:mx-4 lg:mx-6 courses-container">
             <!-- Curved Container Background -->
-            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+            <div class="bg-purple-100 dark:bg-purple-900 rounded-[3rem] border-2 border-purple-300 dark:border-purple-600 shadow-lg overflow-hidden">
                 <!-- Inner padding container -->
-                <div class="px-6 py-6">
+                <div class="px-2 py-2 sm:px-3 sm:py-3 md:px-4 md:py-4">
                     <div class="scrolling-wrapper overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                         <div class="scrolling-container flex gap-x-6 min-w-max animate-marquee">
                             <?php 
@@ -1046,12 +1044,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             foreach ($courses_loop as $index => $course): ?>
                                 <div class="group animate-section w-[300px] sm:w-[320px] flex-shrink-0" style="animation-delay: <?= 100 * $index ?>ms;">
                                     <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl">
-
-                                        <!-- Corner Decorations -->
-                                        <div class="absolute bottom-0 left-0 w-20 h-20">
-                                            <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
-                                            <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
-                                        </div>
 
                                         <!-- Image -->
                                         <?php if (!empty($course['image'])): ?>
@@ -1121,10 +1113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </div>
                     </div>
                 </div>
-                
-                <!-- Curved fade edges for seamless effect -->
-                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
-                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
             </div>
         </div>
         <style>
@@ -1276,7 +1264,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     <!-- Curved Container Background -->
                     <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                         <!-- Inner padding container -->
-                        <div class="px-6 py-6">
+                        <div class="px-2 py-2 sm:px-3 sm:py-3 md:px-4 md:py-4">
                             <div id="videos-wrapper" class="overflow-hidden animate-section rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                                 <div id="videos" class="flex gap-x-6 min-h-[200px] animate-marquee">
                                     <?php if (empty($youtube_videos)): ?>
@@ -1519,7 +1507,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             <!-- Curved Container Background -->
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
-                <div class="px-6 py-6">
+                <div class="px-2 py-2 sm:px-3 sm:py-3 md:px-4 md:py-4">
                     <div class="relative overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                         <div class="flex animate-marquee gap-x-8" style="width: max-content;">
                             <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
@@ -1573,9 +1561,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 </a>
                             <?php endif; ?>
                         </div>
-
-                        <!-- Bottom Gradient Accent -->
-                        <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/20 dark:from-purple-600/30 to-transparent"></div>
                     </div>
                 <?php endforeach; ?>
                         </div>
@@ -1663,21 +1648,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                             </div>
 
-                            <!-- Header Section with Category -->
-                            <div class="relative z-10 px-6 pt-6 pb-2">
-                                <div class="flex items-center justify-between mb-4">
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-800/80 border border-purple-300/50 dark:border-purple-600/50 text-xs font-bold uppercase tracking-wider text-purple-800 dark:text-purple-200 backdrop-blur-sm">
-                                        <div class="w-2 h-2 rounded-full bg-purple-500 dark:bg-purple-400 mr-2 animate-pulse"></div>
-                                        <?= htmlspecialchars($coupon['category']) ?>
-                                    </span>
-                                    <div class="w-6 h-6 rounded-lg bg-yellow-400/20 dark:bg-yellow-500/20 border border-yellow-400/30 dark:border-yellow-500/40 flex items-center justify-center">
-                                        <div class="w-2 h-2 bg-yellow-500 dark:bg-yellow-400 rounded-full animate-pulse"></div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Main Content Section -->
-                            <div class="relative z-10 px-6 pb-6">
+                            <div class="relative z-10 px-6 py-6">
                                 <!-- Coupon Code Display -->
                                 <div class="text-center mb-5 p-4 rounded-2xl bg-purple-50 dark:bg-purple-900/50 border border-purple-200/50 dark:border-purple-600/50">
                                     <div class="text-xs font-semibold uppercase tracking-widest text-purple-600 dark:text-purple-300 mb-1">Coupon Code</div>
@@ -1722,12 +1694,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                     </div>
                                 </button>
                             </div>
-
-                            <!-- Tech Corner Accents -->
-                            <div class="absolute bottom-0 left-0 w-20 h-20">
-                                <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
-                                <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
-                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -1760,9 +1726,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         <!-- Horizontal Scrolling Cards -->
         <div class="relative mx-2 md:mx-4 lg:mx-6">
             <!-- Curved Container Background -->
-            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+            <div class="bg-purple-100 dark:bg-purple-900 rounded-[3rem] border-2 border-purple-300 dark:border-purple-600 shadow-lg overflow-hidden">
                 <!-- Inner padding container -->
-                <div class="px-6 py-6">
+                <div class="px-2 py-2 sm:px-3 sm:py-3 md:px-4 md:py-4">
                     <div class="scrolling-wrapper overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                         <div class="scrolling-container flex space-x-6 min-w-max pb-4 animate-marquee">
                             <?php 
@@ -1808,21 +1774,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 </div>
                             </button>
                         </div>
-
-                        <!-- Tech Corner Accents -->
-                        <div class="absolute bottom-0 left-0 w-20 h-20">
-                            <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
-                            <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
-                        </div>
                     </div>
                 <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Curved fade edges for seamless effect -->
-                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
-                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
             </div>
         </div>
         <style>
@@ -1870,7 +1826,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             <!-- Curved Container Background -->
             <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
                 <!-- Inner padding container -->
-                <div class="px-6 py-6">
+                <div class="px-2 py-2 sm:px-3 sm:py-3 md:px-4 md:py-4">
                     <div class="relative overflow-hidden rounded-[2rem] manual-scroll">
                         <div class="flex animate-marquee gap-8" style="animation: marquee 40s linear infinite;">
                             <?php 
