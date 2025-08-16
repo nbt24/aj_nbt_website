@@ -14,9 +14,6 @@ $team = $team_stmt->fetchAll();
 $services_stmt = $pdo->query("SELECT * FROM our_services");
 $services = $services_stmt->fetchAll();
 
-$testimonials_stmt = $pdo->query("SELECT * FROM testimonials");
-$testimonials = $testimonials_stmt->fetchAll();
-
 $overview_stmt = $pdo->query("SELECT * FROM overview_images ORDER BY image_sequence");
 $overview_images = $overview_stmt->fetchAll();
 
@@ -1446,76 +1443,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
 
 
-
-        <section id="testimonials" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
-            <!-- Decorative Backgrounds -->
-            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
-            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
-
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Header -->
-                <div class="text-center mb-16 animate-section">
-                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">What Our Students Say</h2>
-                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
-                        Real stories from real people who transformed their careers with NBT
-                    </p>
-                </div>
-
-                <!-- Testimonials Marquee -->
-                <div class="relative overflow-hidden animate-section" style="animation-delay: 300ms;">
-                    <div class="flex gap-8 animate-marquee hover:[animation-play-state:paused] px-2" style="animation: marquee 40s linear infinite;">
-                        <?php $looped = array_merge($testimonials, $testimonials); ?>
-                        <?php foreach ($looped as $index => $testimonial): ?>
-                            <div class="flex-none w-80 bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm rounded-3xl shadow-2xl p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group animate-section" style="animation-delay: <?= 100 * $index ?>ms;">
-                                <!-- Star Rating -->
-                                <div class="flex items-center mb-4">
-                                    <?php
-                                    $rating = isset($testimonial['rating']) ? (int) $testimonial['rating'] : 5;
-                                    for ($i = 1; $i <= 5; $i++): ?>
-                                        <?php if ($i <= $rating): ?>
-                                            <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
-                                        <?php else: ?>
-                                            <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
-                                        <?php endif; ?>
-                                    <?php endfor; ?>
-                                    <span class="ml-2 text-purple-700 dark:text-purple-300"><?= number_format($rating, 1) ?></span>
-                                </div>
-
-                                <!-- Message -->
-                                <p class="text-purple-700 dark:text-purple-300 mb-4 text-sm">
-                                    <?= htmlspecialchars($testimonial['message']) ?>
-                                </p>
-
-                                <!-- User Info -->
-                                <div class="flex items-center mt-4">
-                                    <div class="w-12 h-12 bg-yellow-400/20 dark:bg-yellow-500/20 border border-yellow-400/40 dark:border-yellow-500/50 rounded-full flex items-center justify-center text-purple-900 dark:text-purple-200 font-bold text-lg">
-                                        <?= strtoupper(substr($testimonial['name'], 0, 1)) ?>
-                                    </div>
-                                    <div class="ml-4">
-                                        <p class="font-semibold text-purple-900 dark:text-purple-200"><?= htmlspecialchars($testimonial['name']) ?></p>
-                                        <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($testimonial['email']) ?></p>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Add marquee animation if not already defined -->
-        <style>
-            @keyframes marquee {
-                0% {
-                    transform: translateX(0);
-                }
-
-                100% {
-                    transform: translateX(-50%);
-                }
-            }
-        </style>
 
         <!-- Social Media Section -->
         <section id="social-media" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
