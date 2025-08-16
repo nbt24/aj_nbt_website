@@ -15,8 +15,12 @@ try {
         students VARCHAR(100),
         courses VARCHAR(100),
         success_rate VARCHAR(100),
+        video_url TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
+    
+    // Add video_url column if it doesn't exist
+    $pdo->exec("ALTER TABLE our_mission ADD COLUMN IF NOT EXISTS video_url TEXT");
 } catch (PDOException $e) {
     die("DB Connection failed: " . $e->getMessage());
 }
@@ -28,10 +32,10 @@ if ($check == 0) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
-    $stmt = $pdo->prepare("UPDATE our_mission SET title = ?, description = ?, students = ?, courses = ?, success_rate = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE our_mission SET title = ?, description = ?, students = ?, courses = ?, success_rate = ?, video_url = ? WHERE id = ?");
     $stmt->execute([
         $_POST['title'], $_POST['description'], $_POST['students'],
-        $_POST['courses'], $_POST['success_rate'], $_POST['id']
+        $_POST['courses'], $_POST['success_rate'], $_POST['video_url'], $_POST['id']
     ]);
     $success = "Mission updated successfully!";
 }
@@ -91,7 +95,7 @@ $mission = $pdo->query("SELECT * FROM our_mission LIMIT 1")->fetch(PDO::FETCH_AS
                     <textarea name="description" required rows="4" class="w-full border border-purple-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"><?= htmlspecialchars($mission['description']) ?></textarea>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
                         <label class="block text-sm text-purple-800 font-medium mb-1">Students</label>
                         <input type="text" name="students" required value="<?= htmlspecialchars($mission['students']) ?>" class="w-full border border-purple-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" />
@@ -99,6 +103,23 @@ $mission = $pdo->query("SELECT * FROM our_mission LIMIT 1")->fetch(PDO::FETCH_AS
                     <div>
                         <label class="block text-sm text-purple-800 font-medium mb-1">Courses</label>
                         <input type="text" name="courses" required value="<?= htmlspecialchars($mission['courses']) ?>" class="w-full border border-purple-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm text-purple-800 font-medium mb-1">
+                        Mission Video URL 
+                        <span class="text-xs text-purple-600">(YouTube URL - e.g., https://www.youtube.com/watch?v=VIDEO_ID)</span>
+                    </label>
+                    <input 
+                        type="url" 
+                        name="video_url" 
+                        value="<?= htmlspecialchars($mission['video_url'] ?? '') ?>" 
+                        placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                        class="w-full border border-purple-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                    />
+                    <div class="text-xs text-purple-600 mt-1">
+                        💡 Leave empty to hide the video section. Supports YouTube, Vimeo, and direct video URLs.
                     </div>
                 </div>
 

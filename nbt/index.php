@@ -54,6 +54,45 @@ function getCachedImagePath($imageData, $imageType, $prefix, $id) {
 $mission_stmt = $pdo->query("SELECT * FROM our_mission LIMIT 1");
 $mission = $mission_stmt->fetch();
 
+// Function to convert video URL to embed URL
+function getVideoEmbedData($url) {
+    if (empty($url)) return null;
+    
+    $data = ['type' => 'unknown', 'embed_url' => '', 'thumbnail' => '', 'video_id' => ''];
+    
+    // YouTube URL patterns
+    if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/', $url, $matches)) {
+        $data['type'] = 'youtube';
+        $data['video_id'] = $matches[1];
+        $data['embed_url'] = "https://www.youtube.com/embed/" . $matches[1] . "?rel=0&modestbranding=1&showinfo=0";
+        $data['thumbnail'] = "https://img.youtube.com/vi/" . $matches[1] . "/maxresdefault.jpg";
+        return $data;
+    }
+    
+    // Vimeo URL patterns
+    if (preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
+        $data['type'] = 'vimeo';
+        $data['video_id'] = $matches[1];
+        $data['embed_url'] = "https://player.vimeo.com/video/" . $matches[1] . "?color=ffffff&title=0&byline=0&portrait=0";
+        $data['thumbnail'] = "https://vumbnail.com/" . $matches[1] . ".jpg";
+        return $data;
+    }
+    
+    // Direct video URL
+    if (preg_match('/\.(mp4|webm|ogg)$/i', $url)) {
+        $data['type'] = 'direct';
+        $data['embed_url'] = $url;
+        return $data;
+    }
+    
+    return null;
+}
+
+$mission_video = null;
+if (!empty($mission['video_url'])) {
+    $mission_video = getVideoEmbedData($mission['video_url']);
+}
+
 $courses_stmt = $pdo->query("SELECT * FROM courses");
 $courses = $courses_stmt->fetchAll();
 
@@ -595,7 +634,120 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </div>
                     </div>
                     <div class="animate-section" style="animation-delay: 400ms;">
-                        <iframe width="100%" height="500" src="https://www.youtube.com/embed/HR4HJbqEgNU" title="This is why I left my 50+ LPA job 😲😬 #viral #ai #trending #share  #subscribe #life #tips #motivation" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <?php if ($mission_video): ?>
+                            <!-- Elegant Inline Video Player -->
+                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:-translate-y-1 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400">
+                                <!-- Video Container -->
+                                <div class="relative bg-black rounded-3xl overflow-hidden" id="missionVideoContainer">
+                                    <!-- Video Thumbnail with Play Button -->
+                                    <div class="video-thumbnail absolute inset-0 cursor-pointer group" onclick="loadMissionVideo()">
+                                        <?php if ($mission_video['type'] === 'youtube'): ?>
+                                            <img 
+                                                src="<?= $mission_video['thumbnail'] ?>" 
+                                                alt="Mission Video Thumbnail"
+                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                onerror="this.src='https://img.youtube.com/vi/<?= $mission_video['video_id'] ?>/hqdefault.jpg'"
+                                            />
+                                        <?php elseif ($mission_video['type'] === 'vimeo'): ?>
+                                            <img 
+                                                src="<?= $mission_video['thumbnail'] ?>" 
+                                                alt="Mission Video Thumbnail"
+                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                onerror="this.style.display='none'"
+                                            />
+                                        <?php else: ?>
+                                            <div class="w-full h-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center">
+                                                <div class="text-center text-white">
+                                                    <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M8 5v14l11-7z"/>
+                                                    </svg>
+                                                    <p class="text-lg font-medium">Click to play video</p>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <!-- Overlay with Play Button -->
+                                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                                            <div class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+                                                <svg class="w-8 h-8 text-purple-900 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M8 5v14l11-7z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Video Type Badge -->
+                                        <div class="absolute top-4 right-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
+                                            <div class="flex items-center gap-2">
+                                                <?php if ($mission_video['type'] === 'youtube'): ?>
+                                                    <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                                    </svg>
+                                                    <span class="text-white text-xs font-medium">YouTube</span>
+                                                <?php elseif ($mission_video['type'] === 'vimeo'): ?>
+                                                    <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.522 3.01 7.522c-.179 0-.806.378-1.881 1.132L0 7.197c1.185-1.044 2.351-2.084 3.501-3.128C5.08 2.701 6.266 1.984 7.055 1.91c1.867-.18 3.016 1.1 3.447 3.838.465 2.953.789 4.789.971 5.507.539 2.45 1.131 3.674 1.776 3.674.502 0 1.256-.796 2.265-2.385 1.004-1.589 1.54-2.797 1.612-3.628.144-1.371-.395-2.061-1.614-2.061-.574 0-1.167.121-1.777.391 1.186-3.868 3.434-5.757 6.762-5.637 2.473.06 3.628 1.664 3.493 4.797l-.013.01z"/>
+                                                    </svg>
+                                                    <span class="text-white text-xs font-medium">Vimeo</span>
+                                                <?php else: ?>
+                                                    <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M8 5v14l11-7z"/>
+                                                    </svg>
+                                                    <span class="text-white text-xs font-medium">Video</span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Video Player (Hidden initially) -->
+                                    <div class="video-player hidden absolute inset-0">
+                                        <?php if ($mission_video['type'] === 'direct'): ?>
+                                            <video 
+                                                controls 
+                                                class="w-full h-full object-cover"
+                                                preload="metadata"
+                                            >
+                                                <source src="<?= htmlspecialchars($mission_video['embed_url']) ?>" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        <?php else: ?>
+                                            <iframe 
+                                                class="w-full h-full border-0" 
+                                                src="" 
+                                                data-src="<?= htmlspecialchars($mission_video['embed_url']) ?>&autoplay=1"
+                                                frameborder="0" 
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                allowfullscreen>
+                                            </iframe>
+                                        <?php endif; ?>
+                                    </div>
+                                    
+                                    <!-- Loading State -->
+                                    <div class="video-loading hidden absolute inset-0 bg-black/90 flex items-center justify-center">
+                                        <div class="text-center text-white">
+                                            <div class="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+                                            <p class="text-sm">Loading video...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <!-- Fallback when no video is set -->
+                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:-translate-y-1 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 p-8">
+                                <div class="text-center">
+                                    <svg class="w-24 h-24 mx-auto mb-6 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                    </svg>
+                                    <h4 class="text-2xl font-bold text-purple-900 dark:text-purple-200 mb-3">Coming Soon</h4>
+                                    <p class="text-purple-700 dark:text-purple-300 mb-4">
+                                        We're preparing an inspiring video about our mission and journey.
+                                    </p>
+                                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-purple-200 dark:bg-purple-700 rounded-full text-purple-800 dark:text-purple-200 text-sm">
+                                        <div class="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                                        Video coming soon
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -1242,6 +1394,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     /* Ensure smooth transitions */
                     #videos {
                         transition: transform 0.1s ease-out;
+                    }
+                    
+                    /* Mission Video Player Styles */
+                    .video-thumbnail {
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .video-thumbnail:hover {
+                        transform: scale(1.02);
+                    }
+                    
+                    .video-player {
+                        z-index: 10;
+                    }
+                    
+                    .video-player iframe,
+                    .video-player video {
+                        transition: opacity 0.3s ease;
+                        display: block;
+                        width: 100% !important;
+                        height: 100% !important;
+                        border: none;
+                        outline: none;
+                        border-radius: 1.5rem; /* Match rounded-3xl */
+                    }
+                    
+                    .video-loading {
+                        backdrop-filter: blur(4px);
+                        -webkit-backdrop-filter: blur(4px);
+                        z-index: 20;
+                        border-radius: 1.5rem; /* Match rounded-3xl */
+                    }
+                    
+                    /* Smooth video transitions */
+                    #missionVideoContainer {
+                        position: relative;
+                        width: 100%;
+                        height: 0;
+                        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+                        overflow: hidden;
+                        border-radius: 1.5rem; /* Match rounded-3xl */
+                    }
+                    
+                    #missionVideoContainer .video-thumbnail,
+                    #missionVideoContainer .video-player,
+                    #missionVideoContainer .video-loading {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                        border-radius: 1.5rem; /* Match rounded-3xl */
+                    }
+                    
+                    /* Video badge styling */
+                    .video-thumbnail .absolute.top-4.right-4 {
+                        backdrop-filter: blur(8px);
+                        -webkit-backdrop-filter: blur(8px);
+                    }
+                    
+                    /* Ensure iframe fills container with rounded corners */
+                    #missionVideoContainer iframe {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        border: 0;
+                        border-radius: 1.5rem; /* Match rounded-3xl */
+                    }
+                    
+                    /* Card hover effects for video container */
+                    .video-card-hover:hover {
+                        transform: translateY(-4px);
+                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                    }
+                    
+                    /* Lazy loading fade in */
+                    .video-fade-in {
+                        animation: fadeIn 0.5s ease-in-out;
+                    }
+                    
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
                     }
                 </style>
 
@@ -2346,6 +2584,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
             // Counter animation for social media
             console.log("Social media counter script loaded.");
+
+            // Mission Video Functions
+            let missionVideoLoaded = false;
+            const missionVideoUrl = '<?= !empty($mission_video) ? htmlspecialchars($mission['video_url']) : '' ?>';
+            
+            function loadMissionVideo() {
+                if (!missionVideoUrl) return;
+                
+                const container = document.getElementById('missionVideoContainer');
+                const thumbnail = container.querySelector('.video-thumbnail');
+                const player = container.querySelector('.video-player');
+                const loading = container.querySelector('.video-loading');
+                const iframe = player.querySelector('iframe');
+                const video = player.querySelector('video');
+                
+                // Show loading state
+                thumbnail.style.display = 'none';
+                loading.classList.remove('hidden');
+                
+                // Load video
+                setTimeout(() => {
+                    if (iframe) {
+                        iframe.src = iframe.getAttribute('data-src');
+                        iframe.onload = () => {
+                            loading.classList.add('hidden');
+                            player.classList.remove('hidden');
+                            missionVideoLoaded = true;
+                        };
+                    } else if (video) {
+                        loading.classList.add('hidden');
+                        player.classList.remove('hidden');
+                        video.play();
+                        missionVideoLoaded = true;
+                    }
+                }, 500);
+            }
+            
+            function openVideoInNewTab() {
+                if (missionVideoUrl) {
+                    window.open(missionVideoUrl, '_blank');
+                }
+            }
+            
+            function resetMissionVideo() {
+                const container = document.getElementById('missionVideoContainer');
+                if (!container) return;
+                
+                const thumbnail = container.querySelector('.video-thumbnail');
+                const player = container.querySelector('.video-player');
+                const loading = container.querySelector('.video-loading');
+                const iframe = player.querySelector('iframe');
+                const video = player.querySelector('video');
+                
+                // Reset to thumbnail state
+                thumbnail.style.display = 'block';
+                player.classList.add('hidden');
+                loading.classList.add('hidden');
+                
+                // Clear video sources
+                if (iframe) iframe.src = '';
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                }
+                
+                missionVideoLoaded = false;
+            }
 
             document.addEventListener("DOMContentLoaded", function() {
                 function socialMediaCounter(element, target) {
