@@ -781,6 +781,619 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
         </section>
 
+        <!-- Courses Section -->
+        <section id="courses" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+    <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-section">
+            <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Our Courses</h2>
+            <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                Learn from industry experts and gain in-demand skills
+            </p>
+        </div>
+
+        <div class="relative mx-2 md:mx-4 lg:mx-6 courses-container">
+            <!-- Curved Container Background -->
+            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+                <!-- Inner padding container -->
+                <div class="px-6 py-6">
+                    <div class="scrolling-wrapper overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
+                        <div class="scrolling-container flex gap-x-6 min-w-max animate-marquee">
+                            <?php 
+                            // Duplicate the courses array for seamless looping
+                            $courses_loop = array_merge($courses, $courses);
+                            foreach ($courses_loop as $index => $course): ?>
+                                <div class="group animate-section w-[300px] sm:w-[320px] flex-shrink-0" style="animation-delay: <?= 100 * $index ?>ms;">
+                                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl">
+
+                                        <!-- Corner Decorations -->
+                                        <div class="absolute bottom-0 left-0 w-20 h-20">
+                                            <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
+                                            <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
+                                        </div>
+
+                                        <!-- Image -->
+                                        <?php if (!empty($course['image'])): ?>
+                                            <div class="overflow-hidden rounded-t-3xl">
+                                                <img src="data:image/jpeg;base64,<?= base64_encode($course['image']) ?>"
+                                                    alt="<?= htmlspecialchars($course['title']) ?>"
+                                                    class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105">
+                                            </div>
+                            <?php else: ?>
+                                <div class="w-full h-48 bg-purple-200 flex items-center justify-center rounded-t-3xl text-purple-600 font-semibold">
+                                    No Image
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Content -->
+                            <div class="p-6 space-y-4 relative z-10">
+                                <div class="flex justify-between text-xs uppercase font-semibold text-purple-700 dark:text-purple-300">
+                                    <span class="bg-purple-100 dark:bg-purple-800/80 border border-purple-300/50 dark:border-purple-600/50 px-2 py-1 rounded-xl tracking-wider text-purple-800 dark:text-purple-100">
+                                        <?= htmlspecialchars($course['type']) ?>
+                                    </span>
+                                    <span><?= htmlspecialchars($course['description_1']) ?></span>
+                                </div>
+
+                                <h3 class="text-xl font-bold text-purple-900 dark:text-purple-100"><?= htmlspecialchars($course['title']) ?></h3>
+                                <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($course['description_2']) ?></p>
+
+                                <div class="flex justify-between items-center text-sm text-purple-700 dark:text-purple-300 mt-2">
+                                    <div class="flex items-center space-x-1">
+                                        <i data-lucide="clock" class="h-5 w-5 text-yellow-500 dark:text-yellow-400"></i>
+                                        <span><?= htmlspecialchars($course['timeline']) ?></span>
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <i data-lucide="users" class="h-5 w-5 text-yellow-500 dark:text-yellow-400"></i>
+                                        <span><?= htmlspecialchars($course['people']) ?></span>
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <i class="fas fa-star text-yellow-500 h-4 w-4"></i>
+                                        <span><?= number_format($course['rating'], 1) ?></span>
+                                    </div>
+                                </div>
+
+                                <hr class="border-purple-200 dark:border-purple-600 my-2">
+
+                                <p class="text-sm text-purple-700 dark:text-purple-300">By <strong><?= htmlspecialchars($course['educator']) ?></strong></p>
+
+                                <?php if (!empty($course['link'])): ?>
+                                    <a href="<?= htmlspecialchars($course['link']) ?>" target="_blank"
+                                        class="block text-center py-3 px-6 mt-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn relative overflow-hidden">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                                        <div class="relative flex items-center justify-center space-x-2">
+                                            <span>Enroll Now</span>
+                                            <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                            </svg>
+                                        </div>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Curved fade edges for seamless effect -->
+                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
+            </div>
+        </div>
+        <style>
+            .scrolling-wrapper::-webkit-scrollbar {
+                display: none;
+            }
+            .animate-marquee {
+                animation: marquee 60s linear infinite;
+                will-change: transform; /* Improves performance */
+            }
+            .scrolling-wrapper:hover .animate-marquee {
+                animation-play-state: paused; /* Pause animation on hover */
+            }
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%); /* Move half the width due to duplicated content */
+                }
+            }
+        </style>
+    </div>
+</section>
+
+        <!-- Course Testimonials Section -->
+        <section id="student-testimonials" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Backgrounds -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header -->
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Testimonials from Courses</h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Hear from students who achieved success with our courses
+                    </p>
+                </div>
+
+                <!-- Marquee Slider -->
+                <div class="relative overflow-hidden course-testimonials-container manual-scroll">
+                    <div class="flex animate-marquee" style="width: calc(300% + 48px); animation: marquee 40s linear infinite;">
+                        <?php foreach (array_merge($course_testimonials, $course_testimonials) as $testimonial): ?>
+                            <div class="flex-none w-80 mx-4 relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group p-6">
+                                <!-- Tech background pattern -->
+                                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                </div>
+
+                                <!-- Star Rating -->
+                                <div class="relative z-10 flex items-center mb-4 star-rating">
+                                    <?php
+                                    $rating = floor($testimonial['rating']);
+                                    for ($i = 1; $i <= 5; $i++): ?>
+                                        <?php if ($i <= $rating): ?>
+                                            <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                        <?php else: ?>
+                                            <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                        <?php endif; ?>
+                                    <?php endfor; ?>
+                                    <span class="ml-2 text-purple-700 dark:text-purple-300 font-medium"><?= number_format($testimonial['rating'], 1) ?></span>
+                                </div>
+
+                                <!-- Testimonial Message -->
+                                <p class="relative z-10 text-purple-700 dark:text-purple-300 mb-4">
+                                    <?= htmlspecialchars($testimonial['message']) ?>
+                                </p>
+
+                                <!-- Author -->
+                                <div class="relative z-10 flex items-center">
+                                    <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
+                                        <?php if (!empty($testimonial['image'])): ?>
+                                            <img src="data:image/jpeg;base64,<?= base64_encode($testimonial['image']) ?>"
+                                                alt="<?= htmlspecialchars($testimonial['name']) ?>"
+                                                class="w-full h-full object-cover" />
+                                        <?php else: ?>
+                                            <div class="w-full h-full bg-purple-200 dark:bg-purple-700 flex items-center justify-center text-purple-900 dark:text-purple-200 font-semibold">
+                                                <?= htmlspecialchars(substr($testimonial['name'], 0, 1)) ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="font-semibold text-purple-900 dark:text-purple-200"><?= htmlspecialchars($testimonial['name']) ?></p>
+                                        <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($testimonial['course']) ?></p>
+                                        <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($testimonial['email']) ?></p>
+                                    </div>
+                                </div>
+
+                                <!-- Optional Video -->
+                                <?php if (!empty($testimonial['video'])): ?>
+                                    <div class="flex justify-center mt-3">
+                                        <a href="<?= htmlspecialchars($testimonial['video']) ?>" target="_blank"
+                                            class="text-purple-400 hover:text-yellow-500 transition">
+                                            <i data-lucide="video" class="w-5 h-5"></i>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Testimonials Animation -->
+        <style>
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+            
+            /* Course testimonials hover behavior */
+            .course-testimonials-container:hover .animate-marquee {
+                animation-play-state: paused;
+            }
+        </style>
+
+        <!-- Educational Videos Section -->
+        <section id="videos-section" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Background Elements -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">
+                        Our Latest YouTube Videos
+                    </h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Discover our latest tutorials and insights on our YouTube channel
+                    </p>
+                </div>
+
+                <!-- Videos Marquee -->
+                <div class="relative mx-2 md:mx-4 lg:mx-6">
+                    <!-- Curved Container Background -->
+                    <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+                        <!-- Inner padding container -->
+                        <div class="px-6 py-6">
+                            <div id="videos-wrapper" class="overflow-hidden animate-section rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
+                                <div id="videos" class="flex gap-x-6 min-h-[200px] animate-marquee">
+                                    <?php if (empty($youtube_videos)): ?>
+                                        <div class="text-purple-700 dark:text-purple-300 text-center w-full">
+                                            No videos available at the moment. Please check back later!
+                                        </div>
+                                    <?php else: ?>
+                                        <!-- First set of videos -->
+                                        <?php foreach ($youtube_videos as $video): 
+                                            $video_id = '';
+                                            if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
+                                                $video_id = $matches[1];
+                                            }
+                                        ?>
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
+                                                    <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
+                                                        class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
+                                                        onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
+                                                    <div class="absolute inset-0 flex items-center justify-center">
+                                                        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
+                                                            <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                                                <path d="M8 5v14l11-7z"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="p-4">
+                                                    <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
+                                                        <?= htmlspecialchars($video['title']) ?>
+                                                    </h4>
+                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
+                                                        Watch Now
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                        
+                                        <!-- Duplicate set for seamless loop -->
+                                        <?php foreach ($youtube_videos as $video): 
+                                            $video_id = '';
+                                            if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
+                                                $video_id = $matches[1];
+                                            }
+                                        ?>
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
+                                                    <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
+                                                        class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
+                                                        onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
+                                                    <div class="absolute inset-0 flex items-center justify-center">
+                                                        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
+                                                            <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                                                <path d="M8 5v14l11-7z"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="p-4">
+                                                    <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
+                                                        <?= htmlspecialchars($video['title']) ?>
+                                                    </h4>
+                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
+                                                        Watch Now
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Curved fade edges for seamless effect -->
+                        <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
+                        <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
+                    </div>
+                </div>
+
+                <!-- Hide scrollbar (WebKit) -->
+                <style>
+                    #videos-wrapper::-webkit-scrollbar {
+                        display: none;
+                    }
+
+                    .animate-marquee {
+                        animation: marquee 40s linear infinite;
+                        will-change: transform;
+                        width: fit-content;
+                    }
+
+                    #videos-wrapper:hover .animate-marquee {
+                        animation-play-state: paused;
+                    }
+
+                    @keyframes marquee {
+                        0% {
+                            transform: translateX(0%);
+                        }
+                        100% {
+                            transform: translateX(-50%);
+                        }
+                    }
+
+                    /* Ensure smooth transitions */
+                    #videos {
+                        transition: transform 0.1s ease-out;
+                    }
+                </style>
+
+                <!-- Video Modal -->
+                <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center p-4 overflow-y-auto" style="z-index: 99999 !important; padding-top: 100px;">
+                    <div class="bg-white dark:bg-purple-900 rounded-3xl max-w-4xl w-full max-h-[85vh] overflow-y-auto my-8" style="z-index: 99999 !important;">
+                        <div class="flex justify-between items-center p-4 border-b border-purple-200 dark:border-purple-700 sticky top-0 bg-white dark:bg-purple-900" style="z-index: 99999 !important;">
+                            <h3 id="modalTitle" class="text-xl font-bold text-purple-900 dark:text-purple-200"></h3>
+                            <button onclick="closeVideoModal()" class="text-gray-500 hover:text-gray-700 text-2xl" style="z-index: 99999 !important;">&times;</button>
+                        </div>
+                        <div class="p-4">
+                            <div class="relative" style="padding-bottom: 56.25%; height: 0;">
+                                <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="absolute top-0 left-0 w-full h-full rounded-lg"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Client Testimonials Section -->
+       <section id="testimonials" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div class="absolute top-1/3 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-16 animate-section">
+            <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">What Our Clients Say</h2>
+            <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                Real stories from our valued clients who partnered with NBT
+            </p>
+        </div>
+
+        <!-- Marquee Testimonial Cards -->
+        <div class="relative mx-2 md:mx-4 lg:mx-6 client-testimonials-container">
+            <!-- Curved Container Background -->
+            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
+                <!-- Inner padding container -->
+                <div class="px-6 py-6">
+                    <div class="relative overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
+                        <div class="flex animate-marquee gap-x-8" style="width: max-content;">
+                            <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
+                                <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group">
+                                    <!-- Rating Stars -->
+                                    <div class="flex items-center mt-6 mb-4 px-6 star-rating">
+                                        <?php $rating = floor($testimonial['rating']); ?>
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <?php if ($i <= $rating): ?>
+                                                <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
+                                            <?php endif; ?>
+                                        <?php endfor; ?>
+                                        <span class="ml-2 text-purple-700 dark:text-purple-300 font-medium"><?= number_format($testimonial['rating'], 1) ?></span>
+                                    </div>
+
+                                    <!-- Testimonial Text -->
+                                    <p class="text-purple-700 dark:text-purple-300 mb-4 px-6"><?php echo htmlspecialchars($testimonial['project_description']); ?></p>
+
+                        <!-- User Info -->
+                        <div class="flex items-center px-6 pb-4">
+                            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-purple-200 dark:bg-purple-700">
+                                <?php if (!empty($testimonial['company_logo'])): ?>
+                                    <img src="data:image/jpeg;base64,<?php echo base64_encode($testimonial['company_logo']); ?>"
+                                        alt="<?php echo htmlspecialchars($testimonial['company_name']); ?>"
+                                        class="w-full h-full object-cover" />
+                                <?php else: ?>
+                                    <div class="text-purple-900 dark:text-purple-200 font-semibold">
+                                        <?php echo htmlspecialchars(substr($testimonial['company_name'], 0, 1)); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="ml-4">
+                                <p class="font-semibold text-purple-900 dark:text-purple-200"><?php echo htmlspecialchars($testimonial['company_name']); ?></p>
+                                <p class="text-sm text-purple-700 dark:text-purple-300"><?php echo htmlspecialchars($testimonial['company_email']); ?></p>
+                            </div>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="flex justify-center gap-4 mb-6">
+                            <?php if (!empty($testimonial['linkedin'])): ?>
+                                <a href="<?= htmlspecialchars($testimonial['linkedin']) ?>" target="_blank"
+                                    class="text-purple-400 hover:text-yellow-500 transition">
+                                    <i data-lucide="linkedin" class="w-5 h-5"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Bottom Gradient Accent -->
+                        <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/20 dark:from-purple-600/30 to-transparent"></div>
+                    </div>
+                <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Curved fade edges for seamless effect -->
+                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Client Testimonials Keyframes -->
+<style>
+    @keyframes marquee {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+    .animate-marquee {
+        animation: marquee 40s linear infinite;
+        will-change: transform; /* Improves performance */
+    }
+    /* Only pause animation when hovering over the specific testimonials container */
+    .client-testimonials-container:hover .animate-marquee {
+        animation-play-state: paused;
+    }
+    
+    /* Manual scroll functionality */
+    .manual-scroll {
+        overflow-x: auto !important;
+        cursor: grab;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(168, 85, 247, 0.3) transparent;
+    }
+    .manual-scroll::-webkit-scrollbar {
+        height: 6px;
+    }
+    .manual-scroll::-webkit-scrollbar-track {
+        background: rgba(168, 85, 247, 0.1);
+        border-radius: 3px;
+    }
+    .manual-scroll::-webkit-scrollbar-thumb {
+        background: rgba(168, 85, 247, 0.3);
+        border-radius: 3px;
+    }
+    .manual-scroll::-webkit-scrollbar-thumb:hover {
+        background: rgba(168, 85, 247, 0.5);
+    }
+    .manual-scroll:active {
+        cursor: grabbing;
+    }
+    .manual-scroll:hover .animate-marquee {
+        animation-play-state: paused;
+    }
+</style>
+
+        <!-- Special Offers Section -->
+        <section id="coupons" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
+            <!-- Decorative Background Elements -->
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header -->
+                <div class="text-center mb-16 animate-section">
+                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Special Offers</h2>
+                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
+                        Use these exclusive coupons for discounts on your courses and services.
+                    </p>
+                </div>
+
+                <!-- Coupons Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-section" style="animation-delay: 200ms;">
+                    <?php foreach ($coupons as $coupon): ?>
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group">
+                            <!-- Tech Grid Pattern -->
+                            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                            </div>
+
+                            <!-- Header Section with Category -->
+                            <div class="relative z-10 px-6 pt-6 pb-2">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="inline-flex items-center px-3 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-800/80 border border-purple-300/50 dark:border-purple-600/50 text-xs font-bold uppercase tracking-wider text-purple-800 dark:text-purple-200 backdrop-blur-sm">
+                                        <div class="w-2 h-2 rounded-full bg-purple-500 dark:bg-purple-400 mr-2 animate-pulse"></div>
+                                        <?= htmlspecialchars($coupon['category']) ?>
+                                    </span>
+                                    <div class="w-6 h-6 rounded-lg bg-yellow-400/20 dark:bg-yellow-500/20 border border-yellow-400/30 dark:border-yellow-500/40 flex items-center justify-center">
+                                        <div class="w-2 h-2 bg-yellow-500 dark:bg-yellow-400 rounded-full animate-pulse"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Main Content Section -->
+                            <div class="relative z-10 px-6 pb-6">
+                                <!-- Coupon Code Display -->
+                                <div class="text-center mb-5 p-4 rounded-2xl bg-purple-50 dark:bg-purple-900/50 border border-purple-200/50 dark:border-purple-600/50">
+                                    <div class="text-xs font-semibold uppercase tracking-widest text-purple-600 dark:text-purple-300 mb-1">Coupon Code</div>
+                                    <h3 class="text-2xl font-black tracking-[0.2em] mb-3 font-mono transform group-hover:scale-105 transition-transform duration-300 text-purple-900 dark:text-purple-100">
+                                        <?= htmlspecialchars($coupon['code']) ?>
+                                    </h3>
+
+                                    <!-- Discount Display -->
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <div class="text-4xl font-black text-yellow-500 dark:text-yellow-400 transform group-hover:scale-110 transition-all duration-300">
+                                            <?= htmlspecialchars($coupon['discount']) ?>%
+                                        </div>
+                                        <div class="text-sm font-bold text-purple-600 dark:text-purple-300 uppercase tracking-wider">
+                                            OFF
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Time Limit with Enhanced Design -->
+                                <div class="flex items-center justify-center mb-4 p-2 rounded-lg bg-purple-50 dark:bg-purple-900/50 border border-purple-200/40 dark:border-purple-600/40">
+                                    <div class="flex items-center space-x-2 text-purple-600 dark:text-purple-300">
+                                        <div class="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
+                                            <svg class="w-3 h-3 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-semibold uppercase tracking-wide opacity-70">Valid Until</div>
+                                            <div class="text-xs font-bold"><?= htmlspecialchars($coupon['time_limit']) ?></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Enhanced CTA Button -->
+                                <button class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white dark:text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                                    <div class="relative flex items-center justify-center space-x-2">
+                                        <span>Use This Code</span>
+                                        <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <!-- Tech Corner Accents -->
+                            <div class="absolute bottom-0 left-0 w-20 h-20">
+                                <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Bottom CTA -->
+                <div class="text-center mt-16 animate-section" style="animation-delay: 400ms;">
+                    <p class="text-purple-700 dark:text-purple-300 mb-4 text-lg">
+                        🎉 Don't wait! These offers expire soon!
+                    </p>
+                </div>
+            </div>
+        </section>
+
         <!-- Services Section -->
         <section id="services" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
     <!-- Decorative Background Blobs -->
@@ -1016,498 +1629,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         </style>
     </div>
 </section>
-                }
-                100% {
-                    transform: translateX(-50%);
-                }
-            }
-            .animate-marquee {
-                animation: marquee 40s linear infinite;
-                display: flex;
-                width: max-content;
-                will-change: transform; /* Improves performance */
-            }
-            /*.relative:hover .animate-marquee {*/
-            /*    animation-play-state: paused;*/
-            /*}*/
-        </style>
-    </div>
-</section>
-
-
-
-        <!-- Client Testimonials Section -->
-       <section id="testimonials" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
-    <!-- Decorative Background Elements -->
-    <div class="absolute top-1/3 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="text-center mb-16 animate-section">
-            <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">What Our Clients Say</h2>
-            <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
-                Real stories from our valued clients who partnered with NBT
-            </p>
-        </div>
-
-        <!-- Marquee Testimonial Cards -->
-        <div class="relative mx-2 md:mx-4 lg:mx-6 client-testimonials-container">
-            <!-- Curved Container Background -->
-            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
-                <!-- Inner padding container -->
-                <div class="px-6 py-6">
-                    <div class="relative overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
-                        <div class="flex animate-marquee gap-x-8" style="width: max-content;">
-                            <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
-                                <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group">
-                                    <!-- Rating Stars -->
-                                    <div class="flex items-center mt-6 mb-4 px-6 star-rating">
-                                        <?php $rating = floor($testimonial['rating']); ?>
-                                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                                            <?php if ($i <= $rating): ?>
-                                                <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
-                                            <?php else: ?>
-                                                <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
-                                            <?php endif; ?>
-                                        <?php endfor; ?>
-                                        <span class="ml-2 text-purple-700 dark:text-purple-300 font-medium"><?= number_format($testimonial['rating'], 1) ?></span>
-                                    </div>
-
-                                    <!-- Testimonial Text -->
-                                    <p class="text-purple-700 dark:text-purple-300 mb-4 px-6"><?php echo htmlspecialchars($testimonial['project_description']); ?></p>
-
-                        <!-- User Info -->
-                        <div class="flex items-center px-6 pb-4">
-                            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-purple-200 dark:bg-purple-700">
-                                <?php if (!empty($testimonial['company_logo'])): ?>
-                                    <img src="data:image/jpeg;base64,<?php echo base64_encode($testimonial['company_logo']); ?>"
-                                        alt="<?php echo htmlspecialchars($testimonial['company_name']); ?>"
-                                        class="w-full h-full object-cover" />
-                                <?php else: ?>
-                                    <div class="text-purple-900 dark:text-purple-200 font-semibold">
-                                        <?php echo htmlspecialchars(substr($testimonial['company_name'], 0, 1)); ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            <div class="ml-4">
-                                <p class="font-semibold text-purple-900 dark:text-purple-200"><?php echo htmlspecialchars($testimonial['company_name']); ?></p>
-                                <p class="text-sm text-purple-700 dark:text-purple-300"><?php echo htmlspecialchars($testimonial['company_email']); ?></p>
-                            </div>
-                        </div>
-
-                        <!-- Social Links -->
-                        <div class="flex justify-center gap-4 mb-6">
-                            <?php if (!empty($testimonial['linkedin'])): ?>
-                                <a href="<?= htmlspecialchars($testimonial['linkedin']) ?>" target="_blank"
-                                    class="text-purple-400 hover:text-yellow-500 transition">
-                                    <i data-lucide="linkedin" class="w-5 h-5"></i>
-                                </a>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Bottom Gradient Accent -->
-                        <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/20 dark:from-purple-600/30 to-transparent"></div>
-                    </div>
-                <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Curved fade edges for seamless effect -->
-                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
-                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Marquee Keyframes -->
-<style>
-    @keyframes marquee {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-    .relative::-webkit-scrollbar {
-        display: none;
-    }
-    .animate-marquee {
-        animation: marquee 40s linear infinite;
-        will-change: transform; /* Improves performance */
-    }
-    /* Only pause animation when hovering over the specific testimonials container */
-    .client-testimonials-container:hover .animate-marquee {
-        animation-play-state: paused;
-    }
-    
-    /* Manual scroll functionality */
-    .manual-scroll {
-        overflow-x: auto !important;
-        cursor: grab;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(168, 85, 247, 0.3) transparent;
-    }
-    .manual-scroll::-webkit-scrollbar {
-        height: 6px;
-    }
-    .manual-scroll::-webkit-scrollbar-track {
-        background: rgba(168, 85, 247, 0.1);
-        border-radius: 3px;
-    }
-    .manual-scroll::-webkit-scrollbar-thumb {
-        background: rgba(168, 85, 247, 0.3);
-        border-radius: 3px;
-    }
-    .manual-scroll::-webkit-scrollbar-thumb:hover {
-        background: rgba(168, 85, 247, 0.5);
-    }
-    .manual-scroll:active {
-        cursor: grabbing;
-    }
-    .manual-scroll:hover .animate-marquee {
-        animation-play-state: paused;
-    }
-</style>
-
-
-
-
-        <!-- Courses Section -->
-        <section id="courses" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
-    <!-- Decorative Background Elements -->
-    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
-    <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16 animate-section">
-            <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Our Courses</h2>
-            <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
-                Learn from industry experts and gain in-demand skills
-            </p>
-        </div>
-
-        <div class="relative mx-2 md:mx-4 lg:mx-6 courses-container">
-            <!-- Curved Container Background -->
-            <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
-                <!-- Inner padding container -->
-                <div class="px-6 py-6">
-                    <div class="scrolling-wrapper overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
-                        <div class="scrolling-container flex gap-x-6 min-w-max animate-marquee">
-                            <?php 
-                            // Duplicate the courses array for seamless looping
-                            $courses_loop = array_merge($courses, $courses);
-                            foreach ($courses_loop as $index => $course): ?>
-                                <div class="group animate-section w-[300px] sm:w-[320px] flex-shrink-0" style="animation-delay: <?= 100 * $index ?>ms;">
-                                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl">
-
-                                        <!-- Corner Decorations -->
-                                        <div class="absolute bottom-0 left-0 w-20 h-20">
-                                            <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
-                                            <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
-                                        </div>
-
-                                        <!-- Image -->
-                                        <?php if (!empty($course['image'])): ?>
-                                            <div class="overflow-hidden rounded-t-3xl">
-                                                <img src="data:image/jpeg;base64,<?= base64_encode($course['image']) ?>"
-                                                    alt="<?= htmlspecialchars($course['title']) ?>"
-                                                    class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105">
-                                            </div>
-                            <?php else: ?>
-                                <div class="w-full h-48 bg-purple-200 flex items-center justify-center rounded-t-3xl text-purple-600 font-semibold">
-                                    No Image
-                                </div>
-                            <?php endif; ?>
-
-                            <!-- Content -->
-                            <div class="p-6 space-y-4 relative z-10">
-                                <div class="flex justify-between text-xs uppercase font-semibold text-purple-700 dark:text-purple-300">
-                                    <span class="bg-purple-100 dark:bg-purple-800/80 border border-purple-300/50 dark:border-purple-600/50 px-2 py-1 rounded-xl tracking-wider text-purple-800 dark:text-purple-100">
-                                        <?= htmlspecialchars($course['type']) ?>
-                                    </span>
-                                    <span><?= htmlspecialchars($course['description_1']) ?></span>
-                                </div>
-
-                                <h3 class="text-xl font-bold text-purple-900 dark:text-purple-100"><?= htmlspecialchars($course['title']) ?></h3>
-                                <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($course['description_2']) ?></p>
-
-                                <div class="flex justify-between items-center text-sm text-purple-700 dark:text-purple-300 mt-2">
-                                    <div class="flex items-center space-x-1">
-                                        <i data-lucide="clock" class="h-5 w-5 text-yellow-500 dark:text-yellow-400"></i>
-                                        <span><?= htmlspecialchars($course['timeline']) ?></span>
-                                    </div>
-                                    <div class="flex items-center space-x-1">
-                                        <i data-lucide="users" class="h-5 w-5 text-yellow-500 dark:text-yellow-400"></i>
-                                        <span><?= htmlspecialchars($course['people']) ?></span>
-                                    </div>
-                                    <div class="flex items-center space-x-1">
-                                        <i class="fas fa-star text-yellow-500 h-4 w-4"></i>
-                                        <span><?= number_format($course['rating'], 1) ?></span>
-                                    </div>
-                                </div>
-
-                                <hr class="border-purple-200 dark:border-purple-600 my-2">
-
-                                <p class="text-sm text-purple-700 dark:text-purple-300">By <strong><?= htmlspecialchars($course['educator']) ?></strong></p>
-
-                                <?php if (!empty($course['link'])): ?>
-                                    <a href="<?= htmlspecialchars($course['link']) ?>" target="_blank"
-                                        class="block text-center py-3 px-6 mt-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn relative overflow-hidden">
-                                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                                        <div class="relative flex items-center justify-center space-x-2">
-                                            <span>Enroll Now</span>
-                                            <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                            </svg>
-                                        </div>
-                                    </a>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Curved fade edges for seamless effect -->
-                <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
-                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
-            </div>
-        </div>
-        <style>
-            .scrolling-wrapper::-webkit-scrollbar {
-                display: none;
-            }
-            .animate-marquee {
-                animation: marquee 60s linear infinite;
-                will-change: transform; /* Improves performance */
-            }
-            .scrolling-wrapper:hover .animate-marquee {
-                animation-play-state: paused; /* Pause animation on hover */
-            }
-            @keyframes marquee {
-                0% {
-                    transform: translateX(0);
-                }
-                100% {
-                    transform: translateX(-50%); /* Move half the width due to duplicated content */
-                }
-            }
-        </style>
-    </div>
-</section>
-
-
-        <!-- Coupon Section -->
-        <!-- Coupon Section -->
-        <section id="coupons" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
-            <!-- Decorative Background Elements -->
-            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
-            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
-
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Header -->
-                <div class="text-center mb-16 animate-section">
-                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Special Offers</h2>
-                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
-                        Use these exclusive coupons for discounts on your courses and services.
-                    </p>
-                </div>
-
-                <!-- Coupons Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-section" style="animation-delay: 200ms;">
-                    <?php foreach ($coupons as $coupon): ?>
-                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group">
-                            <!-- Tech Grid Pattern -->
-                            <div class="absolute inset-0 opacity-10 pointer-events-none">
-                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
-                            </div>
-
-                            <!-- Header Section with Category -->
-                            <div class="relative z-10 px-6 pt-6 pb-2">
-                                <div class="flex items-center justify-between mb-4">
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-800/80 border border-purple-300/50 dark:border-purple-600/50 text-xs font-bold uppercase tracking-wider text-purple-800 dark:text-purple-200 backdrop-blur-sm">
-                                        <div class="w-2 h-2 rounded-full bg-purple-500 dark:bg-purple-400 mr-2 animate-pulse"></div>
-                                        <?= htmlspecialchars($coupon['category']) ?>
-                                    </span>
-                                    <div class="w-6 h-6 rounded-lg bg-yellow-400/20 dark:bg-yellow-500/20 border border-yellow-400/30 dark:border-yellow-500/40 flex items-center justify-center">
-                                        <div class="w-2 h-2 bg-yellow-500 dark:bg-yellow-400 rounded-full animate-pulse"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Main Content Section -->
-                            <div class="relative z-10 px-6 pb-6">
-                                <!-- Coupon Code Display -->
-                                <div class="text-center mb-5 p-4 rounded-2xl bg-purple-50 dark:bg-purple-900/50 border border-purple-200/50 dark:border-purple-600/50">
-                                    <div class="text-xs font-semibold uppercase tracking-widest text-purple-600 dark:text-purple-300 mb-1">Coupon Code</div>
-                                    <h3 class="text-2xl font-black tracking-[0.2em] mb-3 font-mono transform group-hover:scale-105 transition-transform duration-300 text-purple-900 dark:text-purple-100">
-                                        <?= htmlspecialchars($coupon['code']) ?>
-                                    </h3>
-
-                                    <!-- Discount Display -->
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <div class="text-4xl font-black text-yellow-500 dark:text-yellow-400 transform group-hover:scale-110 transition-all duration-300">
-                                            <?= htmlspecialchars($coupon['discount']) ?>%
-                                        </div>
-                                        <div class="text-sm font-bold text-purple-600 dark:text-purple-300 uppercase tracking-wider">
-                                            OFF
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Time Limit with Enhanced Design -->
-                                <div class="flex items-center justify-center mb-4 p-2 rounded-lg bg-purple-50 dark:bg-purple-900/50 border border-purple-200/40 dark:border-purple-600/40">
-                                    <div class="flex items-center space-x-2 text-purple-600 dark:text-purple-300">
-                                        <div class="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
-                                            <svg class="w-3 h-3 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <div class="text-xs font-semibold uppercase tracking-wide opacity-70">Valid Until</div>
-                                            <div class="text-xs font-bold"><?= htmlspecialchars($coupon['time_limit']) ?></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Enhanced CTA Button -->
-                                <button class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white dark:text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn">
-                                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                                    <div class="relative flex items-center justify-center space-x-2">
-                                        <span>Use This Code</span>
-                                        <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </div>
-
-                            <!-- Tech Corner Accents -->
-                            <div class="absolute bottom-0 left-0 w-20 h-20">
-                                <div class="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-purple-500/30 dark:from-purple-600/30 to-transparent"></div>
-                                <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-purple-500/40 dark:border-purple-600/50 rounded-full"></div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-
-                <!-- Bottom CTA -->
-                <div class="text-center mt-16 animate-section" style="animation-delay: 400ms;">
-                    <p class="text-purple-700 dark:text-purple-300 mb-4 text-lg">
-                        🎉 Don't wait! These offers expire soon!
-                    </p>
-                </div>
-            </div>
-        </section>
-
-
-
-        <!-- Course Testimonials Section -->
-        <section id="student-testimonials" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
-            <!-- Decorative Backgrounds -->
-            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
-
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Header -->
-                <div class="text-center mb-16 animate-section">
-                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">Testimonials from Courses</h2>
-                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
-                        Hear from students who achieved success with our courses
-                    </p>
-                </div>
-
-                <!-- Marquee Slider -->
-                <div class="relative overflow-hidden course-testimonials-container manual-scroll">
-                    <div class="flex animate-marquee" style="width: calc(300% + 48px); animation: marquee 40s linear infinite;">
-                        <?php foreach (array_merge($course_testimonials, $course_testimonials) as $testimonial): ?>
-                            <div class="flex-none w-80 mx-4 relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group p-6">
-                                <!-- Tech background pattern -->
-                                <div class="absolute inset-0 opacity-10 pointer-events-none">
-                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
-                                </div>
-
-                                <!-- Star Rating -->
-                                <div class="relative z-10 flex items-center mb-4 star-rating">
-                                    <?php
-                                    $rating = floor($testimonial['rating']);
-                                    for ($i = 1; $i <= 5; $i++): ?>
-                                        <?php if ($i <= $rating): ?>
-                                            <i class="fas fa-star text-yellow-500 h-5 w-5 mr-1"></i>
-                                        <?php else: ?>
-                                            <i class="far fa-star text-yellow-500 h-5 w-5 mr-1"></i>
-                                        <?php endif; ?>
-                                    <?php endfor; ?>
-                                    <span class="ml-2 text-purple-700 dark:text-purple-300 font-medium"><?= number_format($testimonial['rating'], 1) ?></span>
-                                </div>
-
-                                <!-- Testimonial Message -->
-                                <p class="relative z-10 text-purple-700 dark:text-purple-300 mb-4">
-                                    <?= htmlspecialchars($testimonial['message']) ?>
-                                </p>
-
-                                <!-- Author -->
-                                <div class="relative z-10 flex items-center">
-                                    <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
-                                        <?php if (!empty($testimonial['image'])): ?>
-                                            <img src="data:image/jpeg;base64,<?= base64_encode($testimonial['image']) ?>"
-                                                alt="<?= htmlspecialchars($testimonial['name']) ?>"
-                                                class="w-full h-full object-cover" />
-                                        <?php else: ?>
-                                            <div class="w-full h-full bg-purple-200 dark:bg-purple-700 flex items-center justify-center text-purple-900 dark:text-purple-200 font-semibold">
-                                                <?= htmlspecialchars(substr($testimonial['name'], 0, 1)) ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="ml-4">
-                                        <p class="font-semibold text-purple-900 dark:text-purple-200"><?= htmlspecialchars($testimonial['name']) ?></p>
-                                        <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($testimonial['course']) ?></p>
-                                        <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($testimonial['email']) ?></p>
-                                    </div>
-                                </div>
-
-                                <!-- Optional Video -->
-                                <?php if (!empty($testimonial['video'])): ?>
-                                    <div class="flex justify-center mt-3">
-                                        <a href="<?= htmlspecialchars($testimonial['video']) ?>" target="_blank"
-                                            class="text-purple-400 hover:text-yellow-500 transition">
-                                            <i data-lucide="video" class="w-5 h-5"></i>
-                                        </a>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Marquee animation -->
-        <style>
-            @keyframes marquee {
-                0% {
-                    transform: translateX(0);
-                }
-
-                100% {
-                    transform: translateX(-50%);
-                }
-            }
-            
-            /* Course testimonials hover behavior */
-            .course-testimonials-container:hover .animate-marquee {
-                animation-play-state: paused;
-            }
-        </style>
-
 
 
 
@@ -1711,156 +1832,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             </div>
         </section>
         */ ?>
-
-        <section id="videos-section" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
-            <!-- Decorative Background Elements -->
-            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
-            <div class="absolute top-2/3 left-1/2 w-48 h-48 bg-yellow-300/20 dark:bg-yellow-400/20 rounded-full blur-2xl"></div>
-
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Section Header -->
-                <div class="text-center mb-16 animate-section">
-                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">
-                        Our Latest YouTube Videos
-                    </h2>
-                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
-                        Discover our latest tutorials and insights on our YouTube channel
-                    </p>
-                </div>
-
-                <!-- Videos Marquee -->
-                <div class="relative mx-2 md:mx-4 lg:mx-6">
-                    <!-- Curved Container Background -->
-                    <div class="bg-gradient-to-r from-purple-100/50 via-purple-50/30 to-purple-100/50 dark:from-purple-900/20 dark:via-purple-800/10 dark:to-purple-900/20 rounded-[3rem] border-2 border-purple-300/70 dark:border-purple-600/60 shadow-lg shadow-purple-200/50 dark:shadow-purple-900/30 backdrop-blur-sm overflow-hidden ring-1 ring-purple-400/20 dark:ring-purple-500/30">
-                        <!-- Inner padding container -->
-                        <div class="px-6 py-6">
-                            <div id="videos-wrapper" class="overflow-hidden animate-section rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
-                                <div id="videos" class="flex gap-x-6 min-h-[200px] animate-marquee">
-                                    <?php if (empty($youtube_videos)): ?>
-                                        <div class="text-purple-700 dark:text-purple-300 text-center w-full">
-                                            No videos available at the moment. Please check back later!
-                                        </div>
-                                    <?php else: ?>
-                                        <!-- First set of videos -->
-                                        <?php foreach ($youtube_videos as $video): 
-                                            $video_id = '';
-                                            if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
-                                                $video_id = $matches[1];
-                                            }
-                                        ?>
-                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
-                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
-                                                    <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
-                                                        class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
-                                                        onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
-                                                    <div class="absolute inset-0 flex items-center justify-center">
-                                                        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
-                                                            <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                                                <path d="M8 5v14l11-7z"/>
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="p-4">
-                                                    <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
-                                                        <?= htmlspecialchars($video['title']) ?>
-                                                    </h4>
-                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
-                                                        Watch Now
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                        
-                                        <!-- Duplicate set for seamless loop -->
-                                        <?php foreach ($youtube_videos as $video): 
-                                            $video_id = '';
-                                            if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video['video_url'], $matches)) {
-                                                $video_id = $matches[1];
-                                            }
-                                        ?>
-                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
-                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
-                                                    <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
-                                                        class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" 
-                                                        onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
-                                                    <div class="absolute inset-0 flex items-center justify-center">
-                                                        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
-                                                            <svg class="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                                                <path d="M8 5v14l11-7z"/>
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="p-4">
-                                                    <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
-                                                        <?= htmlspecialchars($video['title']) ?>
-                                                    </h4>
-                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
-                                                        Watch Now
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Curved fade edges for seamless effect -->
-                        <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-l-[3rem]"></div>
-                        <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-purple-100/80 to-transparent dark:from-purple-900/40 dark:to-transparent pointer-events-none rounded-r-[3rem]"></div>
-                    </div>
-                </div>
-
-                <!-- Video Modal -->
-                <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center p-4 overflow-y-auto" style="z-index: 99999 !important; padding-top: 100px;">
-                    <div class="bg-white dark:bg-purple-900 rounded-3xl max-w-4xl w-full max-h-[85vh] overflow-y-auto my-8" style="z-index: 99999 !important;">
-                        <div class="flex justify-between items-center p-4 border-b border-purple-200 dark:border-purple-700 sticky top-0 bg-white dark:bg-purple-900" style="z-index: 99999 !important;">
-                            <h3 id="modalTitle" class="text-xl font-bold text-purple-900 dark:text-purple-200"></h3>
-                            <button onclick="closeVideoModal()" class="text-gray-500 hover:text-gray-700 text-2xl" style="z-index: 99999 !important;">&times;</button>
-                        </div>
-                        <div class="p-4">
-                            <div class="relative" style="padding-bottom: 56.25%; height: 0;">
-                                <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="absolute top-0 left-0 w-full h-full rounded-lg"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hide scrollbar (WebKit) -->
-                <style>
-                    #videos-wrapper::-webkit-scrollbar {
-                        display: none;
-                    }
-
-                    .animate-marquee {
-                        animation: marquee 40s linear infinite;
-                        will-change: transform;
-                        width: fit-content;
-                    }
-
-                    #videos-wrapper:hover .animate-marquee {
-                        animation-play-state: paused;
-                    }
-
-                    @keyframes marquee {
-                        0% {
-                            transform: translateX(0%);
-                        }
-                        100% {
-                            transform: translateX(-50%);
-                        }
-                    }
-
-                    /* Ensure smooth transitions */
-                    #videos {
-                        transition: transform 0.1s ease-out;
-                    }
-                </style>
-            </div>
-        </section>
 
         <!-- Contact Section -->
         <section id="contact" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
@@ -2072,6 +2043,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             });
 
             // Team Marquee Pause/Resume Functions
+            
+            // Video Modal Functions
+            function openVideoModal(videoId, title) {
+                const modal = document.getElementById('videoModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const videoFrame = document.getElementById('videoFrame');
+                
+                modalTitle.textContent = title;
+                videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                modal.classList.remove('hidden');
+                
+                // Prevent body scroll
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeVideoModal() {
+                const modal = document.getElementById('videoModal');
+                const videoFrame = document.getElementById('videoFrame');
+                
+                videoFrame.src = '';
+                modal.classList.add('hidden');
+                
+                // Restore body scroll
+                document.body.style.overflow = 'auto';
+            }
+
+            // Close modal when clicking outside
+            document.getElementById('videoModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeVideoModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeVideoModal();
+                }
+            });
             function pauseTeamMarquee() {
                 const marquee = document.getElementById('team-marquee');
                 if (marquee) {
