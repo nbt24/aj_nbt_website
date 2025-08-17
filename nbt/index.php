@@ -2,21 +2,29 @@
 require 'config/db.php';
 
 /**
- * Image caching function to convert base64 images to files for better performance
+ * Optimized image caching function with performance improvements
  * @param string $imageData - The binary image data
  * @param string $imageType - The MIME type of the image
- * @param string $prefix - A prefix for the filename (e.g., 'course', 'team', 'service')
+ * @param string $prefix - A prefix for the filename
  * @param int|string $id - Unique identifier for the image
- * @return string - The path to the cached image file
+ * @return string - The path to the cached image file or base64 fallback
  */
-function getCachedImagePath($imageData, $imageType, $prefix, $id) {
-    // Create cache directory if it doesn't exist
-    $cacheDir = 'cache/images/';
-    if (!is_dir($cacheDir)) {
-        mkdir($cacheDir, 0755, true);
+function getOptimizedImagePath($imageData, $imageType, $prefix, $id) {
+    // Skip caching for empty images
+    if (empty($imageData)) {
+        return null;
     }
     
-    // Generate filename based on content hash to avoid unnecessary regeneration
+    // Create cache directory if it doesn't exist (only once)
+    static $cacheDir = 'cache/images/';
+    static $dirCreated = false;
+    
+    if (!$dirCreated && !is_dir($cacheDir)) {
+        mkdir($cacheDir, 0755, true);
+        $dirCreated = true;
+    }
+    
+    // Generate filename based on content hash
     $imageHash = md5($imageData);
     $extension = '';
     
@@ -39,15 +47,24 @@ function getCachedImagePath($imageData, $imageType, $prefix, $id) {
             $extension = '.jpg'; // fallback
     }
     
-    $filename = $prefix . '_' . $id . '_' . $imageHash . $extension;
+    $filename = $prefix . '_' . $id . '_' . substr($imageHash, 0, 8) . $extension;
     $filepath = $cacheDir . $filename;
     
-    // Only create file if it doesn't exist
-    if (!file_exists($filepath)) {
-        file_put_contents($filepath, $imageData);
+    // Only create file if it doesn't exist and has content
+    if (!file_exists($filepath) && !empty($imageData)) {
+        if (file_put_contents($filepath, $imageData) === false) {
+            // Fallback to base64 if file writing fails
+            return 'data:' . $imageType . ';base64,' . base64_encode($imageData);
+        }
     }
     
-    return $filepath;
+    // Verify file exists and has content
+    if (file_exists($filepath) && filesize($filepath) > 0) {
+        return $filepath;
+    }
+    
+    // Fallback to base64 if cache fails
+    return 'data:' . $imageType . ';base64,' . base64_encode($imageData);
 }
 
 // Fetch data
@@ -160,11 +177,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Performance and SEO Meta Tags -->
+    <meta name="description" content="NBT - Next Bigg Tech - Leading technology solutions and training">
+    <meta name="robots" content="index, follow">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    
     <title>NBT - Next Bigg Tech</title>
+    
+    <!-- Critical CSS loaded first -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@formspree/formspree-js@1.0.0/dist/formspree.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Non-critical resources with async/defer -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@formspree/formspree-js@1.0.0/dist/formspree.min.js"></script>
+    <script defer src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    
     <link rel="icon" type="image/x-icon" href="./assert/black.png">
 
     <style>
@@ -835,9 +866,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 <div class="relative w-full h-64 border-b-2 border-purple-300 dark:border-purple-600">
                                     <?php 
                                         // Use cached image for better performance
-                                        $cachedImagePath = getCachedImagePath($mem['image_data'], $mem['image_type'], 'founder', $mem['id']);
+                                        $imagePath = getOptimizedImagePath($mem['image_data'], $mem['image_type'], 'founder', $mem['id']);
                                     ?>
-                                    <img src="<?= $cachedImagePath ?>"
+                                    <img src="<?= $imagePath ?>"
                                         alt="<?php echo htmlspecialchars($mem['name']); ?>"
                                         class="absolute inset-0 w-full h-full object-cover shadow-lg"
                                         loading="lazy" />
@@ -905,10 +936,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                                 loading="lazy" />
                                                         <?php elseif (!empty($member['image_data'])): ?>
                                                             <?php 
-                                                                // Use cached image for better performance
-                                                                $cachedImagePath = getCachedImagePath($member['image_data'], $member['image_type'], 'team', $member['id']);
+                                                                // Use optimized image caching for better performance
+                                                                $imagePath = getOptimizedImagePath($member['image_data'], $member['image_type'], 'team', $member['id']);
                                                             ?>
-                                                            <img src="<?= $cachedImagePath ?>"
+                                                            <img src="<?= $imagePath ?>"
                                                                 alt="<?php echo htmlspecialchars($member['name']); ?>"
                                                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                                                                 loading="lazy" 
@@ -1043,11 +1074,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                         <!-- Image -->
                                         <?php if (!empty($course['image'])): ?>
                                             <?php 
-                                                // Use cached image for better performance
-                                                $cachedImagePath = getCachedImagePath($course['image'], 'image/jpeg', 'course', $course['id']);
+                                                // Use optimized image caching for better performance
+                                                $imagePath = getOptimizedImagePath($course['image'], 'image/jpeg', 'course', $course['id']);
                                             ?>
                                             <div class="overflow-hidden rounded-t-3xl">
-                                                <img src="<?= $cachedImagePath ?>"
+                                                <img src="<?= $imagePath ?>"
                                                     alt="<?= htmlspecialchars($course['title']) ?>"
                                                     class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105"
                                                     loading="lazy">
@@ -1182,10 +1213,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                     <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
                                         <?php if (!empty($testimonial['image'])): ?>
                                             <?php 
-                                                // Use cached image for better performance
-                                                $cachedImagePath = getCachedImagePath($testimonial['image'], 'image/jpeg', 'testimonial', $testimonial['name']);
+                                                // Use optimized image caching for better performance
+                                                $imagePath = getOptimizedImagePath($testimonial['image'], 'image/jpeg', 'testimonial', $testimonial['name']);
                                             ?>
-                                            <img src="<?= $cachedImagePath ?>"
+                                            <img src="<?= $imagePath ?>"
                                                 alt="<?= htmlspecialchars($testimonial['name']) ?>"
                                                 class="w-full h-full object-cover"
                                                 loading="lazy" />
@@ -1522,10 +1553,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-purple-200 dark:bg-purple-700">
                                 <?php if (!empty($testimonial['company_logo'])): ?>
                                     <?php 
-                                        // Use cached image for better performance
-                                        $cachedImagePath = getCachedImagePath($testimonial['company_logo'], 'image/jpeg', 'company', $testimonial['company_name']);
+                                        // Use optimized image caching for better performance
+                                        $imagePath = getOptimizedImagePath($testimonial['company_logo'], 'image/jpeg', 'company', $testimonial['company_name']);
                                     ?>
-                                    <img src="<?= $cachedImagePath ?>"
+                                    <img src="<?= $imagePath ?>"
                                         alt="<?php echo htmlspecialchars($testimonial['company_name']); ?>"
                                         class="w-full h-full object-cover"
                                         loading="lazy" />
@@ -1733,10 +1764,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                     <!-- Image -->
                                     <div class="overflow-hidden rounded-t-3xl">
                                         <?php 
-                                            // Use cached image for better performance
-                                            $cachedImagePath = getCachedImagePath($service['image_data'], $service['image_type'], 'service', $service['id']);
+                                            // Use optimized image caching for better performance
+                                            $imagePath = getOptimizedImagePath($service['image_data'], $service['image_type'], 'service', $service['id']);
                                         ?>
-                                        <img src="<?= $cachedImagePath ?>" 
+                                        <img src="<?= $imagePath ?>" 
                                              alt="<?= htmlspecialchars($service['title']) ?>" 
                                              class="w-full h-48 object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-110"
                                              loading="lazy">
@@ -1839,10 +1870,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 <div class="w-24 h-24 rounded-xl bg-gradient-to-br from-purple-100 to-yellow-100 dark:from-purple-800 dark:to-yellow-800 flex items-center justify-center border-2 border-yellow-400/30 dark:border-yellow-400/50 shadow-lg">
                                         <?php if (!empty($client['company_logo'])): ?>
                                             <?php 
-                                                // Use cached image for better performance
-                                                $cachedImagePath = getCachedImagePath($client['company_logo'], 'image/jpeg', 'client', $client['id']);
+                                                // Use optimized image caching for better performance
+                                                $imagePath = getOptimizedImagePath($client['company_logo'], 'image/jpeg', 'client', $client['id']);
                                             ?>
-                                            <img src="<?= $cachedImagePath ?>" 
+                                            <img src="<?= $imagePath ?>" 
                                                  alt="<?= htmlspecialchars($client['company_name']) ?>" 
                                                  class="w-full h-full object-cover rounded-lg"
                                                  loading="lazy">

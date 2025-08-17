@@ -1,9 +1,9 @@
-# Cache images for 30 days
-<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
-    ExpiresActive On
-    ExpiresDefault "access plus 30 days"
-    Header set Cache-Control "public, max-age=2592000"
-</FilesMatch>
+# Cache images for 30 days - Disabled until mod_expires is enabled
+# <FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+#     ExpiresActive On
+#     ExpiresDefault "access plus 30 days"
+#     Header set Cache-Control "public, max-age=2592000"
+# </FilesMatch>
 
 # Prevent direct access to cleanup script
 <Files "cleanup.php">

@@ -27,7 +27,35 @@ if (!isset($_SESSION['admin_id'])) {
             </div>
         </div>
     </nav>
-   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-[100px]">
+    
+    <!-- Quick Optimization Widget -->
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-xl shadow-lg mt-20 mx-6 mb-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-bold mb-2">🚀 Keep Your Website Fast!</h2>
+                <p class="text-blue-100 mb-4">Essential tools for website performance</p>
+                <div class="flex flex-wrap gap-2">
+                    <a href="health_check.php" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition-colors">
+                        📊 Health Check
+                    </a>
+                    <a href="documentation.php" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition-colors">
+                        📚 How-To Guide
+                    </a>
+                    <a href="https://tinypng.com" target="_blank" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition-colors">
+                        🗜️ Compress Images
+                    </a>
+                    <button onclick="showQuickStart()" class="bg-yellow-400 hover:bg-yellow-500 text-purple-800 px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                        🚀 Quick Start
+                    </button>
+                </div>
+            </div>
+            <div class="text-6xl opacity-50">
+                ⚡
+            </div>
+        </div>
+    </div>
+
+   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mx-6">
     <a href="manage_courses.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
         <h3 class="text-xl font-semibold text-purple-900">Manage Courses</h3>
         <p class="text-purple-700">Add, edit, or delete courses</p>
@@ -88,5 +116,37 @@ if (!isset($_SESSION['admin_id'])) {
         <h3 class="text-xl font-semibold text-purple-900">Manage Admin Users</h3>
         <p class="text-purple-700">Add, edit, or delete admin accounts</p>
     </a>
-</div></body>
+    
+    <!-- Performance Monitoring -->
+    <a href="health_check.php" class="bg-gradient-to-r from-green-500 to-blue-500 p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all text-white">
+        <h3 class="text-xl font-semibold">🚀 Website Health Check</h3>
+        <p class="text-green-100">Monitor performance and speed</p>
+    </a>
+    
+    <!-- Documentation -->
+    <a href="documentation.php" class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all text-white">
+        <h3 class="text-xl font-semibold">📚 Optimization Guide</h3>
+        <p class="text-purple-100">Step-by-step website optimization</p>
+    </a>
+</div>
+
+<!-- Quick Start Modal Script -->
+<script>
+function showQuickStart() {
+    // Check if modal exists, if not create it
+    let modal = document.getElementById('quickStartModal');
+    if (!modal) {
+        fetch('quick_start_modal.php')
+            .then(response => response.text())
+            .then(html => {
+                document.body.insertAdjacentHTML('beforeend', html);
+                document.getElementById('quickStartModal').style.display = 'flex';
+            });
+    } else {
+        modal.style.display = 'flex';
+    }
+}
+</script>
+
+</body>
 </html>
