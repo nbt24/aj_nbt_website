@@ -12,7 +12,15 @@ if (isset($_POST['add'])) {
     $stmt = $pdo->prepare("INSERT INTO founder_card (image_name, image_type, image_size, image_data, name, description, position, number, image_sequence, linkedin, email)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $imageData = file_get_contents($_FILES['image']['tmp_name']);
+    // Optimize uploaded image
+    $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+    if (optimizeUploadedImage($_FILES['image'], $tempOptimized)) {
+        $imageData = file_get_contents($tempOptimized);
+        unlink($tempOptimized); // Clean up temp file
+    } else {
+        $imageData = file_get_contents($_FILES['image']['tmp_name']);
+    }
+    
     $imageName = $_FILES['image']['name'];
     $imageType = $_FILES['image']['type'];
     $imageSize = $_FILES['image']['size'];
@@ -39,7 +47,15 @@ if (isset($_GET['delete'])) {
 if (isset($_POST['edit'])) {
     $id = $_POST['edit_id'];
     if (!empty($_FILES['image']['tmp_name'])) {
-        $imageData = file_get_contents($_FILES['image']['tmp_name']);
+        // Optimize uploaded image
+        $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+        if (optimizeUploadedImage($_FILES['image'], $tempOptimized)) {
+            $imageData = file_get_contents($tempOptimized);
+            unlink($tempOptimized); // Clean up temp file
+        } else {
+            $imageData = file_get_contents($_FILES['image']['tmp_name']);
+        }
+        
         $imageName = $_FILES['image']['name'];
         $imageType = $_FILES['image']['type'];
         $imageSize = $_FILES['image']['size'];

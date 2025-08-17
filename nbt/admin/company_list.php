@@ -11,7 +11,14 @@ if (!isset($_SESSION['admin_id'])) {
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add'])) {
     $logoData = null;
     if (!empty($_FILES['company_logo']['tmp_name'])) {
-        $logoData = file_get_contents($_FILES['company_logo']['tmp_name']);
+        // Optimize uploaded image
+        $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+        if (optimizeUploadedImage($_FILES['company_logo'], $tempOptimized)) {
+            $logoData = file_get_contents($tempOptimized);
+            unlink($tempOptimized); // Clean up temp file
+        } else {
+            $logoData = file_get_contents($_FILES['company_logo']['tmp_name']);
+        }
     }
     
     $stmt = $pdo->prepare("INSERT INTO client_testimonials (company_name, company_email, linkedin, project_description, rating, company_logo, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -40,7 +47,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_id'])) {
     $logoData = null;
 
     if (!empty($_FILES['company_logo']['tmp_name'])) {
-        $logoData = file_get_contents($_FILES['company_logo']['tmp_name']);
+        // Optimize uploaded image
+        $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+        if (optimizeUploadedImage($_FILES['company_logo'], $tempOptimized)) {
+            $logoData = file_get_contents($tempOptimized);
+            unlink($tempOptimized); // Clean up temp file
+        } else {
+            $logoData = file_get_contents($_FILES['company_logo']['tmp_name']);
+        }
         $stmt = $pdo->prepare("UPDATE client_testimonials SET 
             company_name = ?, 
             company_email = ?, 

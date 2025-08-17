@@ -133,6 +133,11 @@ $dbClass = $dbStatus === "Connected" ? 'text-green-600' : 'text-red-600';
                     📸 Check Images
                 </a>
                 
+                <a href="compression_monitor.php" 
+                   class="bg-purple-500 hover:bg-purple-600 text-white text-center py-3 px-4 rounded-lg transition-colors">
+                    🗜️ Compression
+                </a>
+                
                 <a href="maintenance.php" 
                    class="bg-red-500 hover:bg-red-600 text-white text-center py-3 px-4 rounded-lg transition-colors">
                     🔧 Auto Maintenance

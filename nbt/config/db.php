@@ -11,4 +11,7 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
+
+// Include automatic image optimization
+require_once __DIR__ . '/image_optimizer.php';
 ?>

@@ -112,6 +112,10 @@ if (!isset($_SESSION['admin_id'])) {
         <h3 class="text-xl font-semibold text-purple-900">Manage Founder Cards</h3>
         <p class="text-purple-700">Upload, edit, or delete founder profiles</p>
     </a>
+    <a href="compression_monitor.php" class="bg-gradient-to-r from-green-400 to-blue-500 p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all text-white">
+        <h3 class="text-xl font-semibold">🗜️ Image Compression Monitor</h3>
+        <p class="text-green-100">Monitor automatic image optimization</p>
+    </a>
     <a href="manage_admin_users.php" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all">
         <h3 class="text-xl font-semibold text-purple-900">Manage Admin Users</h3>
         <p class="text-purple-700">Add, edit, or delete admin accounts</p>

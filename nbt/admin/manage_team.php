@@ -7,7 +7,15 @@
         $image_name = $_FILES['image']['name'];
         $image_type = $_FILES['image']['type'];
         $image_size = $_FILES['image']['size'];
-        $image_data = file_get_contents($_FILES['image']['tmp_name']);
+        
+        // Optimize uploaded image
+        $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+        if (optimizeUploadedImage($_FILES['image'], $tempOptimized)) {
+            $image_data = file_get_contents($tempOptimized);
+            unlink($tempOptimized); // Clean up temp file
+        } else {
+            $image_data = file_get_contents($_FILES['image']['tmp_name']);
+        }
 
         $stmt = $pdo->prepare("INSERT INTO meet_our_team (name, description, position, phone, image_sequence, linkedin, email, image_name, image_type, image_size, image_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$name, $description, $position, $number, $image_sequence, $linkedin, $email, $image_name, $image_type, $image_size, $image_data]);
@@ -27,7 +35,15 @@
             $image_name = $_FILES['image']['name'];
             $image_type = $_FILES['image']['type'];
             $image_size = $_FILES['image']['size'];
-            $image_data = file_get_contents($_FILES['image']['tmp_name']);
+            
+            // Optimize uploaded image
+            $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+            if (optimizeUploadedImage($_FILES['image'], $tempOptimized)) {
+                $image_data = file_get_contents($tempOptimized);
+                unlink($tempOptimized); // Clean up temp file
+            } else {
+                $image_data = file_get_contents($_FILES['image']['tmp_name']);
+            }
             $stmt = $pdo->prepare("UPDATE meet_our_team SET name = ?, description = ?, position = ?, phone = ?, image_sequence = ?, linkedin = ?, email = ?, image_name = ?, image_type = ?, image_size = ?, image_data = ? WHERE id = ?");
             $stmt->execute([$name, $description, $position, $number, $image_sequence, $linkedin, $email, $image_name, $image_type, $image_size, $image_data, $id]);
             $stmt = $pdo->prepare("UPDATE meet_our_team SET name = ?, description = ?, position = ?, phone = ?, image_sequence = ?, image_name = ?, image_type = ?, image_size = ?, image_data = ? WHERE id = ?");
