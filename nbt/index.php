@@ -1002,10 +1002,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             }
                         }
                         
-                        /* Team marquee hover behavior - same as original */
-                        .team-marquee-container:hover .animate-marquee {
-                            animation-play-state: paused;
-                        }
+                        /* Team marquee - smooth continuous animation */
+                        /* Removed hover pause for better performance */
                         
                         /* Manual scroll styles - same as original */
                         .manual-scroll {
@@ -1157,9 +1155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 animation: marquee 60s linear infinite;
                 will-change: transform; /* Improves performance */
             }
-            .scrolling-wrapper:hover .animate-marquee {
-                animation-play-state: paused; /* Pause animation on hover */
-            }
+            /* Removed hover-pause for smoother performance */
             @keyframes marquee {
                 0% {
                     transform: translateX(0);
@@ -1269,10 +1265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 }
             }
             
-            /* Course testimonials hover behavior */
-            .course-testimonials-container:hover .animate-marquee {
-                animation-play-state: paused;
-            }
+            /* Removed course testimonials hover-pause for smoother performance */
         </style>
 
         <!-- Educational Videos Section -->
@@ -1389,10 +1382,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         will-change: transform;
                         width: fit-content;
                     }
-
-                    #videos-wrapper:hover .animate-marquee {
-                        animation-play-state: paused;
-                    }
+                    /* Removed videos hover-pause for smoother performance */
 
                     @keyframes marquee {
                         0% {
@@ -1617,10 +1607,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
         animation: marquee 40s linear infinite;
         will-change: transform; /* Improves performance */
     }
-    /* Only pause animation when hovering over the specific testimonials container */
-    .client-testimonials-container:hover .animate-marquee {
-        animation-play-state: paused;
-    }
+    /* Removed client testimonials hover-pause for smoother performance */
     
     /* Manual scroll functionality */
     .manual-scroll {
@@ -1646,9 +1633,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
     .manual-scroll:active {
         cursor: grabbing;
     }
-    .manual-scroll:hover .animate-marquee {
-        animation-play-state: paused;
-    }
+    /* Removed manual scroll hover-pause for smoother performance */
 </style>
 
         <!-- Special Offers Section -->
@@ -1817,10 +1802,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 animation: marquee 20s linear infinite;
                 will-change: transform; /* Improves performance */
             }
-             /* Pause animation on hover */
-            .scrolling-wrapper:hover .animate-marquee {
-                animation-play-state: paused;
-            }
+            /* Removed scrolling wrapper hover-pause for smoother performance */
             @keyframes marquee {
                 0% {
                     transform: translateX(0);
@@ -1966,9 +1948,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 animation: marquee 40s linear infinite;
                 will-change: transform;
             }
-            .clients-container:hover .animate-marquee {
-                animation-play-state: paused;
-            }
+            /* Removed clients container hover-pause for smoother performance */
         </style>
     </div>
 </section>
@@ -2464,21 +2444,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 return;
             }
 
-            // Optimized Team Marquee Functions (Same Functionality)
-            function pauseTeamMarquee() {
-                const marquee = document.getElementById('team-marquee');
-                if (marquee) {
-                    marquee.style.animationPlayState = 'paused';
-                }
-            }
-
-            function resumeTeamMarquee() {
-                const marquee = document.getElementById('team-marquee');
-                if (marquee) {
-                    marquee.style.animationPlayState = 'running';
-                }
-            }
-
+            // Team Marquee - Smooth Continuous Animation
+            // Removed pause/resume functions for better performance
+            
             // Performance optimization: Pause animation when not visible
             if (document.getElementById('team-marquee')) {
                 const teamSection = document.getElementById('team-marquee').closest('section');
