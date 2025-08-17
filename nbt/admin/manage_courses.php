@@ -11,7 +11,15 @@ if (!isset($_SESSION['admin_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
   $image = null;
   if (!empty($_FILES['image']['tmp_name'])) {
-    $image = file_get_contents($_FILES['image']['tmp_name']);
+    // Create temporary optimized file
+    $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+    if (optimizeUploadedImage($_FILES['image'], $tempOptimized)) {
+      $image = file_get_contents($tempOptimized);
+      unlink($tempOptimized); // Clean up temp file
+    } else {
+      // Fallback to original if optimization fails
+      $image = file_get_contents($_FILES['image']['tmp_name']);
+    }
   }
 
   $stmt = $pdo->prepare("INSERT INTO courses (title, image, type, description_1, description_2, educator, timeline, people, rating, price, link)
@@ -39,7 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
 
   // If a new image is uploaded, use it; otherwise, keep the existing one
   if (!empty($_FILES['image']['tmp_name'])) {
-    $image = file_get_contents($_FILES['image']['tmp_name']);
+    // Create temporary optimized file
+    $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+    if (optimizeUploadedImage($_FILES['image'], $tempOptimized)) {
+      $image = file_get_contents($tempOptimized);
+      unlink($tempOptimized); // Clean up temp file
+    } else {
+      // Fallback to original if optimization fails
+      $image = file_get_contents($_FILES['image']['tmp_name']);
+    }
     $stmt = $pdo->prepare("UPDATE courses SET title=?, image=?, type=?, description_1=?, description_2=?, educator=?, timeline=?, people=?, rating=?, price=?, link=? WHERE id=?");
     $stmt->execute([
       $_POST['title'], $image, $_POST['type'], $_POST['description_1'],

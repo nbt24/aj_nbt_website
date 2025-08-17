@@ -26,7 +26,14 @@ try {
         $company_logo = null;
 
         if (isset($_FILES['company_logo']) && $_FILES['company_logo']['error'] === UPLOAD_ERR_OK) {
-            $company_logo = file_get_contents($_FILES['company_logo']['tmp_name']);
+            // Optimize uploaded image
+            $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+            if (optimizeUploadedImage($_FILES['company_logo'], $tempOptimized)) {
+                $company_logo = file_get_contents($tempOptimized);
+                unlink($tempOptimized); // Clean up temp file
+            } else {
+                $company_logo = file_get_contents($_FILES['company_logo']['tmp_name']);
+            }
         }
 
         $stmt = $pdo->prepare("

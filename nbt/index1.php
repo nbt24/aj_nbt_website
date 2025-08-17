@@ -27,9 +27,16 @@ try {
         $image = null;
         $video = null;
 
-        // Handle image upload
+        // Handle image upload with optimization
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $image = file_get_contents($_FILES['image']['tmp_name']);
+            // Optimize uploaded image
+            $tempOptimized = sys_get_temp_dir() . '/optimized_' . uniqid() . '.jpg';
+            if (optimizeUploadedImage($_FILES['image'], $tempOptimized)) {
+                $image = file_get_contents($tempOptimized);
+                unlink($tempOptimized); // Clean up temp file
+            } else {
+                $image = file_get_contents($_FILES['image']['tmp_name']);
+            }
         }
 
         // Handle video upload

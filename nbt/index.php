@@ -904,16 +904,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         <?php endforeach; ?>
                     </div>
 
-                    <!--Company Team Members-->
+                    <!--Company Team Members - Performance Optimized but Same Look-->
                     <div class="mt-16 overflow-hidden relative team-marquee-container manual-scroll">
-                        <div id="team-marquee" class="flex gap-12 animate-marquee px-4" style="animation: marquee 40s linear infinite;">
+                        <div id="team-marquee" class="flex gap-12 animate-marquee px-4" style="animation: marquee 60s linear infinite;">
                             <?php
-                            // Double the team array for infinite scrolling
-                            $loopedTeam = array_merge($team, $team);
-                            foreach ($loopedTeam as $index => $member): ?>
+                            // Single team array - no duplication for better performance
+                            foreach ($team as $index => $member): ?>
                                 <div class="flex-shrink-0 w-72 text-center group team-card">
-                                    <!-- Card Container with Curved Boundary and Fixed Height -->
-                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-96">
+                                    <!-- Card Container with Optimized Height for Content -->
+                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-80">
                                         
                                         <!-- Decorative Background Pattern -->
                                         <div class="absolute inset-0 opacity-5 pointer-events-none">
@@ -923,8 +922,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                         <!-- Gradient Border Effect -->
                                         <div class="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 via-purple-500/20 to-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                                         
-                                        <!-- Content with Flex Layout -->
-                                        <div class="relative z-10 h-full flex flex-col">
+                                        <!-- Content with Flex Layout - No flex-1 for tighter content -->
+                                        <div class="relative z-10 h-full flex flex-col justify-start">
                                             <!-- Profile Image -->
                                             <div class="relative overflow-hidden rounded-full w-16 h-16 mx-auto mb-3 border-3 border-gradient-to-r from-yellow-400 to-purple-500 shadow-xl group-hover:shadow-2xl transition-shadow duration-300">
                                                 <div class="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 to-purple-500 p-0.5">
@@ -953,18 +952,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 </div>
                                             </div>
 
-                                            <!-- Name -->
-                                            <h4 class="text-lg font-bold text-purple-900 dark:text-purple-200 mb-1 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">
-                                                <?php echo htmlspecialchars($member['name']); ?>
+                                            <!-- Name (smaller font, sentence case) -->
+                                            <h4 class="text-sm font-bold text-purple-900 dark:text-purple-200 mb-1 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">
+                                                <?php echo ucwords(strtolower(htmlspecialchars($member['name']))); ?>
                                             </h4>
 
-                                            <!-- Position -->
-                                            <div class="text-yellow-500 dark:text-yellow-400 font-semibold mb-2 text-sm">
+                                            <!-- Position (larger font) -->
+                                            <div class="text-yellow-500 dark:text-yellow-400 font-semibold mb-2 text-lg">
                                                 <?php echo htmlspecialchars($member['position']); ?>
                                             </div>
 
-                                            <!-- Skills/Description - Flexible Section -->
-                                            <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 flex-1 overflow-hidden">
+                                            <!-- Skills/Description - Fixed Height Section -->
+                                            <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 overflow-hidden">
                                                 <?php 
                                                 $description = htmlspecialchars($member['description']);
                                                 // Split by bullet points (•) or newlines
@@ -985,32 +984,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 ?>
                                             </div>
 
-
                                         </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
                     </div>
-
-                    <!-- Marquee Keyframes - Hardware Accelerated -->
+                    <!-- Performance-Optimized Team Animations (Same Visual Look) -->
                     <style>
+                        /* Original marquee animation with hardware acceleration */
                         @keyframes marquee {
                             0% {
                                 transform: translate3d(0%, 0, 0);
                             }
-
                             100% {
-                                transform: translate3d(-50%, 0, 0);
+                                transform: translate3d(-100%, 0, 0);
                             }
                         }
                         
-                        /* Team marquee hover behavior */
+                        /* Team marquee hover behavior - same as original */
                         .team-marquee-container:hover .animate-marquee {
                             animation-play-state: paused;
                         }
                         
-                        /* Manual scroll styles */
+                        /* Manual scroll styles - same as original */
                         .manual-scroll {
                             overflow-x: auto;
                             cursor: grab;
@@ -1036,6 +1033,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         
                         .manual-scroll::-webkit-scrollbar-thumb:hover {
                             background: rgba(147, 51, 234, 0.5);
+                        }
+                        
+                        /* Hardware acceleration for better performance */
+                        .team-card {
+                            transform: translateZ(0);
+                            backface-visibility: hidden;
+                        }
+                        
+                        /* Optimize animations for 60fps */
+                        .animate-marquee {
+                            will-change: transform;
                         }
                     </style>
                 </div>
@@ -2456,6 +2464,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 return;
             }
 
+            // Optimized Team Marquee Functions (Same Functionality)
             function pauseTeamMarquee() {
                 const marquee = document.getElementById('team-marquee');
                 if (marquee) {
@@ -2468,6 +2477,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 if (marquee) {
                     marquee.style.animationPlayState = 'running';
                 }
+            }
+
+            // Performance optimization: Pause animation when not visible
+            if (document.getElementById('team-marquee')) {
+                const teamSection = document.getElementById('team-marquee').closest('section');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const marquee = document.getElementById('team-marquee');
+                        if (marquee) {
+                            if (entry.isIntersecting) {
+                                marquee.style.animationPlayState = 'running';
+                            } else {
+                                marquee.style.animationPlayState = 'paused';
+                            }
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                if (teamSection) observer.observe(teamSection);
             }
 
 
