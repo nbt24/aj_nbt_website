@@ -665,7 +665,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             <!-- Elegant Inline Video Player -->
                             <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:-translate-y-1 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400">
                                 <!-- Video Container -->
-                                <div class="relative bg-black rounded-3xl overflow-hidden" id="missionVideoContainer">
+                                <div class="relative bg-black rounded-3xl overflow-hidden min-h-[300px] aspect-video" id="missionVideoContainer">
                                     <!-- Video Thumbnail with Play Button -->
                                     <div class="video-thumbnail absolute inset-0 cursor-pointer group" onclick="loadMissionVideo()">
                                         <?php if ($mission_video['type'] === 'youtube'): ?>
@@ -740,7 +740,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                             <iframe 
                                                 class="w-full h-full border-0" 
                                                 src="" 
-                                                data-src="<?= htmlspecialchars($mission_video['embed_url']) ?>&autoplay=1"
+                                                data-src="<?= htmlspecialchars($mission_video['embed_url']) ?><?= strpos($mission_video['embed_url'], '?') !== false ? '&' : '?' ?>autoplay=1"
                                                 frameborder="0" 
                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                                 allowfullscreen>
@@ -1420,86 +1420,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         border: none;
                         outline: none;
                         border-radius: 1.5rem; /* Match rounded-3xl */
-                    }
-                </style>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="services-section" class="py-20 bg-purple-950 relative overflow-hidden">
-            <!-- Decorative Background Elements -->
-                    
-                    .video-player iframe,
-                    .video-player video {
-                        transition: opacity 0.3s ease;
-                        display: block;
-                        width: 100% !important;
-                        height: 100% !important;
-                        border: none;
-                        outline: none;
-                        border-radius: 1.5rem; /* Match rounded-3xl */
-                    }
-                    
-                    .video-loading {
-                        backdrop-filter: blur(4px);
-                        -webkit-backdrop-filter: blur(4px);
-                        z-index: 20;
-                        border-radius: 1.5rem; /* Match rounded-3xl */
-                    }
-                    
-                    /* Smooth video transitions */
-                    #missionVideoContainer {
-                        position: relative;
-                        width: 100%;
-                        height: 0;
-                        padding-bottom: 56.25%; /* 16:9 aspect ratio */
-                        overflow: hidden;
-                        border-radius: 1.5rem; /* Match rounded-3xl */
-                    }
-                    
-                    #missionVideoContainer .video-thumbnail,
-                    #missionVideoContainer .video-player,
-                    #missionVideoContainer .video-loading {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                        border-radius: 1.5rem; /* Match rounded-3xl */
-                    }
-                    
-                    /* Video badge styling */
-                    .video-thumbnail .absolute.top-4.right-4 {
-                        backdrop-filter: blur(8px);
-                        -webkit-backdrop-filter: blur(8px);
-                    }
-                    
-                    /* Ensure iframe fills container with rounded corners */
-                    #missionVideoContainer iframe {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        border: 0;
-                        border-radius: 1.5rem; /* Match rounded-3xl */
-                    }
-                    
-                    /* Card hover effects for video container */
-                    .video-card-hover:hover {
-                        transform: translateY(-4px);
-                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-                    }
-                    
-                    /* Lazy loading fade in */
-                    .video-fade-in {
-                        animation: fadeIn 0.5s ease-in-out;
-                    }
-                    
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(10px); }
-                        to { opacity: 1; transform: translateY(0); }
                     }
                 </style>
             </div>
@@ -2530,33 +2450,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             const missionVideoUrl = '<?= !empty($mission_video) ? htmlspecialchars($mission['video_url']) : '' ?>';
             
             function loadMissionVideo() {
-                if (!missionVideoUrl) return;
+                if (!missionVideoUrl) {
+                    console.log('No mission video URL available');
+                    return;
+                }
                 
                 const container = document.getElementById('missionVideoContainer');
+                if (!container) {
+                    console.log('Mission video container not found');
+                    return;
+                }
+                
                 const thumbnail = container.querySelector('.video-thumbnail');
                 const player = container.querySelector('.video-player');
                 const loading = container.querySelector('.video-loading');
+                
+                if (!player) {
+                    console.log('Video player element not found');
+                    // Fallback: open video in new tab
+                    window.open(missionVideoUrl, '_blank');
+                    return;
+                }
+                
                 const iframe = player.querySelector('iframe');
                 const video = player.querySelector('video');
                 
                 // Show loading state
-                thumbnail.style.display = 'none';
-                loading.classList.remove('hidden');
+                if (thumbnail) thumbnail.style.display = 'none';
+                if (loading) loading.classList.remove('hidden');
                 
                 // Load video
                 setTimeout(() => {
-                    if (iframe) {
+                    if (iframe && iframe.getAttribute('data-src')) {
                         iframe.src = iframe.getAttribute('data-src');
                         iframe.onload = () => {
-                            loading.classList.add('hidden');
+                            if (loading) loading.classList.add('hidden');
                             player.classList.remove('hidden');
                             missionVideoLoaded = true;
                         };
+                        // Fallback timeout in case onload doesn't fire
+                        setTimeout(() => {
+                            if (loading) loading.classList.add('hidden');
+                            player.classList.remove('hidden');
+                            missionVideoLoaded = true;
+                        }, 3000);
                     } else if (video) {
-                        loading.classList.add('hidden');
+                        if (loading) loading.classList.add('hidden');
                         player.classList.remove('hidden');
-                        video.play();
+                        video.play().catch(e => console.log('Video autoplay prevented:', e));
                         missionVideoLoaded = true;
+                    } else {
+                        console.log('No video element found, opening in new tab');
+                        if (loading) loading.classList.add('hidden');
+                        if (thumbnail) thumbnail.style.display = 'block';
+                        window.open(missionVideoUrl, '_blank');
                     }
                 }, 500);
             }
