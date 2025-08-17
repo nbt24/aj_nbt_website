@@ -57,11 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
   header("Location: manage_courses.php");
   exit;
 }
-    ]);
-  }
-  header("Location: manage_courses.php");
-  exit;
-}
 
 // Fetch courses
 $stmt = $pdo->query("SELECT * FROM courses ORDER BY id DESC");
@@ -74,7 +69,7 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <meta charset="UTF-8">
   <title>Manage Courses</title>
   <script src="https://cdn.tailwindcss.com"></script>
-   <link rel="icon" href="./asset/black.png" type="image/x-icon" />
+   <link rel="icon" href="../assert/black.png" type="image/x-icon" />
 </head>
 <body class="bg-purple-50 font-sans">
     <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
