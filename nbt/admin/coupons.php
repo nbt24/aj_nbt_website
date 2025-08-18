@@ -11,17 +11,47 @@ if (!isset($_SESSION['admin_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $code = $_POST['code'];
     $discount = $_POST['discount'];
-    $time_limit = $_POST['time_limit'] ?: null;
-    $original_code = $_POST['original_code'];
+    
+    // Check if database has end_date column, otherwise use time_limit
+    try {
+        $columnCheck = $pdo->query("SHOW COLUMNS FROM coupons LIKE 'end_date'")->fetch();
+        if ($columnCheck) {
+            // Use end_date column
+            $end_date = $_POST['end_date'] ?: null;
+            $original_code = $_POST['original_code'];
 
-    if ($original_code) {
-        // Update
-        $stmt = $pdo->prepare("UPDATE coupons SET code=?, discount=?, time_limit=? WHERE code=?");
-        $stmt->execute([$code, $discount, $time_limit, $original_code]);
-    } else {
-        // Insert
-        $stmt = $pdo->prepare("INSERT INTO coupons (code, discount, time_limit) VALUES (?, ?, ?)");
-        $stmt->execute([$code, $discount, $time_limit]);
+            if ($original_code) {
+                $stmt = $pdo->prepare("UPDATE coupons SET code=?, discount=?, end_date=? WHERE code=?");
+                $stmt->execute([$code, $discount, $end_date, $original_code]);
+            } else {
+                $stmt = $pdo->prepare("INSERT INTO coupons (code, discount, end_date) VALUES (?, ?, ?)");
+                $stmt->execute([$code, $discount, $end_date]);
+            }
+        } else {
+            // Fall back to time_limit column
+            $time_limit = $_POST['time_limit'] ?: null;
+            $original_code = $_POST['original_code'];
+
+            if ($original_code) {
+                $stmt = $pdo->prepare("UPDATE coupons SET code=?, discount=?, time_limit=? WHERE code=?");
+                $stmt->execute([$code, $discount, $time_limit, $original_code]);
+            } else {
+                $stmt = $pdo->prepare("INSERT INTO coupons (code, discount, time_limit) VALUES (?, ?, ?)");
+                $stmt->execute([$code, $discount, $time_limit]);
+            }
+        }
+    } catch (Exception $e) {
+        // If there's any error, fall back to time_limit
+        $time_limit = $_POST['time_limit'] ?: null;
+        $original_code = $_POST['original_code'];
+
+        if ($original_code) {
+            $stmt = $pdo->prepare("UPDATE coupons SET code=?, discount=?, time_limit=? WHERE code=?");
+            $stmt->execute([$code, $discount, $time_limit, $original_code]);
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO coupons (code, discount, time_limit) VALUES (?, ?, ?)");
+            $stmt->execute([$code, $discount, $time_limit]);
+        }
     }
 
     header("Location: coupons.php");
@@ -41,10 +71,10 @@ if (isset($_GET['download']) && $_GET['download'] === 'true') {
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="coupons.csv"');
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['Code', 'Discount', 'Time Limit', 'Created At']);
+    fputcsv($out, ['Code', 'Discount', 'End Date', 'Created At']);
     $rows = $pdo->query("SELECT * FROM coupons ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
     foreach ($rows as $row) {
-        fputcsv($out, [$row['code'], $row['discount'], $row['time_limit'], $row['created_at']]);
+        fputcsv($out, [$row['code'], $row['discount'], $row['end_date'], $row['created_at']]);
     }
     fclose($out);
     exit;
@@ -105,10 +135,11 @@ if (isset($_GET['edit'])) {
                  value="<?= htmlspecialchars($edit_coupon['discount'] ?? '') ?>" />
         </div>
         <div>
-          <label class="block font-medium text-gray-700">Time Limit (days)</label>
-          <input name="time_limit" type="number"
+          <label class="block font-medium text-gray-700">End Date</label>
+          <input name="end_date" type="date"
                  class="mt-1 w-full border border-gray-300 rounded px-3 py-2"
-                 value="<?= htmlspecialchars($edit_coupon['time_limit'] ?? '') ?>" />
+                 value="<?= htmlspecialchars($edit_coupon['end_date'] ?? '') ?>" />
+          <small class="text-gray-500">Leave empty for no expiration</small>
         </div>
         <div class="text-right">
           <?php if ($edit_coupon): ?>
@@ -134,7 +165,7 @@ if (isset($_GET['edit'])) {
               <th class="px-4 py-3">#</th>
               <th class="px-4 py-3">Code</th>
               <th class="px-4 py-3">Discount (%)</th>
-              <th class="px-4 py-3">Time Limit</th>
+              <th class="px-4 py-3">End Date</th>
               <th class="px-4 py-3">Created At</th>
               <th class="px-4 py-3">Actions</th>
             </tr>
@@ -148,7 +179,24 @@ if (isset($_GET['edit'])) {
                   <td class="px-4 py-3"><?= $i + 1 ?></td>
                   <td class="px-4 py-3 font-medium"><?= htmlspecialchars($c['code']) ?></td>
                   <td class="px-4 py-3"><?= htmlspecialchars($c['discount']) ?></td>
-                  <td class="px-4 py-3"><?= htmlspecialchars($c['time_limit']) ?></td>
+                  <td class="px-4 py-3">
+                    <?php if ($c['end_date']): ?>
+                      <?= date('M d, Y', strtotime($c['end_date'])) ?>
+                      <?php 
+                        $today = new DateTime();
+                        $endDate = new DateTime($c['end_date']);
+                        if ($endDate < $today): ?>
+                          <span class="ml-2 px-2 py-1 text-xs bg-red-100 text-red-700 rounded">EXPIRED</span>
+                        <?php else: 
+                          $diff = $today->diff($endDate);
+                          if ($diff->days <= 3): ?>
+                            <span class="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded">ENDING SOON</span>
+                          <?php endif;
+                        endif; ?>
+                    <?php else: ?>
+                      <span class="text-gray-500">No expiration</span>
+                    <?php endif; ?>
+                  </td>
                   <td class="px-4 py-3"><?= htmlspecialchars($c['created_at']) ?></td>
                   <td class="px-4 py-3 space-x-2">
                     <a href="?edit=<?= urlencode($c['code']) ?>" class="text-blue-600 hover:underline">Edit</a>

@@ -1699,63 +1699,135 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     </p>
                 </div>
 
-                <!-- Coupons Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-section" style="animation-delay: 200ms;">
-                    <?php foreach ($coupons as $coupon): ?>
-                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group">
-                            <!-- Tech Grid Pattern -->
-                            <div class="absolute inset-0 opacity-10 pointer-events-none">
-                                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
-                            </div>
+                <!-- Coupons Container with Banner Style -->
+                <div class="relative mx-2 md:mx-4 lg:mx-6 coupons-container">
+                    <!-- Curved Container Background -->
+                    <div class="bg-purple-100 dark:bg-purple-900 rounded-[3rem] border-2 border-purple-300 dark:border-purple-600 shadow-lg overflow-hidden">
+                        <!-- Inner padding container -->
+                        <div class="px-2 py-2 sm:px-3 sm:py-3 md:px-4 md:py-4">
+                            <div class="scrolling-wrapper overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
+                                <!-- Scrollable Coupons Container -->
+                                <div class="scrolling-container flex gap-x-6 min-w-max animate-marquee">
+                                    <?php 
+                                    // Duplicate the coupons array for seamless looping
+                                    $coupons_loop = array_merge($coupons, $coupons);
+                                    foreach ($coupons_loop as $index => $coupon): ?>
+                                        <div class="group animate-section w-[300px] sm:w-[320px] flex-shrink-0" style="animation-delay: <?= 100 * $index ?>ms;">
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group">
+                                                <!-- Tech Grid Pattern -->
+                                                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                                                </div>
 
-                            <!-- Main Content Section -->
-                            <div class="relative z-10 px-6 py-6 transition-transform duration-500 group-hover:scale-105">
-                                <!-- Coupon Code Display -->
-                                <div class="text-center mb-5 p-4 rounded-2xl bg-purple-50 dark:bg-purple-900/50 border border-purple-200/50 dark:border-purple-600/50">
-                                    <div class="text-xs font-semibold uppercase tracking-widest text-purple-600 dark:text-purple-300 mb-1">Coupon Code</div>
-                                    <h3 class="text-2xl font-black tracking-[0.2em] mb-3 font-mono transform group-hover:scale-105 transition-transform duration-300 text-purple-900 dark:text-purple-100">
-                                        <?= htmlspecialchars($coupon['code']) ?>
-                                    </h3>
+                                                <!-- Main Content Section -->
+                                                <div class="relative z-10 px-6 py-6 transition-transform duration-500 group-hover:scale-105">
+                                                    <!-- Coupon Code Display -->
+                                                    <div class="text-center mb-5 p-4 rounded-2xl bg-purple-50 dark:bg-purple-900/50 border border-purple-200/50 dark:border-purple-600/50">
+                                                        <div class="text-xs font-semibold uppercase tracking-widest text-purple-600 dark:text-purple-300 mb-1">Coupon Code</div>
+                                                        <h3 class="text-2xl font-black tracking-[0.2em] mb-3 font-mono transform group-hover:scale-105 transition-transform duration-300 text-purple-900 dark:text-purple-100">
+                                                            <?= htmlspecialchars($coupon['code']) ?>
+                                                        </h3>
 
-                                    <!-- Discount Display -->
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <div class="text-4xl font-black text-yellow-500 dark:text-yellow-400 transform group-hover:scale-110 transition-all duration-300">
-                                            <?= htmlspecialchars($coupon['discount']) ?>%
+                                                        <!-- Discount Display -->
+                                                        <div class="flex items-center justify-center space-x-2">
+                                                            <div class="text-4xl font-black text-yellow-500 dark:text-yellow-400 transform group-hover:scale-110 transition-all duration-300">
+                                                                <?= htmlspecialchars($coupon['discount']) ?>%
+                                                            </div>
+                                                            <div class="text-sm font-bold text-purple-600 dark:text-purple-300 uppercase tracking-wider">
+                                                                OFF
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Time Limit with Enhanced Design and Countdown -->
+                                                    <div class="flex items-center justify-center mb-4 p-2 rounded-lg bg-purple-50 dark:bg-purple-900/50 border border-purple-200/40 dark:border-purple-600/40">
+                                                        <div class="flex items-center space-x-2 text-purple-600 dark:text-purple-300">
+                                                            <div class="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
+                                                                <svg class="w-3 h-3 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                </svg>
+                                                            </div>
+                                                            <div>
+                                                                    <div class="flex items-center justify-center">
+                                                                        <span class="text-xs font-semibold uppercase tracking-wide opacity-70 mr-2">Expires in</span>
+                                                                        <span class="countdown-timer text-lg font-extrabold text-purple-700 dark:text-yellow-300" data-expiry="<?= htmlspecialchars($coupon['end_date'] ?? '') ?>" data-debug="<?= htmlspecialchars($coupon['end_date'] ?? 'NO_END_DATE') ?>">Loading...</span>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Enhanced CTA Button -->
+                                                    <button class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-yellow-400 text-purple-900 font-bold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 glow-border">
+                                                        <span class="relative z-10 flex items-center justify-center space-x-2">
+                                                            <span>Use This Code</span>
+                                                            <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                                            </svg>
+                                                        </span>
+                                                        <!-- Button Glow Effect -->
+                                                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-300 to-yellow-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Hover Glow Effect -->
+                                                <div class="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 via-transparent to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                            </div>
                                         </div>
-                                        <div class="text-sm font-bold text-purple-600 dark:text-purple-300 uppercase tracking-wider">
-                                            OFF
-                                        </div>
-                                    </div>
+                                    <?php endforeach; ?>
                                 </div>
-
-                                <!-- Time Limit with Enhanced Design -->
-                                <div class="flex items-center justify-center mb-4 p-2 rounded-lg bg-purple-50 dark:bg-purple-900/50 border border-purple-200/40 dark:border-purple-600/40">
-                                    <div class="flex items-center space-x-2 text-purple-600 dark:text-purple-300">
-                                        <div class="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
-                                            <svg class="w-3 h-3 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <div class="text-xs font-semibold uppercase tracking-wide opacity-70">Valid Until</div>
-                                            <div class="text-xs font-bold"><?= htmlspecialchars($coupon['time_limit']) ?></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Enhanced CTA Button -->
-                                <button class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-yellow-400 text-purple-900 font-bold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 glow-border">
-                                    <span class="relative z-10 flex items-center justify-center space-x-2">
-                                        <span>Use This Code</span>
-                                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                        </svg>
-                                    </span>
-                                </button>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                    </div>
                 </div>
+
+                <!-- Countdown Timer Script - Runs immediately -->
+                <script>
+                (function() {
+                    const countdownElements = document.querySelectorAll('.countdown-timer');
+                    
+                    countdownElements.forEach(element => {
+                        const expiryDate = element.getAttribute('data-expiry');
+                        
+                        if (!expiryDate || expiryDate.trim() === '') {
+                            element.textContent = 'No expiry';
+                            return;
+                        }
+                        
+                        const targetDate = new Date(expiryDate + 'T23:59:59');
+                        
+                        if (isNaN(targetDate.getTime())) {
+                            element.textContent = 'Invalid date';
+                            return;
+                        }
+                        
+                        function updateCountdown() {
+                            const now = new Date().getTime();
+                            const timeLeft = targetDate.getTime() - now;
+                            
+                            if (timeLeft > 0) {
+                                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                                
+                                if (days > 0) {
+                                    element.textContent = `${days}d ${hours}h ${minutes}m`;
+                                } else if (hours > 0) {
+                                    element.textContent = `${hours}h ${minutes}m ${seconds}s`;
+                                } else {
+                                    element.textContent = `${minutes}m ${seconds}s`;
+                                }
+                            } else {
+                                element.textContent = 'EXPIRED';
+                                element.style.color = '#ef4444';
+                            }
+                        }
+                        
+                        updateCountdown();
+                        setInterval(updateCountdown, 1000);
+                    });
+                })();
+                </script>
 
                 <!-- Bottom CTA -->
                 <div class="text-center mt-16 animate-section" style="animation-delay: 400ms;">
@@ -1764,9 +1836,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     </p>
                 </div>
             </div>
-        </section>
-
-        <!-- Services Section -->
+        </section>        <!-- Services Section -->
         <section id="services" class="py-20 bg-white dark:bg-purple-950 relative overflow-hidden">
     <!-- Decorative Background Blobs -->
     <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/20 rounded-full blur-3xl"></div>
@@ -2663,6 +2733,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     .catch(error => console.error('Error fetching videos:', error));
             });
             */
+
+            // Simple Countdown Timer for Coupons
+            function initCouponCountdowns() {
+                const countdownElements = document.querySelectorAll('.countdown-timer');
+                
+                countdownElements.forEach(element => {
+                    const expiryDate = element.getAttribute('data-expiry');
+                    
+                    if (!expiryDate || expiryDate.trim() === '') {
+                        element.textContent = 'No expiry date';
+                        return;
+                    }
+                    
+                    // Parse the date (YYYY-MM-DD format from database)
+                    const targetDate = new Date(expiryDate + 'T23:59:59');
+                    
+                    if (isNaN(targetDate.getTime())) {
+                        element.textContent = 'Invalid date';
+                        return;
+                    }
+                    
+                    function updateCountdown() {
+                        const now = new Date().getTime();
+                        const timeLeft = targetDate.getTime() - now;
+                        
+                        if (timeLeft > 0) {
+                            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                            
+                            if (days > 0) {
+                                element.textContent = `${days}d ${hours}h ${minutes}m`;
+                            } else if (hours > 0) {
+                                element.textContent = `${hours}h ${minutes}m ${seconds}s`;
+                            } else {
+                                element.textContent = `${minutes}m ${seconds}s`;
+                            }
+                        } else {
+                            element.textContent = 'EXPIRED';
+                            element.style.color = '#ef4444';
+                        }
+                    }
+                    
+                    updateCountdown();
+                    setInterval(updateCountdown, 1000);
+                });
+            }
+            
+            // Start countdown when page loads
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initCouponCountdowns);
+            } else {
+                initCouponCountdowns();
+            }
         </script>
 </body>
 
