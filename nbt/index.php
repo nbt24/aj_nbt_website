@@ -217,6 +217,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             }
         }
 
+        /* Line Clamp Utilities */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .line-clamp-4 {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         .animate-marquee {
             animation: marquee 40s linear infinite;
             will-change: transform;
@@ -476,6 +498,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
             transform: translateY(-4px);
         }
+
+        /* Smooth Moving Flash Border Animation */
+        .glow-border {
+            position: relative;
+            border: 2px solid #fbbf24;
+            background: #fbbf24;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+            overflow: hidden;
+        }
+
+        /* Main moving flash effect */
+        .glow-border::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.1) 40%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 1) 52%,
+                rgba(255, 255, 255, 0.8) 54%,
+                rgba(255, 255, 255, 0.1) 60%,
+                transparent 70%
+            );
+            animation: sweep-flash 5s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        /* Secondary glow pulse */
+        .glow-border::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b, #fde047, #fbbf24);
+            background-size: 300% 300%;
+            border-radius: inherit;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask-composite: xor;
+            animation: glow-rotate 0.5s linear infinite;
+            z-index: 0;
+        }
+
+        /* Button content overlay */
+        .glow-border span {
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes sweep-flash {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            92.5% {
+                opacity: 1;
+            }
+            95% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+                opacity: 0;
+            }
+            95.1%, 100% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes glow-rotate {
+            0% {
+                background-position: 0% 50%;
+                filter: hue-rotate(0deg);
+            }
+            33% {
+                background-position: 100% 50%;
+                filter: hue-rotate(10deg);
+            }
+            66% {
+                background-position: 50% 100%;
+                filter: hue-rotate(-10deg);
+            }
+            100% {
+                background-position: 0% 50%;
+                filter: hue-rotate(0deg);
+            }
+        }
+
+        /* Enhanced hover effects */
+        .glow-border:hover {
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.6), 0 0 60px rgba(251, 191, 36, 0.3);
+            transform: scale(1.05);
+        }
+
+        .glow-border:hover::before {
+            animation: sweep-flash 5s ease-in-out infinite;
+        }
+
+        .glow-border:hover::after {
+            animation: glow-rotate 1.5s linear infinite;
+        }
     </style>
 
 
@@ -537,8 +665,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     </button>
                 </div>
                 <div class="hidden md:block">
-                    <button onclick="window.location.href='https://courses.nextbiggtech.com'" class="bg-yellow-500 text-purple-900 dark:bg-yellow-400 dark:text-purple-900 px-6 py-2 rounded-full font-semibold hover:bg-yellow-600 dark:hover:bg-yellow-500 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-                        Login
+                    <button onclick="window.location.href='https://courses.nextbiggtech.com'" class="bg-yellow-500 text-purple-900 dark:bg-yellow-400 dark:text-purple-900 px-6 py-2 rounded-full font-semibold hover:bg-yellow-600 dark:hover:bg-yellow-500 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl glow-border">
+                        <span class="relative z-10">Login</span>
                     </button>
                 </div>
                 <div class="md:hidden flex items-center space-x-2">
@@ -589,17 +717,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             Transform your career with expert consultancy, cutting-edge tech services, and industry-leading courses in web development, data science, and digital marketing.
                         </p>
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <button onclick="scrollToSection('contact')" class="bg-yellow-500 text-purple-900 dark:bg-yellow-400 dark:text-purple-800 px-8 py-3 rounded-full font-semibold hover:bg-yellow-600 dark:hover:bg-yellow-500 hover:scale-105 transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                                Get Free Consultation
+                            <button onclick="scrollToSection('contact')" class="bg-yellow-500 text-purple-900 dark:bg-yellow-400 dark:text-purple-800 px-8 py-3 rounded-full font-semibold hover:bg-yellow-600 dark:hover:bg-yellow-500 hover:scale-105 transition-all duration-300 text-center shadow-lg hover:shadow-xl transform glow-border">
+                                <span class="relative z-10">Get Free Consultation</span>
                             </button>
-                            <button onclick="scrollToSection('courses')" class="border-2 border-yellow-400 text-yellow-400 dark:border-yellow-400 dark:text-yellow-400 px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-purple-900 dark:hover:bg-yellow-400 dark:hover:text-purple-800 hover:scale-105 transition-all duration-300 text-center transform hover:-translate-y-1">
-                                View Courses
+                            <button onclick="scrollToSection('courses')" class="border-2 border-yellow-400 text-yellow-400 dark:border-yellow-400 dark:text-yellow-400 px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-purple-900 dark:hover:bg-yellow-400 dark:hover:text-purple-800 hover:scale-105 transition-all duration-300 text-center transform glow-border">
+                                <span class="relative z-10">View Courses</span>
                             </button>
                         </div>
                     </div>
                     <!-- Right Carousel Image -->
                     <div class="animate-section flex-1" style="animation-delay: 300ms;">
-                        <div class="relative w-full aspect-video overflow-hidden rounded-xl shadow-2xl bg-white dark:bg-gray-800 flex items-center justify-center">
+                        <div class="relative w-full aspect-video overflow-hidden rounded-xl shadow-2xl bg-white dark:bg-gray-800 flex items-center justify-center border-4 border-yellow-400/80 dark:border-yellow-400/90 hover:border-yellow-400 dark:hover:border-yellow-400 transition-all duration-300">
                             <div id="carousel" class="flex w-full h-full items-center justify-center transition-transform duration-500 ease-in-out">
                                 <?php
                                 if (!empty($overview_images)) {
@@ -663,9 +791,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     <div class="animate-section" style="animation-delay: 400ms;">
                         <?php if ($mission_video): ?>
                             <!-- Elegant Inline Video Player -->
-                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:-translate-y-1 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400">
+                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group">
                                 <!-- Video Container -->
-                                <div class="relative bg-black rounded-3xl overflow-hidden min-h-[300px] aspect-video" id="missionVideoContainer">
+                                <div class="relative bg-black rounded-3xl overflow-hidden min-h-[300px] aspect-video transition-transform duration-500 group-hover:scale-105" id="missionVideoContainer">
                                     <!-- Video Thumbnail with Play Button -->
                                     <div class="video-thumbnail absolute inset-0 cursor-pointer group" onclick="loadMissionVideo()">
                                         <?php if ($mission_video['type'] === 'youtube'): ?>
@@ -759,8 +887,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             </div>
                         <?php else: ?>
                             <!-- Fallback when no video is set -->
-                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:-translate-y-1 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 p-8">
-                                <div class="text-center">
+                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 p-8 group">
+                                <div class="text-center transition-transform duration-500 group-hover:scale-105">
                                     <svg class="w-24 h-24 mx-auto mb-6 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                                     </svg>
@@ -795,12 +923,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         <!-- Value Cards -->
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             <!-- Value Card -->
-                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group animate-section">
+                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group animate-section">
                                 <div class="absolute inset-0 opacity-10 pointer-events-none">
                                     <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                                 </div>
 
-                                <div class="relative z-10 p-6 text-center">
+                                <div class="relative z-10 p-6 text-center transition-transform duration-500 group-hover:scale-105">
                                     <div class="bg-purple-100 dark:bg-purple-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-600 transition-colors duration-300">
                                         <i data-lucide="target" class="h-8 w-8 text-purple-600 dark:text-purple-300 group-hover:text-purple-900 dark:group-hover:text-purple-800 transition-colors duration-300"></i>
                                     </div>
@@ -810,11 +938,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             </div>
 
                             <!-- Repeat for other values -->
-                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group animate-section" style="animation-delay: 100ms;">
+                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group animate-section" style="animation-delay: 100ms;">
                                 <div class="absolute inset-0 opacity-10 pointer-events-none">
                                     <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                                 </div>
-                                <div class="relative z-10 p-6 text-center">
+                                <div class="relative z-10 p-6 text-center transition-transform duration-500 group-hover:scale-105">
                                     <div class="bg-purple-100 dark:bg-purple-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-600 transition-colors duration-300">
                                         <i data-lucide="heart" class="h-8 w-8 text-purple-600 dark:text-purple-300 group-hover:text-purple-900 dark:group-hover:text-purple-800 transition-colors duration-300"></i>
                                     </div>
@@ -823,11 +951,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 </div>
                             </div>
 
-                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group animate-section" style="animation-delay: 200ms;">
+                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group animate-section" style="animation-delay: 200ms;">
                                 <div class="absolute inset-0 opacity-10 pointer-events-none">
                                     <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                                 </div>
-                                <div class="relative z-10 p-6 text-center">
+                                <div class="relative z-10 p-6 text-center transition-transform duration-500 group-hover:scale-105">
                                     <div class="bg-purple-100 dark:bg-purple-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-600 transition-colors duration-300">
                                         <i data-lucide="users" class="h-8 w-8 text-purple-600 dark:text-purple-300 group-hover:text-purple-900 dark:group-hover:text-purple-800 transition-colors duration-300"></i>
                                     </div>
@@ -836,11 +964,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 </div>
                             </div>
 
-                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group animate-section" style="animation-delay: 300ms;">
+                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group animate-section" style="animation-delay: 300ms;">
                                 <div class="absolute inset-0 opacity-10 pointer-events-none">
                                     <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                                 </div>
-                                <div class="relative z-10 p-6 text-center">
+                                <div class="relative z-10 p-6 text-center transition-transform duration-500 group-hover:scale-105">
                                     <div class="bg-purple-100 dark:bg-purple-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-600 transition-colors duration-300">
                                         <i data-lucide="award" class="h-8 w-8 text-purple-600 dark:text-purple-300 group-hover:text-purple-900 dark:group-hover:text-purple-800 transition-colors duration-300"></i>
                                     </div>
@@ -862,7 +990,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     <!--four Founders-->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
                         <?php foreach ($founder as $mem): ?>
-                            <div class="w-64 text-center bg-purple-50 dark:bg-purple-900/70 rounded-xl shadow-lg mx-auto overflow-hidden">
+                            <div class="w-64 text-center bg-purple-50 dark:bg-purple-900/70 rounded-xl shadow-lg mx-auto overflow-hidden border-4 border-yellow-400/80 dark:border-yellow-400/90 hover:border-yellow-400 dark:hover:border-yellow-400 transition-all duration-300">
                                 <div class="relative w-full h-64 border-b-2 border-purple-300 dark:border-purple-600">
                                     <?php 
                                         // Use cached image for better performance
@@ -912,7 +1040,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             foreach ($team as $index => $member): ?>
                                 <div class="flex-shrink-0 w-72 text-center group team-card">
                                     <!-- Card Container with Optimized Height for Content -->
-                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-yellow-400/40 dark:border-yellow-400/60 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-80">
+                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border-4 border-yellow-400/80 dark:border-yellow-400/90 transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-80">
                                         
                                         <!-- Decorative Background Pattern -->
                                         <div class="absolute inset-0 opacity-5 pointer-events-none">
@@ -923,7 +1051,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                         <div class="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 via-purple-500/20 to-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                                         
                                         <!-- Content with Flex Layout - No flex-1 for tighter content -->
-                                        <div class="relative z-10 h-full flex flex-col justify-start">
+                                        <div class="relative z-10 h-full flex flex-col justify-start transition-transform duration-500 group-hover:scale-105">
                                             <!-- Profile Image -->
                                             <div class="relative overflow-hidden rounded-full w-16 h-16 mx-auto mb-3 border-3 border-gradient-to-r from-yellow-400 to-purple-500 shadow-xl group-hover:shadow-2xl transition-shadow duration-300">
                                                 <div class="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 to-purple-500 p-0.5">
@@ -1075,72 +1203,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             $courses_loop = array_merge($courses, $courses);
                             foreach ($courses_loop as $index => $course): ?>
                                 <div class="group animate-section w-[300px] sm:w-[320px] flex-shrink-0" style="animation-delay: <?= 100 * $index ?>ms;">
-                                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl">
+                                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 h-[420px] flex flex-col">
 
-                                        <!-- Image -->
-                                        <?php if (!empty($course['image'])): ?>
-                                            <?php 
-                                                // Use optimized image caching for better performance
-                                                $imagePath = getOptimizedImagePath($course['image'], 'image/jpeg', 'course', $course['id']);
-                                            ?>
-                                            <div class="overflow-hidden rounded-t-3xl">
-                                                <img src="<?= $imagePath ?>"
+                                        <!-- Banner Image -->
+                                        <?php if (!empty($course['banner_image'])): ?>
+                                            <div class="overflow-hidden rounded-t-3xl flex-shrink-0">
+                                                <img src="<?= htmlspecialchars($course['banner_image']) ?>"
                                                     alt="<?= htmlspecialchars($course['title']) ?>"
-                                                    class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-105"
-                                                    loading="lazy">
+                                                    class="w-full h-48 object-cover rounded-t-3xl transition-transform duration-300 group-hover:scale-110"
+                                                    loading="lazy"
+                                                    onerror="this.parentElement.innerHTML='<div class=&quot;w-full h-48 bg-purple-200 flex items-center justify-center rounded-t-3xl text-purple-600 font-semibold&quot;>Course Banner</div>'">
                                             </div>
-                            <?php else: ?>
-                                <div class="w-full h-48 bg-purple-200 flex items-center justify-center rounded-t-3xl text-purple-600 font-semibold">
-                                    No Image
-                                </div>
-                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <div class="w-full h-48 bg-purple-200 flex items-center justify-center rounded-t-3xl text-purple-600 font-semibold flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+                                                Course Banner
+                                            </div>
+                                        <?php endif; ?>
 
-                            <!-- Content -->
-                            <div class="p-6 space-y-4 relative z-10">
-                                <div class="flex justify-between text-xs uppercase font-semibold text-purple-700 dark:text-purple-300">
-                                    <span class="bg-purple-100 dark:bg-purple-800/80 border border-purple-300/50 dark:border-purple-600/50 px-2 py-1 rounded-xl tracking-wider text-purple-800 dark:text-purple-100">
-                                        <?= htmlspecialchars($course['type']) ?>
-                                    </span>
-                                    <span><?= htmlspecialchars($course['description_1']) ?></span>
-                                </div>
+                                        <!-- Content -->
+                                        <div class="p-4 flex flex-col flex-grow relative z-10 transition-transform duration-300 group-hover:scale-105">
+                                            <!-- Course Title -->
+                                            <div class="mb-3">
+                                                <h3 class="text-lg font-bold text-purple-900 dark:text-purple-100 leading-tight"><?= htmlspecialchars($course['title']) ?></h3>
+                                            </div>
 
-                                <h3 class="text-xl font-bold text-purple-900 dark:text-purple-100"><?= htmlspecialchars($course['title']) ?></h3>
-                                <p class="text-sm text-purple-700 dark:text-purple-300"><?= htmlspecialchars($course['description_2']) ?></p>
+                                            <!-- Description -->
+                                            <p class="text-sm text-purple-700 dark:text-purple-300 line-clamp-2 mb-4 flex-grow"><?= htmlspecialchars($course['description']) ?></p>
 
-                                <div class="flex justify-between items-center text-sm text-purple-700 dark:text-purple-300 mt-2">
-                                    <div class="flex items-center space-x-1">
-                                        <i data-lucide="clock" class="h-5 w-5 text-yellow-500 dark:text-yellow-400"></i>
-                                        <span><?= htmlspecialchars($course['timeline']) ?></span>
-                                    </div>
-                                    <div class="flex items-center space-x-1">
-                                        <i data-lucide="users" class="h-5 w-5 text-yellow-500 dark:text-yellow-400"></i>
-                                        <span><?= htmlspecialchars($course['people']) ?></span>
-                                    </div>
-                                    <div class="flex items-center space-x-1">
-                                        <i class="fas fa-star text-yellow-500 h-4 w-4"></i>
-                                        <span><?= number_format($course['rating'], 1) ?></span>
-                                    </div>
-                                </div>
+                                            <!-- Course Details Section - Clean Layout -->
+                                            <div class="bg-purple-50 dark:bg-purple-800/30 rounded-lg p-3 mb-3">
+                                                <div class="flex items-center justify-between text-sm">
+                                                    <!-- Duration -->
+                                                    <div class="flex items-center space-x-2 text-purple-700 dark:text-purple-300">
+                                                        <i class="fas fa-clock text-yellow-500 w-4 h-4"></i>
+                                                        <span><?= htmlspecialchars($course['duration']) ?></span>
+                                                    </div>
+                                                    
+                                                    <!-- Students -->
+                                                    <div class="flex items-center space-x-2 text-purple-700 dark:text-purple-300">
+                                                        <i class="fas fa-users text-yellow-500 w-4 h-4"></i>
+                                                        <span><?= number_format($course['enrolled_students']) ?></span>
+                                                    </div>
+                                                    
+                                                    <!-- Rating -->
+                                                    <div class="flex items-center space-x-2 text-purple-700 dark:text-purple-300">
+                                                        <i class="fas fa-star text-yellow-500 w-4 h-4"></i>
+                                                        <span><?= number_format($course['rating'], 1) ?></span>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                <hr class="border-purple-200 dark:border-purple-600 my-2">
-
-                                <p class="text-sm text-purple-700 dark:text-purple-300">By <strong><?= htmlspecialchars($course['educator']) ?></strong></p>
-
-                                <?php if (!empty($course['link'])): ?>
-                                    <a href="<?= htmlspecialchars($course['link']) ?>" target="_blank"
-                                        class="block text-center py-3 px-6 mt-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn relative overflow-hidden">
-                                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                                        <div class="relative flex items-center justify-center space-x-2">
-                                            <span>Enroll Now</span>
-                                            <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                            </svg>
+                                            <!-- Check Out Button with Glowing Animation -->
+                                            <div class="text-center mt-auto">
+                                                <button onclick="window.open('<?= htmlspecialchars($course['course_link'] ?? '#') ?>', '_blank')"
+                                                    class="w-full py-2 px-4 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold text-sm shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden glow-border">
+                                                    <span class="relative z-10 flex items-center justify-center space-x-2">
+                                                        <span>Check Out</span>
+                                                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                        </svg>
+                                                    </span>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </a>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
+                                    </div>
+                                </div>
                 <?php endforeach; ?>
                         </div>
                     </div>
@@ -1187,14 +1314,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 <div class="relative overflow-hidden course-testimonials-container manual-scroll">
                     <div class="flex animate-marquee" style="width: calc(300% + 48px); animation: marquee 40s linear infinite;">
                         <?php foreach (array_merge($course_testimonials, $course_testimonials) as $testimonial): ?>
-                            <div class="flex-none w-80 mx-4 relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group p-6">
+                            <div class="flex-none w-80 mx-4 relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group p-6">
                                 <!-- Tech background pattern -->
                                 <div class="absolute inset-0 opacity-10 pointer-events-none">
                                     <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                                 </div>
 
                                 <!-- Star Rating -->
-                                <div class="relative z-10 flex items-center mb-4 star-rating">
+                                <div class="relative z-10 flex items-center mb-4 star-rating transition-transform duration-500 group-hover:scale-105">
                                     <?php
                                     $rating = floor($testimonial['rating']);
                                     for ($i = 1; $i <= 5; $i++): ?>
@@ -1208,12 +1335,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 </div>
 
                                 <!-- Testimonial Message -->
-                                <p class="relative z-10 text-purple-700 dark:text-purple-300 mb-4">
+                                <p class="relative z-10 text-purple-700 dark:text-purple-300 mb-4 transition-transform duration-500 group-hover:scale-105">
                                     <?= htmlspecialchars($testimonial['message']) ?>
                                 </p>
 
                                 <!-- Author -->
-                                <div class="relative z-10 flex items-center">
+                                <div class="relative z-10 flex items-center transition-transform duration-500 group-hover:scale-105">
                                     <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
                                         <?php if (!empty($testimonial['image'])): ?>
                                             <?php 
@@ -1306,8 +1433,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 $video_id = $matches[1];
                                             }
                                         ?>
-                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-300 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
-                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-300 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0 group" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600 transition-transform duration-300 group-hover:scale-105" style="height: 200px;">
                                                     <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
                                                         class="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105" 
                                                         onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
@@ -1323,8 +1450,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                     <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
                                                         <?= htmlspecialchars($video['title']) ?>
                                                     </h4>
-                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
-                                                        Watch Now
+                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-yellow-400 text-purple-900 font-bold text-sm shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 w-full glow-border">
+                                                        <span class="relative z-10">Watch Now</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -1337,8 +1464,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                 $video_id = $matches[1];
                                             }
                                         ?>
-                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-300 hover:-translate-y-3 hover:shadow-3xl min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
-                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600" style="height: 200px;">
+                                            <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-300 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 min-w-[300px] max-w-[350px] cursor-pointer flex-shrink-0 group" onclick="openVideoModal('<?= $video_id ?>', '<?= htmlspecialchars($video['title']) ?>')">
+                                                <div class="relative w-full overflow-hidden border-b border-purple-300 dark:border-purple-600 transition-transform duration-300 group-hover:scale-105" style="height: 200px;">
                                                     <img src="https://img.youtube.com/vi/<?= $video_id ?>/maxresdefault.jpg" alt="<?= htmlspecialchars($video['title']) ?>"
                                                         class="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105" 
                                                         onerror="this.src='https://img.youtube.com/vi/<?= $video_id ?>/hqdefault.jpg'" />
@@ -1354,8 +1481,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                                     <h4 class="text-lg font-semibold text-purple-900 dark:text-purple-200 mb-2 line-clamp-2">
                                                         <?= htmlspecialchars($video['title']) ?>
                                                     </h4>
-                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 text-white font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] transition-all duration-300 group w-full">
-                                                        Watch Now
+                                                    <button class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-yellow-400 text-purple-900 font-bold text-sm shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 w-full glow-border">
+                                                        <span class="relative z-10">Watch Now</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -1449,9 +1576,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     <div class="relative overflow-hidden rounded-[2rem] manual-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
                         <div class="flex animate-marquee gap-x-8" style="width: max-content;">
                             <?php foreach (array_merge($clients_testimonials, $clients_testimonials) as $testimonial): ?>
-                                <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl group">
+                                <div class="flex-none w-80 mx-4 rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group">
                                     <!-- Rating Stars -->
-                                    <div class="flex items-center mt-6 mb-4 px-6 star-rating">
+                                    <div class="flex items-center mt-6 mb-4 px-6 star-rating transition-transform duration-500 group-hover:scale-105">
                                         <?php $rating = floor($testimonial['rating']); ?>
                                         <?php for ($i = 1; $i <= 5; $i++): ?>
                                             <?php if ($i <= $rating): ?>
@@ -1464,10 +1591,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                     </div>
 
                                     <!-- Testimonial Text -->
-                                    <p class="text-purple-700 dark:text-purple-300 mb-4 px-6"><?php echo htmlspecialchars($testimonial['project_description']); ?></p>
+                                    <p class="text-purple-700 dark:text-purple-300 mb-4 px-6 transition-transform duration-500 group-hover:scale-105"><?php echo htmlspecialchars($testimonial['project_description']); ?></p>
 
                         <!-- User Info -->
-                        <div class="flex items-center px-6 pb-4">
+                        <div class="flex items-center px-6 pb-4 transition-transform duration-500 group-hover:scale-105">
                             <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-purple-200 dark:bg-purple-700">
                                 <?php if (!empty($testimonial['company_logo'])): ?>
                                     <?php 
@@ -1575,14 +1702,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 <!-- Coupons Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-section" style="animation-delay: 200ms;">
                     <?php foreach ($coupons as $coupon): ?>
-                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group">
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group">
                             <!-- Tech Grid Pattern -->
                             <div class="absolute inset-0 opacity-10 pointer-events-none">
                                 <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                             </div>
 
                             <!-- Main Content Section -->
-                            <div class="relative z-10 px-6 py-6">
+                            <div class="relative z-10 px-6 py-6 transition-transform duration-500 group-hover:scale-105">
                                 <!-- Coupon Code Display -->
                                 <div class="text-center mb-5 p-4 rounded-2xl bg-purple-50 dark:bg-purple-900/50 border border-purple-200/50 dark:border-purple-600/50">
                                     <div class="text-xs font-semibold uppercase tracking-widest text-purple-600 dark:text-purple-300 mb-1">Coupon Code</div>
@@ -1617,14 +1744,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 </div>
 
                                 <!-- Enhanced CTA Button -->
-                                <button class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white dark:text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn">
-                                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                                    <div class="relative flex items-center justify-center space-x-2">
+                                <button class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-yellow-400 text-purple-900 font-bold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 glow-border">
+                                    <span class="relative z-10 flex items-center justify-center space-x-2">
                                         <span>Use This Code</span>
-                                        <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                         </svg>
-                                    </div>
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -1668,7 +1794,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             // Duplicate the services array for seamless looping
                             $services_loop = array_merge($services, $services);
                             foreach ($services_loop as $index => $service): ?>
-                                <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group w-[300px] sm:w-[320px] flex-shrink-0 animate-section" style="animation-delay: <?= 100 * $index ?>ms;">
+                                <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group w-[300px] sm:w-[320px] flex-shrink-0 animate-section" style="animation-delay: <?= 100 * $index ?>ms;">
                                     <!-- Tech Grid Background -->
                                     <div class="absolute inset-0 opacity-10 pointer-events-none">
                                         <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
@@ -1687,7 +1813,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                     </div>
 
                                     <!-- Content -->
-                                    <div class="relative z-10 p-6">
+                                    <div class="relative z-10 p-6 transition-transform duration-500 group-hover:scale-105">
                                         <h3 class="text-xl font-bold text-purple-900 dark:text-purple-200 mb-2 group-hover:text-yellow-500 transition-colors duration-300"><?= htmlspecialchars($service['title']) ?></h3>
                             <p class="text-purple-700 dark:text-purple-300 mb-4"><?= htmlspecialchars($service['description']) ?></p>
                             <ul class="list-disc list-inside text-purple-700 dark:text-purple-300 mb-4">
@@ -1697,14 +1823,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             </ul>
 
                             <!-- CTA Button -->
-                            <button onclick="scrollToSection('contact')" class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white dark:text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn">
-                                <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                                <div class="relative flex items-center justify-center space-x-2">
+                            <button onclick="scrollToSection('contact')" class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-yellow-400 text-purple-900 font-bold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 glow-border">
+                                <span class="relative z-10 flex items-center justify-center space-x-2">
                                     <span>Get Started</span>
-                                    <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                     </svg>
-                                </div>
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -1765,7 +1890,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             foreach ($clients_loop as $index => $client): ?>
                                 <div class="flex-shrink-0 w-80 group">
                                     <!-- Client Card -->
-                                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl group-hover:border-yellow-400 dark:group-hover:border-yellow-400 h-80">
+                                    <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group-hover:border-yellow-400 dark:group-hover:border-yellow-400 h-80">
                                         
                                         <!-- Decorative Background Pattern -->
                                         <div class="absolute inset-0 opacity-5 pointer-events-none">
@@ -1773,7 +1898,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                         </div>
                                         
                                         <!-- Card Content -->
-                                        <div class="relative z-10 p-6 h-full flex flex-col">
+                                        <div class="relative z-10 p-6 h-full flex flex-col transition-transform duration-500 group-hover:scale-105">
                                             <!-- Company Logo & Header -->
                                             <div class="flex items-center gap-4 mb-6">
                                                 <!-- Company Logo -->
@@ -1894,7 +2019,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
                 <!-- Linktree Preview Section -->
                 <div class="mb-16 animate-section" style="animation-delay: 100ms;">
-                    <div class="bg-gradient-to-br from-purple-50 to-yellow-50 dark:from-purple-900/50 dark:to-yellow-900/20 rounded-3xl p-8 border border-yellow-400/30 dark:border-yellow-400/40 shadow-xl">
+                    <div class="bg-gradient-to-br from-purple-50 to-yellow-50 dark:from-purple-900/50 dark:to-yellow-900/20 rounded-3xl p-8 border-4 border-yellow-400/80 dark:border-yellow-400/90 shadow-xl">
                         <div class="flex flex-col lg:flex-row items-center gap-8">
                             <!-- Linktree Info -->
                             <div class="flex-1 text-center lg:text-left">
@@ -1918,7 +2043,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             
                             <!-- Linktree Preview -->
                             <div class="flex-1 max-w-md w-full">
-                                <div class="bg-white dark:bg-purple-900/90 rounded-3xl shadow-xl border border-purple-200/50 dark:border-purple-700/50 overflow-hidden">
+                                <div class="bg-white dark:bg-purple-900/90 rounded-3xl shadow-xl border-4 border-yellow-400/80 dark:border-yellow-400/90 overflow-hidden">
                                     <!-- Mock Linktree Header -->
                                     <div class="bg-gradient-to-r from-green-400 to-purple-600 p-4 text-center">
                                         <div class="w-16 h-16 bg-white rounded-full mx-auto mb-3 flex items-center justify-center">
@@ -2014,14 +2139,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         $data = $platform['data'];
                     ?>
                         <div class="group cursor-pointer">
-                            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br <?= $platform['bg'] ?> backdrop-blur-sm border <?= $platform['border'] ?> shadow-xl transform transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl h-64 flex flex-col">
+                            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br <?= $platform['bg'] ?> backdrop-blur-sm border <?= $platform['border'] ?> shadow-xl transform transition-all duration-500 hover:shadow-2xl h-64 flex flex-col">
                                 <!-- Decorative Pattern -->
                                 <div class="absolute inset-0 opacity-5 pointer-events-none">
                                     <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                                 </div>
 
                                 <!-- Floating Icon -->
-                                <div class="relative z-10 flex-1 flex items-center justify-center">
+                                <div class="relative z-10 flex-1 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
                                     <div class="w-20 h-20 <?= $platform['iconBg'] ?> rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
                                         <i class="<?= $platform['icon'] ?> <?= $platform['iconColor'] ?> text-3xl"></i>
                                     </div>
@@ -2097,7 +2222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     <!-- Contact Form -->
                     <div class="animate-section" style="animation-delay: 200ms;">
-                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl p-8">
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl hover:border-yellow-400 dark:hover:border-yellow-400 p-8">
                             <!-- Tech grid pattern -->
                             <div class="absolute inset-0 opacity-10 pointer-events-none">
                                 <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
@@ -2125,14 +2250,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                         class="mt-2 w-full px-4 py-3 border border-purple-300 dark:border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-white dark:bg-purple-800 text-purple-900 dark:text-purple-200"></textarea>
                                 </div>
                                 <button type="submit"
-                                    class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-purple-600 dark:from-yellow-400 dark:to-purple-700 text-white font-bold text-base shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 group/btn">
-                                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-purple-500/20 dark:from-yellow-300/30 dark:to-purple-600/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                                    <div class="relative flex items-center justify-center space-x-2">
+                                    class="w-full relative overflow-hidden py-3 px-6 rounded-2xl bg-yellow-400 text-purple-900 font-bold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 glow-border">
+                                    <span class="relative z-10 flex items-center justify-center space-x-2">
                                         <span>Send Message</span>
-                                        <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                         </svg>
-                                    </div>
+                                    </span>
                                 </button>
                                 <?php if (isset($_GET['success']) && $_GET['success'] === 'contact_submitted'): ?>
                                     <p class="mt-4 text-green-500 dark:text-green-400 text-center">Thank you for your message! We'll get back to you soon.</p>
@@ -2143,13 +2267,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
                     <!-- Contact Image -->
                     <div class="animate-section" style="animation-delay: 400ms;">
-                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border border-yellow-400/40 dark:border-yellow-400/60 backdrop-blur-sm shadow-2xl p-4 group transform transition duration-500 hover:-translate-y-2 hover:shadow-3xl">
+                        <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm shadow-2xl hover:border-yellow-400 dark:hover:border-yellow-400 p-4 group transform transition duration-500 hover:shadow-3xl">
                             <!-- Tech pattern -->
                             <div class="absolute inset-0 opacity-10 pointer-events-none">
                                 <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
                             </div>
                             <img src="/assert/20250126_145421.jpg" alt="Contact us"
-                                class="relative z-10 w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105"
+                                class="relative z-10 w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover:scale-110"
                                 loading="lazy">
                         </div>
                     </div>
