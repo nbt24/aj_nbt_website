@@ -2009,176 +2009,148 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
             <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16 animate-section">
-                    <h2 class="text-4xl font-bold text-purple-900 dark:text-purple-200 mb-4 tracking-tight">
-                        Connect With Us
-                    </h2>
-                    <p class="text-xl text-purple-700 dark:text-purple-300 max-w-3xl mx-auto">
-                        Follow our journey and stay updated with the latest insights
-                    </p>
-                </div>
+            }
 
-                <!-- Linktree Preview Section -->
-                <div class="mb-16 animate-section" style="animation-delay: 100ms;">
-                    <div class="bg-gradient-to-br from-purple-50 to-yellow-50 dark:from-purple-900/50 dark:to-yellow-900/20 rounded-3xl p-8 border-4 border-yellow-400/80 dark:border-yellow-400/90 shadow-xl">
-                        <div class="flex flex-col lg:flex-row items-center gap-8">
-                            <!-- Linktree Info -->
-                            <div class="flex-1 text-center lg:text-left">
-                                <div class="flex items-center justify-center lg:justify-start gap-3 mb-4">
-                                    <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-purple-600 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-link text-white text-xl"></i>
-                                    </div>
-                                    <h3 class="text-2xl font-bold text-purple-900 dark:text-purple-200">Our Linktree</h3>
-                                </div>
-                                <p class="text-purple-700 dark:text-purple-300 mb-6 leading-relaxed">
-                                    Discover all our platforms, projects, and latest updates in one convenient place. 
-                                    Connect with Aditya Jain and explore our complete digital ecosystem.
-                                </p>
-                                <a href="https://linktr.ee/aditya.jain.iitb" target="_blank"
-                                   class="inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 group">
-                                    <i class="fas fa-external-link-alt group-hover:rotate-12 transition-transform duration-300"></i>
-                                    Visit Our Linktree
-                                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform duration-300"></i>
-                                </a>
-                            </div>
-                            
-                            <!-- Linktree Preview -->
-                            <div class="flex-1 max-w-md w-full">
-                                <div class="bg-white dark:bg-purple-900/90 rounded-3xl shadow-xl border-4 border-yellow-400/80 dark:border-yellow-400/90 overflow-hidden">
-                                    <!-- Mock Linktree Header -->
-                                    <div class="bg-gradient-to-r from-green-400 to-purple-600 p-4 text-center">
-                                        <div class="w-16 h-16 bg-white rounded-full mx-auto mb-3 flex items-center justify-center">
-                                            <span class="text-purple-600 font-bold text-lg">AJ</span>
-                                        </div>
-                                        <h4 class="text-white font-bold text-lg">@aditya.jain.iitb</h4>
-                                        <p class="text-white/90 text-sm">Tech Entrepreneur | IIT Graduate</p>
-                                    </div>
-                                    
-                                    <!-- Mock Linktree Links -->
-                                    <div class="p-4 space-y-3">
-                                        <div class="bg-purple-50 dark:bg-purple-800/50 rounded-xl p-3 border border-purple-200/30 dark:border-purple-700/30">
-                                            <div class="flex items-center gap-3">
-                                                <i class="fab fa-linkedin text-blue-600 text-lg"></i>
-                                                <span class="text-purple-900 dark:text-purple-200 font-medium">LinkedIn Profile</span>
-                                            </div>
-                                        </div>
-                                        <div class="bg-purple-50 dark:bg-purple-800/50 rounded-xl p-3 border border-purple-200/30 dark:border-purple-700/30">
-                                            <div class="flex items-center gap-3">
-                                                <i class="fab fa-youtube text-red-600 text-lg"></i>
-                                                <span class="text-purple-900 dark:text-purple-200 font-medium">YouTube Channel</span>
-                                            </div>
-                                        </div>
-                                        <div class="bg-purple-50 dark:bg-purple-800/50 rounded-xl p-3 border border-purple-200/30 dark:border-purple-700/30">
-                                            <div class="flex items-center gap-3">
-                                                <i class="fas fa-globe text-purple-600 text-lg"></i>
-                                                <span class="text-purple-900 dark:text-purple-200 font-medium">NBT Website</span>
-                                            </div>
-                                        </div>
-                                        <div class="bg-purple-50 dark:bg-purple-800/50 rounded-xl p-3 border border-purple-200/30 dark:border-purple-700/30">
-                                            <div class="flex items-center gap-3">
-                                                <i class="fab fa-instagram text-pink-600 text-lg"></i>
-                                                <span class="text-purple-900 dark:text-purple-200 font-medium">Instagram</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-                <?php /*
-                <!-- Enhanced Social Media Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate-section" style="animation-delay: 200ms;">
-                    <!-- Card Template -->
-                    <?php
-                    $platforms = [
-                        [
-                            'icon' => 'fab fa-linkedin-in',
-                            'color' => 'blue',
-                            'text' => 'blue-700',
-                            'bg' => 'from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20',
-                            'border' => 'border-blue-500/30',
-                            'iconColor' => 'text-blue-600',
-                            'iconBg' => 'bg-blue-100 dark:bg-blue-800/50',
-                            'data' => $row1
-                        ],
-                        [
-                            'icon' => 'fab fa-instagram',
-                            'color' => 'pink',
-                            'text' => 'pink-700',
-                            'bg' => 'from-pink-50 to-pink-100 dark:from-pink-900/30 dark:to-pink-800/20',
-                            'border' => 'border-pink-500/30',
-                            'iconColor' => 'text-pink-600',
-                            'iconBg' => 'bg-pink-100 dark:bg-pink-800/50',
-                            'data' => $row2
-                        ],
-                        [
-                            'icon' => 'fab fa-youtube',
-                            'color' => 'red',
-                            'text' => 'red-700',
-                            'bg' => 'from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/20',
-                            'border' => 'border-red-500/30',
-                            'iconColor' => 'text-red-600',
-                            'iconBg' => 'bg-red-100 dark:bg-red-800/50',
-                            'data' => $row3
-                        ],
-                        [
-                            'icon' => 'fab fa-twitter',
-                            'color' => 'sky',
-                            'text' => 'sky-700',
-                            'bg' => 'from-sky-50 to-sky-100 dark:from-sky-900/30 dark:to-sky-800/20',
-                            'border' => 'border-sky-500/30',
-                            'iconColor' => 'text-sky-600',
-                            'iconBg' => 'bg-sky-100 dark:bg-sky-800/50',
-                            'iconBg' => 'bg-sky-100 dark:bg-sky-800/50',
-                            'data' => $row4
-                        ],
-                    ];
-                    foreach ($platforms as $platform):
-                        $data = $platform['data'];
-                    ?>
-                        <div class="group cursor-pointer">
-                            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br <?= $platform['bg'] ?> backdrop-blur-sm border <?= $platform['border'] ?> shadow-xl transform transition-all duration-500 hover:shadow-2xl h-64 flex flex-col">
-                                <!-- Decorative Pattern -->
-                                <div class="absolute inset-0 opacity-5 pointer-events-none">
-                                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
-                                </div>
+            // Load theme from localStorage
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.querySelector('[data-lucide="moon"]').setAttribute('data-lucide', 'sun');
+                lucide.createIcons();
+            }
 
-                                <!-- Floating Icon -->
-                                <div class="relative z-10 flex-1 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                                    <div class="w-20 h-20 <?= $platform['iconBg'] ?> rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
-                                        <i class="<?= $platform['icon'] ?> <?= $platform['iconColor'] ?> text-3xl"></i>
-                                    </div>
-                                </div>
+            // Mobile menu toggle
+            function toggleMenu() {
+                const menu = document.getElementById('mobile-menu');
+                const menuIcon = document.getElementById('menu-icon');
+                if (menu.classList.contains('max-h-0')) {
+                    menu.classList.remove('max-h-0', 'opacity-0');
+                    menu.classList.add('max-h-screen', 'opacity-100');
+                    menuIcon.setAttribute('data-lucide', 'x');
+                } else {
+                    menu.classList.remove('max-h-screen', 'opacity-100');
+                    menu.classList.add('max-h-0', 'opacity-0');
+                    menuIcon.setAttribute('data-lucide', 'menu');
+                }
+                lucide.createIcons();
+            }
 
-                                <!-- Content -->
-                                <div class="relative z-10 p-6 text-center">
-                                    <h3 class="text-lg font-bold <?= $platform['text'] ?> dark:text-<?= $platform['color'] ?>-300 mb-2">
-                                        <?= htmlspecialchars($data['platform']) ?>
-                                    </h3>
-                                    
-                                    <!-- Stats -->
-                                    <div class="flex items-center justify-center gap-2 mb-3">
-                                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                        <span class="text-purple-700 dark:text-purple-300 text-sm font-medium">
-                                            <span class="follower-count font-bold text-yellow-600 dark:text-yellow-400" data-target="<?= htmlspecialchars($data['followers']) ?>">0</span> 
-                                            Followers
-                                        </span>
-                                    </div>
-                                    
-                                    <!-- CTA -->
-                                    <div class="text-xs text-purple-600 dark:text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        Click to follow →
-                                    </div>
-                                </div>
+            // Scroll to section with smooth animation
+            function scrollToSection(id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    // Get the navbar height to offset the scroll position
+                    const navbarHeight = document.querySelector('nav').offsetHeight || 80;
+                    const elementPosition = element.offsetTop - navbarHeight - 20;
+                    
+                    // Custom smooth scroll implementation for better browser support
+                    const startPosition = window.pageYOffset;
+                    const distance = elementPosition - startPosition;
+                    const duration = 1000; // 1 second animation
+                    let start = null;
+                    
+                    function animation(currentTime) {
+                        if (start === null) start = currentTime;
+                        const timeElapsed = currentTime - start;
+                        const run = ease(timeElapsed, startPosition, distance, duration);
+                        window.scrollTo(0, run);
+                        if (timeElapsed < duration) requestAnimationFrame(animation);
+                    }
+                    
+                    // Easing function for smooth animation
+                    function ease(t, b, c, d) {
+                        t /= d / 2;
+                        if (t < 1) return c / 2 * t * t + b;
+                        t--;
+                        return -c / 2 * (t * (t - 2) - 1) + b;
+                    }
+                    
+                    requestAnimationFrame(animation);
+                    
+                    // Close mobile menu if open
+                    const menu = document.getElementById('mobile-menu');
+                    if (menu && menu.classList.contains('max-h-screen')) {
+                        toggleMenu();
+                    }
+                }
+            }
 
-                                <!-- Hover Gradient -->
-                                <div class="absolute inset-0 bg-gradient-to-t from-<?= $platform['color'] ?>-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+            // Dedicated smooth scroll function for contact section
+            function smoothScrollToContact() {
+                const contactSection = document.getElementById('contact');
+                if (contactSection) {
+                    const navbarHeight = document.querySelector('nav').offsetHeight || 80;
+                    const targetPosition = contactSection.offsetTop - navbarHeight - 20;
+                    
+                    // Enhanced smooth scroll with longer duration for better visual effect
+                    const startPosition = window.pageYOffset;
+                    const distance = targetPosition - startPosition;
+                    const duration = 1500; // 1.5 seconds for more noticeable smooth scroll
+                    let startTime = null;
+                    
+                    function smoothAnimation(currentTime) {
+                        if (startTime === null) startTime = currentTime;
+                        const timeElapsed = currentTime - startTime;
+                        const progress = Math.min(timeElapsed / duration, 1);
+                        
+                        // Smooth easing function (ease-in-out)
+                        const easeProgress = progress < 0.5 
+                            ? 2 * progress * progress 
+                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                        
+                        const currentPosition = startPosition + (distance * easeProgress);
+                        window.scrollTo(0, currentPosition);
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(smoothAnimation);
+                        }
+                    }
+                    
+                    requestAnimationFrame(smoothAnimation);
+                    
+                    // Close mobile menu if open
+                    const menu = document.getElementById('mobile-menu');
+                    if (menu && menu.classList.contains('max-h-screen')) {
+                        toggleMenu();
+                    }
+                }
+            }
+
+            
+
+            // Counter animation
+            document.querySelectorAll('[data-counter]').forEach(element => {
+                const target = parseFloat(element.getAttribute('data-counter').replace(/[^0-9.]/g, ''));
+                let count = 0;
+                const increment = target / 100;
+                const updateCount = () => {
+                    count += increment;
+                    if (count < target) {
+                        element.textContent = Math.ceil(count) + element.getAttribute('data-counter').replace(/[0-9.]+/g, '');
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        element.textContent = element.getAttribute('data-counter');
+                    }
+                };
+                updateCount();
+            });
+
+            // Team Marquee Pause/Resume Functions
+            
+            // Video Functions - Direct Fullscreen
+            function openVideoModal(videoId, title) {
+                // Open YouTube video directly in a new tab/window with autoplay
+                const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}&autoplay=1&rel=0`;
+                
+                // Try to open in new window first
+                const newWindow = window.open(youtubeUrl, '_blank', 'noopener,noreferrer');
+                
+                // Fallback if popup is blocked
+                if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                    // Show fallback modal or redirect
+                    alert('Please allow popups for this site or manually open: ' + youtubeUrl);
+                    window.location.href = youtubeUrl;
+                }
+            }
 
                 <!-- Call to Action -->
                 <div class="text-center mt-12 animate-section" style="animation-delay: 400ms;">
