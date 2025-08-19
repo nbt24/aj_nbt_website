@@ -619,6 +619,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     <img src="./assert/black.png" alt="NBT Logo" class="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-110">
                     <div class="ml-1 text-lg font-semibold text-purple-900 dark:text-purple-200 hidden sm:block transition-colors duration-300 group-hover:text-yellow-500 dark:group-hover:text-yellow-400"></div>
                 </div>
+                   <script>
+                       if (window.lucide && typeof lucide.createIcons === 'function') {
+                           lucide.createIcons();
+                       }
+                   </script>
                 <div class="hidden md:flex space-x-8 items-center">
                     <button onclick="scrollToSection('home')" class="text-purple-900 dark:text-purple-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-300 relative group capitalize font-medium">
                         Home
@@ -990,20 +995,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     <!--four Founders-->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
                         <?php foreach ($founder as $mem): ?>
-                            <div class="w-64 text-center bg-purple-50 dark:bg-purple-900/70 rounded-xl shadow-lg mx-auto overflow-hidden border-4 border-yellow-400/80 dark:border-yellow-400/90 hover:border-yellow-400 dark:hover:border-yellow-400 transition-all duration-300">
-                                <div class="relative w-full h-64 border-b-2 border-purple-300 dark:border-purple-600">
+                            <div class="w-64 text-center bg-purple-50 dark:bg-purple-900/70 rounded-xl shadow-lg mx-auto overflow-hidden border-2 border-yellow-400/80 dark:border-yellow-400/90 hover:border-yellow-400 dark:hover:border-yellow-400 transition-all duration-300">
+                                <div class="relative w-full h-64 flex items-center justify-center">
                                     <?php 
                                         // Use cached image for better performance
                                         $imagePath = getOptimizedImagePath($mem['image_data'], $mem['image_type'], 'founder', $mem['id']);
                                     ?>
                                     <img src="<?= $imagePath ?>"
                                         alt="<?php echo htmlspecialchars($mem['name']); ?>"
-                                        class="absolute inset-0 w-full h-full object-cover shadow-lg"
+                                        class="w-56 h-56 rounded-full object-cover shadow-lg border-4 border-yellow-400/80 dark:border-yellow-400/90 bg-white"
                                         loading="lazy" />
-                                    <div class="absolute inset-0 bg-yellow-500/20 dark:bg-yellow-400/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                                    <div class="absolute inset-0 bg-yellow-500/20 dark:bg-yellow-400/20 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
                                 </div>
                                 <div class="p-6">
-                                    <h4 class="text-xl font-semibold text-purple-900 dark:text-purple-200 mb-1 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">
+                                    <h4 class="text-2xl font-extrabold text-purple-900 dark:text-purple-200 mb-1 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-300">
                                         <?php echo htmlspecialchars($mem['name']); ?>
                                     </h4>
                                     <div class="text-yellow-500 dark:text-yellow-400 font-medium mb-2">
@@ -1014,18 +1019,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                     </p>
                                     <!-- Optional Socials -->
                                     <div class="flex justify-center gap-4 mt-2">
-                                        <?php if (!empty($mem['linkedin'])): ?>
-                                            <a href="<?php echo htmlspecialchars($mem['linkedin']); ?>" target="_blank"
-                                                class="text-purple-400 hover:text-yellow-500 transition">
-                                                <i data-lucide="linkedin" class="w-5 h-5"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                        <?php if (!empty($mem['email'])): ?>
-                                            <a href="mailto:<?php echo htmlspecialchars($mem['email']); ?>"
-                                                class="text-purple-400 hover:text-yellow-500 transition">
-                                                <i data-lucide="mail" class="w-5 h-5"></i>
-                                            </a>
-                                        <?php endif; ?>
+                                        <a href="<?php echo !empty($mem['linkedin']) ? htmlspecialchars($mem['linkedin']) : '#'; ?>" target="_blank"
+                                            class="hover:scale-110 transition" title="LinkedIn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="#FFD600" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.036 0 3.6 2.001 3.6 4.601v5.595z"/></svg>
+                                        </a>
+                                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<?php echo !empty($mem['email']) ? htmlspecialchars($mem['email']) : 'example@email.com'; ?>" target="_blank"
+                                            class="hover:scale-110 transition" title="Email">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="#FFD600" viewBox="0 0 24 24"><path d="M12 13.065l-11.99-7.065v15h23.98v-15l-11.99 7.065zm11.99-9.065h-23.98l11.99 7.065 11.99-7.065z"/></svg>
+                                        </a>
+                                        <a href="https://wa.me/<?php echo !empty($mem['number']) ? preg_replace('/\D/', '', $mem['number']) : '0000000000'; ?>" target="_blank"
+                                            class="hover:scale-110 transition" title="WhatsApp Chat">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="#FFD600" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.11-.21c1.21.49 2.53.76 3.88.76a1 1 0 011 1v3.5a1 1 0 01-1 1C10.07 22 2 13.93 2 4.5A1 1 0 013 3.5h3.5a1 1 0 011 1c0 1.35.27 2.67.76 3.88a1.003 1.003 0 01-.21 1.11l-2.2 2.2z"/></svg>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
