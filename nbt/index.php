@@ -760,7 +760,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             </div>
         </section>
 
-        <!-- About Section -->
+         <!-- About Section -->
         <section id="about" class="py-20 bg-purple-20 dark:bg-purple-950">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16 animate-section">
@@ -796,9 +796,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                     <div class="animate-section" style="animation-delay: 400ms;">
                         <?php if ($mission_video): ?>
                             <!-- Elegant Inline Video Player -->
-                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group">
+                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:-translate-y-1 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400">
                                 <!-- Video Container -->
-                                <div class="relative bg-black rounded-3xl overflow-hidden min-h-[300px] aspect-video transition-transform duration-500 group-hover:scale-105" id="missionVideoContainer">
+                                <div class="relative bg-black rounded-3xl overflow-hidden min-h-[300px] aspect-video" id="missionVideoContainer">
                                     <!-- Video Thumbnail with Play Button -->
                                     <div class="video-thumbnail absolute inset-0 cursor-pointer group" onclick="loadMissionVideo()">
                                         <?php if ($mission_video['type'] === 'youtube'): ?>
@@ -892,8 +892,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                             </div>
                         <?php else: ?>
                             <!-- Fallback when no video is set -->
-                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 p-8 group">
-                                <div class="text-center transition-transform duration-500 group-hover:scale-105">
+                            <div class="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-purple-900/90 border-4 border-yellow-400/80 dark:border-yellow-400/90 backdrop-blur-sm transform transition-all duration-500 hover:-translate-y-1 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 p-8">
+                                <div class="text-center">
                                     <svg class="w-24 h-24 mx-auto mb-6 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                                     </svg>
@@ -2502,65 +2502,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
             // Mission Video Functions
             let missionVideoLoaded = false;
-            const missionVideoUrl = '<?= !empty($mission_video) ? htmlspecialchars($mission['video_url']) : '' ?>';
+            const missionVideoUrl = '<?= !empty($mission_video) ? htmlspecialchars($mission_video['embed_url']) : '' ?>';
             
             function loadMissionVideo() {
                 if (!missionVideoUrl) {
                     console.log('No mission video URL available');
                     return;
                 }
-                
                 const container = document.getElementById('missionVideoContainer');
                 if (!container) {
                     console.log('Mission video container not found');
                     return;
                 }
-                
                 const thumbnail = container.querySelector('.video-thumbnail');
                 const player = container.querySelector('.video-player');
                 const loading = container.querySelector('.video-loading');
-                
                 if (!player) {
                     console.log('Video player element not found');
-                    // Fallback: open video in new tab
-                    window.open(missionVideoUrl, '_blank');
                     return;
                 }
-                
                 const iframe = player.querySelector('iframe');
                 const video = player.querySelector('video');
-                
-                // Show loading state
+                // Hide thumbnail and show loading
                 if (thumbnail) thumbnail.style.display = 'none';
                 if (loading) loading.classList.remove('hidden');
-                
-                // Load video
-                setTimeout(() => {
-                    if (iframe && iframe.getAttribute('data-src')) {
-                        iframe.src = iframe.getAttribute('data-src');
-                        iframe.onload = () => {
-                            if (loading) loading.classList.add('hidden');
-                            player.classList.remove('hidden');
-                            missionVideoLoaded = true;
-                        };
-                        // Fallback timeout in case onload doesn't fire
-                        setTimeout(() => {
-                            if (loading) loading.classList.add('hidden');
-                            player.classList.remove('hidden');
-                            missionVideoLoaded = true;
-                        }, 3000);
-                    } else if (video) {
-                        if (loading) loading.classList.add('hidden');
-                        player.classList.remove('hidden');
-                        video.play().catch(e => console.log('Video autoplay prevented:', e));
-                        missionVideoLoaded = true;
-                    } else {
-                        console.log('No video element found, opening in new tab');
-                        if (loading) loading.classList.add('hidden');
-                        if (thumbnail) thumbnail.style.display = 'block';
-                        window.open(missionVideoUrl, '_blank');
-                    }
-                }, 500);
+                // Load video immediately
+                if (iframe) {
+                    // Always set src to force reload and autoplay
+                    iframe.src = iframe.src;
+                    player.classList.remove('hidden');
+                    if (loading) loading.classList.add('hidden');
+                    missionVideoLoaded = true;
+                } else if (video) {
+                    player.classList.remove('hidden');
+                    if (loading) loading.classList.add('hidden');
+                    video.play().catch(e => console.log('Video autoplay prevented:', e));
+                    missionVideoLoaded = true;
+                } else {
+                    if (loading) loading.classList.add('hidden');
+                    if (thumbnail) thumbnail.style.display = 'block';
+                }
             }
             
             function openVideoInNewTab() {
@@ -2594,8 +2575,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                 missionVideoLoaded = false;
             }
 
-            // document.addEventListener("DOMContentLoaded", function() {
-            //     function socialMediaCounter(element, target) {
+            document.addEventListener("DOMContentLoaded", function() {
+                loadMissionVideo();
+            });
             //         let count = 0;
             //         const speed = 2000;
             //         const increment = Math.ceil(target / speed);
