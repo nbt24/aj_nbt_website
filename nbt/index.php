@@ -1039,84 +1039,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
                     <!--Company Team Members - Performance Optimized but Same Look-->
                     <div class="mt-16 overflow-hidden relative team-marquee-container manual-scroll">
-                        <div id="team-marquee" class="flex gap-12 animate-marquee px-4" style="animation: marquee 60s linear infinite;">
+                        <div id="team-marquee" class="flex gap-8 animate-marquee px-4" style="animation: marquee 30s linear infinite;">
                             <?php
-                            // Single team array - no duplication for better performance
-                            foreach ($team as $index => $member): ?>
-                                <div class="flex-shrink-0 w-72 text-center group team-card">
-                                    <!-- Card Container with Optimized Height for Content -->
-                                    <div class="relative bg-white dark:bg-purple-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border-4 border-yellow-400/80 dark:border-yellow-400/90 transform transition-all duration-500 hover:shadow-3xl hover:border-yellow-400 dark:hover:border-yellow-400 group-hover:border-yellow-400 dark:group-hover:border-yellow-400 overflow-hidden h-80">
-                                        
-                                        <!-- Decorative Background Pattern -->
-                                        <div class="absolute inset-0 opacity-5 pointer-events-none">
-                                            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--yellow-accent) 1px, transparent 0); background-size: 20px 20px;"></div>
+                            // Limit to first 8 team members for performance
+                            $limited_team = array_slice($team, 0, 8);
+                            foreach ($limited_team as $index => $member): ?>
+                                <div class="flex-shrink-0 w-72 text-center team-card">
+                                    <div class="relative bg-white dark:bg-purple-900/90 rounded-2xl p-4 border border-yellow-400/60 dark:border-yellow-400/80 shadow-md overflow-hidden h-80">
+                                        <div class="relative overflow-hidden rounded-full w-16 h-16 mx-auto mb-3 border border-yellow-400/60 dark:border-yellow-400/80">
+                                            <div class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-purple-900">
+                                                <?php if (!empty($member['image_path']) && file_exists($member['image_path'])): ?>
+                                                    <img src="<?php echo htmlspecialchars($member['image_path']); ?>"
+                                                        alt="<?php echo htmlspecialchars($member['name']); ?>"
+                                                        class="w-full h-full object-cover" loading="lazy" />
+                                                <?php elseif (!empty($member['image_data'])): ?>
+                                                    <?php $imagePath = getOptimizedImagePath($member['image_data'], $member['image_type'], 'team', $member['id']); ?>
+                                                    <img src="<?= $imagePath ?>"
+                                                        alt="<?php echo htmlspecialchars($member['name']); ?>"
+                                                        class="w-full h-full object-cover" loading="lazy" />
+                                                <?php else: ?>
+                                                    <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                                        <i data-lucide="user" class="w-6 h-6 text-gray-400"></i>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
-                                        
-                                        <!-- Gradient Border Effect -->
-                                        <div class="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 via-purple-500/20 to-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                                        
-                                        <!-- Content with Flex Layout - No flex-1 for tighter content -->
-                                        <div class="relative z-10 h-full flex flex-col justify-start transition-transform duration-500 group-hover:scale-105">
-                                            <!-- Profile Image -->
-                                            <div class="relative overflow-hidden rounded-full w-16 h-16 mx-auto mb-3 border-3 border-gradient-to-r from-yellow-400 to-purple-500 shadow-xl group-hover:shadow-2xl transition-shadow duration-300">
-                                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 to-purple-500 p-0.5">
-                                                    <div class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-purple-900">
-                                                        <?php if (!empty($member['image_path']) && file_exists($member['image_path'])): ?>
-                                                            <img src="<?php echo htmlspecialchars($member['image_path']); ?>"
-                                                                alt="<?php echo htmlspecialchars($member['name']); ?>"
-                                                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                                                loading="lazy" />
-                                                        <?php elseif (!empty($member['image_data'])): ?>
-                                                            <?php 
-                                                                // Use optimized image caching for better performance
-                                                                $imagePath = getOptimizedImagePath($member['image_data'], $member['image_type'], 'team', $member['id']);
-                                                            ?>
-                                                            <img src="<?= $imagePath ?>"
-                                                                alt="<?php echo htmlspecialchars($member['name']); ?>"
-                                                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                                                                loading="lazy" 
-                                                                decoding="async" />
-                                                        <?php else: ?>
-                                                            <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                                                <i data-lucide="user" class="w-6 h-6 text-gray-400"></i>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                    </div>
+                                        <h4 class="text-sm font-bold text-purple-900 dark:text-purple-200 mb-1">
+                                            <?php echo ucwords(strtolower(htmlspecialchars($member['name']))); ?>
+                                        </h4>
+                                        <div class="text-yellow-500 dark:text-yellow-400 font-semibold mb-2 text-lg">
+                                            <?php echo htmlspecialchars($member['position']); ?>
+                                        </div>
+                                        <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 overflow-hidden">
+                                            <?php 
+                                            $description = htmlspecialchars($member['description']);
+                                            $bullet_points = preg_split('/[•\n]/', $description);
+                                            $bullet_points = array_filter(array_map('trim', $bullet_points));
+                                            $bullet_points = array_slice($bullet_points, 0, 4);
+                                            foreach ($bullet_points as $point): 
+                                                if (!empty($point)):
+                                            ?>
+                                                <div class="flex items-start gap-2">
+                                                    <span class="text-yellow-500 dark:text-yellow-400 text-xs mt-0.5 flex-shrink-0">•</span>
+                                                    <span class="flex-1 leading-relaxed line-clamp-2"><?php echo $point; ?></span>
                                                 </div>
-                                            </div>
-
-                                            <!-- Name (smaller font, sentence case) -->
-                                            <h4 class="text-sm font-bold text-purple-900 dark:text-purple-200 mb-1 group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-300">
-                                                <?php echo ucwords(strtolower(htmlspecialchars($member['name']))); ?>
-                                            </h4>
-
-                                            <!-- Position (larger font) -->
-                                            <div class="text-yellow-500 dark:text-yellow-400 font-semibold mb-2 text-lg">
-                                                <?php echo htmlspecialchars($member['position']); ?>
-                                            </div>
-
-                                            <!-- Skills/Description - Fixed Height Section -->
-                                            <div class="text-purple-700 dark:text-purple-300 text-xs text-left space-y-1 overflow-hidden">
-                                                <?php 
-                                                $description = htmlspecialchars($member['description']);
-                                                // Split by bullet points (•) or newlines
-                                                $bullet_points = preg_split('/[•\n]/', $description);
-                                                $bullet_points = array_filter(array_map('trim', $bullet_points)); // Remove empty items
-                                                $bullet_points = array_slice($bullet_points, 0, 4); // Limit to 4 points for consistent height
-                                                
-                                                foreach ($bullet_points as $point): 
-                                                    if (!empty($point)):
-                                                ?>
-                                                    <div class="flex items-start gap-2">
-                                                        <span class="text-yellow-500 dark:text-yellow-400 text-xs mt-0.5 flex-shrink-0">•</span>
-                                                        <span class="flex-1 leading-relaxed line-clamp-2"><?php echo $point; ?></span>
-                                                    </div>
-                                                <?php 
-                                                    endif;
-                                                endforeach; 
-                                                ?>
-                                            </div>
-
+                                            <?php 
+                                                endif;
+                                            endforeach; 
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -2004,9 +1974,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                                 <!-- Project Description -->
                                 <div class="bg-purple-50/50 dark:bg-purple-900/30 rounded-2xl p-4 border border-purple-200/30 dark:border-purple-700/30 flex-1">
                                     <div class="flex items-start gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-purple-500 flex items-center justify-center flex-shrink-0 mt-1">
-                                            <i data-lucide="briefcase" class="w-4 h-4 text-white"></i>
-                                        </div>
+                                        <!-- Removed orange circle and briefcase icon -->
                                         <div class="flex-1">
                                             <h4 class="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-2">Project Details</h4>
                                             <p class="text-purple-900 dark:text-purple-100 text-sm leading-relaxed line-clamp-4">
